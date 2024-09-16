@@ -24,6 +24,7 @@
         <kontrakter.version>3.0_20240228112956_0728048</kontrakter.version>
         <felles.version>3.20240806111424_fff2930</felles.version>
         <token-validation-spring.version>5.0.5</token-validation-spring.version>
+        <springdoc.version>2.6.0</springdoc.version>
     </properties>
 
     <dependencies>
@@ -143,6 +144,18 @@
             <artifactId>mockk-jvm</artifactId>
             <version>1.13.12</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
     </dependencies>
 
