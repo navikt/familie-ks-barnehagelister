@@ -65,7 +65,7 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: nais-preprod.yaml
+          RESOURCE: .deploy/nais/nais-preprod.yaml
           IMAGE: ${{ steps.docker-push.outputs.image }}
 
       - name: Dependabot metadata
