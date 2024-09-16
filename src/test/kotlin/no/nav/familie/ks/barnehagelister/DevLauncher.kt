@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister
 
-import no.nav.ks.barnehagelister.config.ApplicationConfig
+import no.nav.familie.ks.barnehagelister.config.ApplicationConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
 
