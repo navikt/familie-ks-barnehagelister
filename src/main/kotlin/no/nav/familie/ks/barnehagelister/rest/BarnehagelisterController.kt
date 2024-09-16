@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class BarnehagelisterController {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
-    @GetMapping
+    @GetMapping(path = ["/ping"])
     fun ping(): ResponseEntity<String> {
         logger.info("Mottok ping")
         return ResponseEntity.ok("pong")
