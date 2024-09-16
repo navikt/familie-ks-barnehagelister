@@ -1,4 +1,4 @@
-package no.nav.ks.barnehagelister
+package no.nav.familie.ks.barnehagelister
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
