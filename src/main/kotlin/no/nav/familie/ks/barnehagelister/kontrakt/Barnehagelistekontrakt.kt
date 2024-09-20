@@ -29,7 +29,7 @@ data class BarnInfolinje(
 data class Barnehage(
     var navn: String,
     var organisasjonsnr: String,
-    var adresse: Adresse?
+    var adresse: Adresse?,
 )
 
 data class Forelder(
@@ -41,7 +41,7 @@ data class Forelder(
 data class Barn(
     var navn: String,
     var fodselsnummer: String,
-    var adresse: Adresse?
+    var adresse: Adresse?,
 )
 
 data class Adresse(
