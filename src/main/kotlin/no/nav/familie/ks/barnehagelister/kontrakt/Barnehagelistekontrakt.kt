@@ -4,49 +4,43 @@ import java.time.LocalDate
 import java.util.UUID
 
 data class Skjema(
-    var id: UUID,
-    var barnInfolinjer: List<BarnInfolinje>,
-    var listeopplysninger: Listeopplysninger,
+    val id: UUID,
+    val barnInfolinjer: List<BarnInfolinje>,
+    val listeopplysninger: Listeopplysninger,
 )
 
 data class Listeopplysninger(
-    var kommuneNavn: String,
-    var kommuneNr: String,
-    var aarInnsending: String,
-    var maanedinnsending: String,
+    val kommuneNavn: String,
+    val kommuneNr: String,
+    val arInnsending: String,
+    val manedinnsending: String,
 )
 
 data class BarnInfolinje(
-    var avtaltOppholdstidTimer: Double,
-    var startdato: LocalDate,
-    var sluttdato: LocalDate?,
-    var barn: Barn,
-    var foreldre: List<Forelder>,
-    var barnehage: Barnehage,
-    var endringstype: String,
+    val avtaltOppholdstidTimer: Double,
+    val startdato: LocalDate,
+    val sluttdato: LocalDate?,
+    val barn: Person,
+    val foreldre: List<Person>,
+    val barnehage: Barnehage,
+    val endringstype: String,
 )
 
 data class Barnehage(
-    var navn: String,
-    var organisasjonsnr: String,
-    var adresse: Adresse?,
+    val navn: String,
+    val organisasjonsnr: String,
+    val adresse: Adresse?,
 )
 
-data class Forelder(
-    var fodselsnummer: String,
-    var navn: String,
-    var adresse: Adresse?,
-)
-
-data class Barn(
-    var navn: String,
-    var fodselsnummer: String,
-    var adresse: Adresse?,
+data class Person(
+    val fodselsnummer: String,
+    val navn: String,
+    val adresse: Adresse?,
 )
 
 data class Adresse(
-    var adresselinje1: String?,
-    var adresselinje2: String?,
-    var postnummer: String,
-    var poststed: String,
+    val adresselinje1: String?,
+    val adresselinje2: String?,
+    val postnummer: String,
+    val poststed: String,
 )
