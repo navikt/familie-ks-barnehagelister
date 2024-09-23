@@ -2,6 +2,7 @@ package no.nav.familie.ks.barnehagelister.config
 
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.log.filter.LogFilter
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootConfiguration
 @ConfigurationPropertiesScan("no.nav.familie")
 @ComponentScan("no.nav.familie.ks.barnehagelister")
+@EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation.swagger"])
 @Import(ConsumerIdClientInterceptor::class)
 @EnableScheduling
 class ApplicationConfig {
