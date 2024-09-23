@@ -38,6 +38,14 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           byosbom: target/classes/META-INF/sbom/application.cdx.json
 
+      - name: Deploy til dev-gcp
+        if: github.event.pull_request.user.login != 'dependabot[bot]'
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .deploy/nais/nais-preprod.yaml
+          IMAGE: ${{ steps.docker-push.outputs.image }}
+
       - name: Deploy til prod-gcp
         uses: nais/deploy/actions/deploy@v2
         env:
