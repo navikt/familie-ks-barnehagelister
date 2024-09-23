@@ -17,9 +17,26 @@ jobs:
       security-events: write # push sarif to github security
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        uses: step-security/harden-runner@446798f8213ac2e75931c1b0769676d927801858 # v2.10.0
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            auth.docker.io:443
+            europe-north1-docker.pkg.dev:443
+            fulcio.sigstore.dev:443
+            gcr.io:443
+            ghcr.io:443
+            github.com:443
+            iamcredentials.googleapis.com:443
+            objects.githubusercontent.com:443
+            pkg-containers.githubusercontent.com:443
+            production.cloudflare.docker.com:443
+            registry-1.docker.io:443
+            rekor.sigstore.dev:443
+            sts.googleapis.com:443
+            tuf-repo-cdn.sigstore.dev:443
 
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
