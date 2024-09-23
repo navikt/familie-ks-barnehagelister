@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.kontrakt
 
 import java.time.LocalDate
+import java.time.YearMonth
 import java.util.UUID
 
 data class Skjema(
@@ -11,13 +12,12 @@ data class Skjema(
 
 data class Listeopplysninger(
     val kommuneNavn: String,
-    val kommuneNr: String,
-    val arInnsending: String,
-    val manedinnsending: String,
+    val kommunenummer: String,
+    val innsendingGjelder: YearMonth,
 )
 
 data class BarnInfolinje(
-    val avtaltOppholdstidTimer: Double,
+    val avtaltOppholdstidTimer: Number,
     val startdato: LocalDate,
     val sluttdato: LocalDate?,
     val barn: Person,
@@ -28,7 +28,7 @@ data class BarnInfolinje(
 
 data class Barnehage(
     val navn: String,
-    val organisasjonsnr: String,
+    val organisasjonsnummer: String,
     val adresse: Adresse?,
 )
 
