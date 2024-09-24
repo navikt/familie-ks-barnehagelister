@@ -6,30 +6,30 @@ import java.util.UUID
 
 data class Skjema(
     val id: UUID,
-    val barnInfolinjer: List<BarnInfolinje>,
+    val barnehager: List<Barnehage>,
     val listeopplysninger: Listeopplysninger,
 )
 
 data class Listeopplysninger(
-    val kommuneNavn: String,
+    val kommunenavn: String,
     val kommunenummer: String,
-    val innsendingGjelder: YearMonth,
-)
-
-data class BarnInfolinje(
-    val avtaltOppholdstidTimer: Number,
-    val startdato: LocalDate,
-    val sluttdato: LocalDate?,
-    val barn: Person,
-    val foreldre: List<Person>,
-    val barnehage: Barnehage,
-    val endringstype: String,
+    val innsendingGjelderArManed: YearMonth,
 )
 
 data class Barnehage(
     val navn: String,
     val organisasjonsnummer: String,
     val adresse: Adresse?,
+    val barnInfolinjer: List<BarnInfolinje>,
+)
+
+data class BarnInfolinje(
+    val avtaltOppholdstidTimer: Double,
+    val startdato: LocalDate,
+    val sluttdato: LocalDate?,
+    val barn: Person,
+    val foreldre: List<Person>,
+    val endringstype: String,
 )
 
 data class Person(
