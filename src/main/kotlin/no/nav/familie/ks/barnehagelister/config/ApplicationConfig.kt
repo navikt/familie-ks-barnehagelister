@@ -37,6 +37,15 @@ class ApplicationConfig {
         return filterRegistration
     }
 
+    @Bean
+    fun securityHeaderFilter(): FilterRegistrationBean<SecurityHeaderFilter> {
+        log.info("Registering SecurityHeaderFilter filter")
+        val filterRegistration: FilterRegistrationBean<SecurityHeaderFilter> = FilterRegistrationBean()
+        filterRegistration.filter = SecurityHeaderFilter()
+        filterRegistration.order = 2
+        return filterRegistration
+    }
+
     companion object {
         private val log = LoggerFactory.getLogger(ApplicationConfig::class.java)
     }
