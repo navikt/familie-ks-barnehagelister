@@ -36,11 +36,13 @@ class BarnehagelisterController(
     }
 
     @GetMapping(path = ["/status/{transaksjonsId}"])
+    @Unprotected
     fun status(
         @PathVariable transaksjonsId: UUID,
     ): ResponseEntity<String> {
         logger.info("Mottok status")
-        return ResponseEntity.ok("ok")
+        val status = barnehagelisterRepository.hentStatus(transaksjonsId)
+        return ResponseEntity.ok(status)
     }
 
     @GetMapping(path = ["/ping"])

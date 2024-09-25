@@ -25,4 +25,15 @@ class BarnehagelisterRepository(
                 .addValue("status", "MOTTATT")
         jdbcTemplate.update(sql, parameters)
     }
+
+    fun hentStatus(id: UUID): String? {
+        val sql =
+            """
+            SELECT status FROM barnehagelister WHERE id = :id
+            """.trimIndent()
+        val parameters =
+            MapSqlParameterSource()
+                .addValue("id", id.toString())
+        return jdbcTemplate.queryForObject(sql, parameters, String::class.java)
+    }
 }
