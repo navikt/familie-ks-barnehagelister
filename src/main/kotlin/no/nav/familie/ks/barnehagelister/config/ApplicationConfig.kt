@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootConfiguration
 @ConfigurationPropertiesScan("no.nav.familie")
 @ComponentScan("no.nav.familie.ks.barnehagelister")
-@EnableJwtTokenValidation(ignore = ["org.springframework", "springfox.documentation.swagger"])
+@EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
 @Import(ConsumerIdClientInterceptor::class)
 @EnableScheduling
 class ApplicationConfig {
