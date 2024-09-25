@@ -71,3 +71,13 @@ spec:
       value: preprod
     - name: JAVA_OPTS
       value: "-Xmx1g"
+  gcp: # Database
+    sqlInstances:
+      - type: POSTGRES_15 # IF This is changed, all data will be lost. Read on nais.io how to upgrade
+        tier: db-custom-1-3840
+        name: familie-ks-barnehagelister
+        autoBackupHour: 2
+        diskAutoresize: true
+        databases:
+          - name: familie-ks-barnehagelister
+            envVarPrefix: DB
