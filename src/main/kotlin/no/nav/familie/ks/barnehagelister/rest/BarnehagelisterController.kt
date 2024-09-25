@@ -1,7 +1,10 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -17,14 +20,18 @@ import java.util.UUID
 @RestController
 @Validated
 @RequestMapping("/barnehagelister")
-class BarnehagelisterController {
+class BarnehagelisterController(
+    private val barnehagelisterRepository: BarnehagelisterRepository,
+) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
     @PostMapping(path = ["/"])
+    @Unprotected
     fun mottaBarnehagelister(
         @RequestBody skjema: Skjema,
     ): ResponseEntity<String> {
         logger.info("Mottok skjema")
+        barnehagelisterRepository.lagre(skjema.id, objectMapper.writeValueAsString(skjema))
         return ResponseEntity.accepted().body("ok")
     }
 
