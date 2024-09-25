@@ -1,1 +1,11 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/familie-ks-barnehagelister
+    password: test
+    username: postgres
+  flyway:
+    enabled: true
+
+
 MASKINPORTEN_WELL_KNOWN_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/v2.0/.well-known/openid-configuration
