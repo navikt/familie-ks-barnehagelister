@@ -2,7 +2,6 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteJdbcRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
@@ -23,7 +22,6 @@ import java.util.UUID
 @Validated
 @RequestMapping("/barnehagelister")
 class BarnehagelisterController(
-    private val barnehagelisteJdbcRepository: BarnehagelisteJdbcRepository,
     private val barnehagelisterRepository: BarnehagelisterRepository,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
