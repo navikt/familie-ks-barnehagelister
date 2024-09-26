@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.config
 
 import no.nav.familie.kontrakter.felles.objectMapper
-import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
+import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import org.postgresql.util.PGobject
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -31,16 +31,16 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
         )
 
     @ReadingConverter
-    class SkjemaPGObjectLesConverter : Converter<PGobject, Skjema> {
-        override fun convert(pgObject: PGobject): Skjema = objectMapper.readValue(pgObject.value, Skjema::class.java)
+    class SkjemaPGObjectLesConverter : Converter<PGobject, SkjemaV1> {
+        override fun convert(pgObject: PGobject): SkjemaV1 = objectMapper.readValue(pgObject.value, SkjemaV1::class.java)
     }
 
     @WritingConverter
-    class SkjemaPGOBjectSkrivConverter : Converter<Skjema, PGobject> {
-        override fun convert(skjema: Skjema): PGobject {
+    class SkjemaPGOBjectSkrivConverter : Converter<SkjemaV1, PGobject> {
+        override fun convert(skjemaV1: SkjemaV1): PGobject {
             val pgJsonObject = PGobject()
             pgJsonObject.type = "json"
-            pgJsonObject.value = objectMapper.writeValueAsString(skjema)
+            pgJsonObject.value = objectMapper.writeValueAsString(skjemaV1)
             return pgJsonObject
         }
     }

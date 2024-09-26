@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
-data class Skjema(
+data class SkjemaV1(
     val id: UUID,
     val barnehager: List<Barnehage>,
     val listeopplysninger: Listeopplysninger,
