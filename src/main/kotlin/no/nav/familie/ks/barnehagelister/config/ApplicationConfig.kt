@@ -1,6 +1,8 @@
 package no.nav.familie.ks.barnehagelister.config
 
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
+import no.nav.familie.kontrakter.felles.objectMapper
+import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
 import no.nav.familie.log.filter.LogFilter
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.slf4j.LoggerFactory
@@ -12,6 +14,11 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
+import org.springframework.core.convert.converter.Converter
+import org.springframework.data.convert.ReadingConverter
+import org.springframework.data.convert.WritingConverter
+import org.springframework.data.jdbc.core.convert.JdbcCustomConversions
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootConfiguration
