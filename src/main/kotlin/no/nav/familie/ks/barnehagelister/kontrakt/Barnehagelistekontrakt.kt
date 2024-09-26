@@ -1,10 +1,11 @@
 package no.nav.familie.ks.barnehagelister.kontrakt
 
+import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
-data class Skjema(
+data class SkjemaV1(
     val id: UUID,
     val barnehager: List<Barnehage>,
     val listeopplysninger: Listeopplysninger,
@@ -13,7 +14,7 @@ data class Skjema(
 data class Listeopplysninger(
     val kommunenavn: String,
     val kommunenummer: String,
-    val innsendingGjelderArManed: YearMonth,
+    @Schema(type = "string", format = "yearmonth", example = "2024-09") val innsendingGjelderArManed: YearMonth,
 )
 
 data class Barnehage(

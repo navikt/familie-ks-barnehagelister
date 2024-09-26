@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
-import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
+import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.prosessering.internal.TaskService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -21,21 +21,21 @@ import java.util.UUID
 @ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"])
 @RestController
 @Validated
-@RequestMapping("/barnehagelister")
+@RequestMapping("/api/barnehagelister")
 class BarnehagelisterController(
     private val barnehagelisterRepository: BarnehagelisterRepository,
     private val taskService: TaskService,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
-    @PostMapping(path = ["/"])
+    @PostMapping(path = ["/v1"])
     @Unprotected
     fun mottaBarnehagelister(
-        @RequestBody skjema: Skjema,
+        @RequestBody skjemaV1: SkjemaV1,
     ): ResponseEntity<String> {
         logger.info("Mottok skjema")
 
-        barnehagelisterRepository.insert(Barnehagelister(skjema.id, skjema, "MOTTATT"))
+        barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, "MOTTATT"))
         return ResponseEntity.accepted().body("ok")
     }
 
