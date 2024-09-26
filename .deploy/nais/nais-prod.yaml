@@ -82,3 +82,13 @@ spec:
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
+
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: false
+      claims:
+        groups:
+          - id: "87190cf3-b278-457d-8ab7-1a5c55a9edd7" # Gruppen teamfamilie
+
+      singlePageApplication: true
