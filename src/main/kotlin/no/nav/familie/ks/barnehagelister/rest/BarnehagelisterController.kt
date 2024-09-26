@@ -1,11 +1,12 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.kontrakter.felles.objectMapper
+import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,7 +32,7 @@ class BarnehagelisterController(
         @RequestBody skjema: Skjema,
     ): ResponseEntity<String> {
         logger.info("Mottok skjema")
-        barnehagelisterRepository.lagre(skjema.id, objectMapper.writeValueAsString(skjema))
+        barnehagelisterRepository.insert(Barnehagelister(skjema.id, skjema, "MOTTATT"))
         return ResponseEntity.accepted().body("ok")
     }
 
@@ -41,7 +42,7 @@ class BarnehagelisterController(
         @PathVariable transaksjonsId: UUID,
     ): ResponseEntity<String> {
         logger.info("Mottok status")
-        val status = barnehagelisterRepository.hentStatus(transaksjonsId)
+        val status = barnehagelisterRepository.findByIdOrNull(transaksjonsId)?.status ?: "Ukjent"
         return ResponseEntity.ok(status)
     }
 
