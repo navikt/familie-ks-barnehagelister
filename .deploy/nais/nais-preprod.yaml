@@ -9,7 +9,7 @@ metadata:
     nais.io/restricted: "true"
 
 spec:
-  image: { { image } }
+  image: {{ image }}
   port: 8096
   liveness:
     path: /internal/health/liveness
