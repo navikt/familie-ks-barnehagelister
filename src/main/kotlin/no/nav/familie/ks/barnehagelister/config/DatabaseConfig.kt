@@ -11,8 +11,6 @@ import org.springframework.data.convert.WritingConverter
 import org.springframework.data.jdbc.core.convert.JdbcCustomConversions
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
 import javax.sql.DataSource
@@ -20,12 +18,8 @@ import javax.sql.DataSource
 @Configuration
 @EnableJdbcRepositories("no.nav.familie.ks.barnehagelister")
 class DatabaseConfig : AbstractJdbcConfiguration() {
-
-
     @Bean
-    fun transactionManager(dataSource: DataSource): PlatformTransactionManager =
-        DataSourceTransactionManager(dataSource)
-
+    fun transactionManager(dataSource: DataSource): PlatformTransactionManager = DataSourceTransactionManager(dataSource)
 
     @Bean
     override fun jdbcCustomConversions(): JdbcCustomConversions =
@@ -38,9 +32,7 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
 
     @ReadingConverter
     class SkjemaPGObjectLesConverter : Converter<PGobject, Skjema> {
-        override fun convert(pgObject: PGobject): Skjema {
-            return objectMapper.readValue(pgObject.value, Skjema::class.java)
-        }
+        override fun convert(pgObject: PGobject): Skjema = objectMapper.readValue(pgObject.value, Skjema::class.java)
     }
 
     @WritingConverter

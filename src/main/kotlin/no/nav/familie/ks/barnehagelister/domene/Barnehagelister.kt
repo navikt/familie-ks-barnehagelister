@@ -7,6 +7,6 @@ import java.util.UUID
 data class Barnehagelister(
     @Id
     val id: UUID,
-    val rawJson: Skjema ,
-    val status: String
+    val rawJson: Skjema,
+    val status: String,
 )

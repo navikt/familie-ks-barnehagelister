@@ -1,6 +1,5 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.Skjema
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteJdbcRepository

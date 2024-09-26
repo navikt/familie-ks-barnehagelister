@@ -9,8 +9,6 @@ import java.util.UUID
 @Transactional
 interface BarnehagelisterRepository :
     RepositoryInterface<Barnehagelister, UUID>,
-    InsertUpdateRepository<Barnehagelister>
-{
+    InsertUpdateRepository<Barnehagelister> {
     // language=PostgreSQL
-
 }
