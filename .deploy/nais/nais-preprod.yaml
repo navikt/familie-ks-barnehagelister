@@ -55,6 +55,7 @@ spec:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
     inbound:
+      - application: familie-prosessering-lokal
       - application: familie-prosessering
         cluster: dev-gcp
   observability:
