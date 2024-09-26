@@ -56,7 +56,7 @@ spec:
   accessPolicy:
     inbound:
       - application: familie-prosessering
-        cluster: dev-gcp
+        cluster: prod-gcp
   observability:
     logging:
       destinations:
