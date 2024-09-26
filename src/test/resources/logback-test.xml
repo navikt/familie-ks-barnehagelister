@@ -17,5 +17,5 @@
         <appender-ref ref="secureLoggerAppender"/>
     </logger>
 
-    <logger name="no.nav" level="INFO"/>
+    <logger name="no" level="DEBUG"/>
 </configuration>
