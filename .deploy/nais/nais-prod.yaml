@@ -9,7 +9,7 @@ metadata:
     nais.io/restricted: "true"
 
 spec:
-  image: {{ image }}
+  image: { { image } }
   port: 8096
   liveness:
     path: /internal/health/liveness
@@ -37,7 +37,7 @@ spec:
     enabled: true
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-ks-barnehagelister.intern.nav.no
-#    - https://familie-ks-barnehagelister.nav.no
+  #    - https://familie-ks-barnehagelister.nav.no
   maskinporten:
     enabled: true
     scopes:
@@ -55,8 +55,9 @@ spec:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
     inbound:
-      - application: familie-prosessering
-        cluster: prod-gcp
+      rules:
+        - application: familie-prosessering
+          cluster: prod-gcp
   observability:
     logging:
       destinations:
@@ -81,7 +82,7 @@ spec:
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
-
+  
   azure:
     application:
       enabled: true
@@ -89,5 +90,5 @@ spec:
       claims:
         groups:
           - id: "87190cf3-b278-457d-8ab7-1a5c55a9edd7" # Gruppen teamfamilie
-
+      
       singlePageApplication: true
