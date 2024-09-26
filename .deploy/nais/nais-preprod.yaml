@@ -54,10 +54,9 @@ spec:
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
-    outbound:
-      rules:
-        - application: familie-ks-sak
-          cluster: dev-gcp
+    inbound:
+      - application: familie-prosessering
+        cluster: dev-gcp
   observability:
     logging:
       destinations:
@@ -81,3 +80,14 @@ spec:
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
+
+
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: false
+      claims:
+        groups:
+          - id: "928636f4-fd0d-4149-978e-a6fb68bb19de" # 0000-GA-STDAPPS
+
+      singlePageApplication: true

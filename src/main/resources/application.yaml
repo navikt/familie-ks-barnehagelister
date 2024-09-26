@@ -61,3 +61,14 @@ no.nav.security.jwt:
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
+
+prosessering:
+  rolle: "87190cf3-b278-457d-8ab7-1a5c55a9edd7" # Gruppen teamfamilie
+  continuousRunning.enabled: true
+  maxantall: 10
+  fixedDelayString:
+    in:
+      milliseconds: 5000
+  delete:
+    after:
+      weeks: 4
