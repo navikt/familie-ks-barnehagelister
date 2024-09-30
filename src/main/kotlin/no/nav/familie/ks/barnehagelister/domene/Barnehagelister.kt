@@ -12,4 +12,6 @@ data class Barnehagelister(
     val status: String,
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
     val ferdigTid: LocalDateTime? = null,
-)
+) {
+    fun erFerdigProsessert(): Boolean = ferdigTid != null
+}

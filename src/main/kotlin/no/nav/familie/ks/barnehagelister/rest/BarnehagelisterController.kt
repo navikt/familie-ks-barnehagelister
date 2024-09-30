@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.rest
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
-import no.nav.familie.prosessering.internal.TaskService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
@@ -26,7 +25,6 @@ import java.util.UUID
 @RequestMapping("/api/barnehagelister")
 class BarnehagelisterController(
     private val barnehagelisterRepository: BarnehagelisterRepository,
-    private val taskService: TaskService,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
@@ -37,8 +35,8 @@ class BarnehagelisterController(
     ): ResponseEntity<BarnehagelisteResponse> {
         logger.info("Mottok skjema")
 
-        val liste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
-        return if (liste == null) {
+        val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
+        return if (barnehageliste == null) {
             val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, "MOTTATT"))
             ResponseEntity.accepted().body(
                 BarnehagelisteResponse(
@@ -53,13 +51,13 @@ class BarnehagelisterController(
                 ),
             )
         } else {
-            val httpStatusKode = if (liste.ferdigTid == null) HttpStatus.ACCEPTED else HttpStatus.OK
+            val httpStatusKode = if (barnehageliste.erFerdigProsessert()) HttpStatus.OK else HttpStatus.ACCEPTED
             ResponseEntity.status(httpStatusKode).body(
                 BarnehagelisteResponse(
                     id = skjemaV1.id,
-                    status = liste.status,
-                    mottattTid = liste.opprettetTid,
-                    ferdigTid = liste.ferdigTid,
+                    status = barnehageliste.status,
+                    mottattTid = barnehageliste.opprettetTid,
+                    ferdigTid = barnehageliste.ferdigTid,
                     links =
                         ResponseLinker(
                             status = "/api/barnehagelister/status/${skjemaV1.id}",
@@ -75,17 +73,17 @@ class BarnehagelisterController(
         @PathVariable transaksjonsId: UUID,
     ): ResponseEntity<BarnehagelisteResponse> {
         logger.info("Mottok status")
-        val liste = barnehagelisterRepository.findByIdOrNull(transaksjonsId)
-        return if (liste == null) {
+        val barnehageliste = barnehagelisterRepository.findByIdOrNull(transaksjonsId)
+        return if (barnehageliste == null) {
             ResponseEntity.notFound().build()
         } else {
-            val httpStatusKode = if (liste.ferdigTid == null) HttpStatus.ACCEPTED else HttpStatus.OK
+            val httpStatusKode = if (barnehageliste.erFerdigProsessert()) HttpStatus.OK else HttpStatus.ACCEPTED
             ResponseEntity.status(httpStatusKode).body(
                 BarnehagelisteResponse(
                     id = transaksjonsId,
-                    status = liste.status,
-                    mottattTid = liste.opprettetTid,
-                    ferdigTid = liste.ferdigTid,
+                    status = barnehageliste.status,
+                    mottattTid = barnehageliste.opprettetTid,
+                    ferdigTid = barnehageliste.ferdigTid,
                     links =
                         ResponseLinker(
                             status = "/api/barnehagelister/status/$transaksjonsId",
