@@ -30,12 +30,20 @@ data class BarnInfolinje(
     val sluttdato: LocalDate?,
     val barn: Person,
     val foreldre: List<Person>,
-    val endringstype: String,
+    val endringstype: Endringstype,
 )
+
+enum class Endringstype {
+    STARTET,
+    ENDRET,
+    INGEN_ENDRING,
+    SLUTTET,
+}
 
 data class Person(
     val fodselsnummer: String,
-    val navn: String,
+    val fornavn: String,
+    val etternavn: String,
     val adresse: Adresse?,
 )
 
