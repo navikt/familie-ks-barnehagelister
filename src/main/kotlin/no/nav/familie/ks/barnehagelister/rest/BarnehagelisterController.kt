@@ -4,7 +4,6 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -29,7 +28,6 @@ class BarnehagelisterController(
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
     @PostMapping(path = ["/v1"])
-    @Unprotected
     fun mottaBarnehagelister(
         @RequestBody skjemaV1: SkjemaV1,
     ): ResponseEntity<BarnehagelisteResponse> {
@@ -68,7 +66,6 @@ class BarnehagelisterController(
     }
 
     @GetMapping(path = ["/status/{transaksjonsId}"])
-    @Unprotected
     fun status(
         @PathVariable transaksjonsId: UUID,
     ): ResponseEntity<BarnehagelisteResponse> {
