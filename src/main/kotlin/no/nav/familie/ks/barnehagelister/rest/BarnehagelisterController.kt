@@ -1,5 +1,10 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
@@ -27,6 +32,33 @@ class BarnehagelisterController(
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
+    @Operation(summary = "Motta barnehagelister")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "202",
+                description = "Mottatt og under behandling",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = BarnehagelisteResponse::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "200",
+                description = "Ferdig prosessert",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = BarnehagelisteResponse::class),
+                    ),
+                ],
+            ),
+            ApiResponse(responseCode = "400", description = "Ugyldig format"),
+            ApiResponse(responseCode = "500", description = "Intern feil"),
+        ],
+    )
     @PostMapping(path = ["/v1"])
     fun mottaBarnehagelister(
         @RequestBody skjemaV1: SkjemaV1,
@@ -65,6 +97,33 @@ class BarnehagelisterController(
         }
     }
 
+    @Operation(summary = "Hent status for barnehagelister")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Ferdig prosessert",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = BarnehagelisteResponse::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "202",
+                description = "Prosesseres",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = BarnehagelisteResponse::class),
+                    ),
+                ],
+            ),
+            ApiResponse(responseCode = "404", description = "Ikke funnet"),
+            ApiResponse(responseCode = "500", description = "Intern feil"),
+        ],
+    )
     @GetMapping(path = ["/status/{transaksjonsId}"])
     fun status(
         @PathVariable transaksjonsId: UUID,
