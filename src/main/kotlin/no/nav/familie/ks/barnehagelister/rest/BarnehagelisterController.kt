@@ -32,7 +32,7 @@ class BarnehagelisterController(
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisterController::class.java)
 
-    @Operation(summary = "Motta barnehagelister")
+    @Operation(summary = "Send inn barnehagelister")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -97,7 +97,7 @@ class BarnehagelisterController(
         }
     }
 
-    @Operation(summary = "Hent status for barnehagelister")
+    @Operation(summary = "Hent status for innsendt barnehageliste")
     @ApiResponses(
         value = [
             ApiResponse(
