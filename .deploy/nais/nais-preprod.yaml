@@ -51,6 +51,8 @@ spec:
           consumers:
             - name: "NAV"
               orgno: "889640782"
+            - name: "Visma Flyt AS"
+              orgno: "933287335"
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
