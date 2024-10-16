@@ -53,6 +53,8 @@ spec:
               orgno: "889640782"
             - name: "Visma Flyt AS"
               orgno: "933287335"
+            - name: "Visma Enterprise AS"
+              orgno: "982410339"
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
