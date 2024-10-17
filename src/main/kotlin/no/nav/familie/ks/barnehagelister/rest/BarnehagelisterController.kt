@@ -59,7 +59,11 @@ class BarnehagelisterController(
             ApiResponse(responseCode = "500", description = "Intern feil"),
         ],
     )
-    @PostMapping(path = ["/v1"])
+    @PostMapping(
+        path = ["/v1"],
+        produces = ["application/json;charset=UTF-8"],
+        consumes = ["application/json;charset=UTF-8"],
+    )
     fun mottaBarnehagelister(
         @RequestBody skjemaV1: SkjemaV1,
     ): ResponseEntity<BarnehagelisteResponse> {
@@ -124,7 +128,10 @@ class BarnehagelisterController(
             ApiResponse(responseCode = "500", description = "Intern feil"),
         ],
     )
-    @GetMapping(path = ["/status/{transaksjonsId}"])
+    @GetMapping(
+        path = ["/status/{transaksjonsId}"],
+        produces = ["application/json;charset=UTF-8"],
+    )
     fun status(
         @PathVariable transaksjonsId: UUID,
     ): ResponseEntity<BarnehagelisteResponse> {
@@ -149,7 +156,9 @@ class BarnehagelisterController(
         }
     }
 
-    @GetMapping(path = ["/ping"])
+    @GetMapping(
+        path = ["/ping"],
+    )
     fun ping(): ResponseEntity<String> {
         logger.info("Mottok ping")
         return ResponseEntity.ok("pong")
