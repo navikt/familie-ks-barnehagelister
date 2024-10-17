@@ -9,9 +9,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
-import org.springframework.boot.configurationprocessor.json.JSONObject
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -162,10 +160,9 @@ class BarnehagelisterController(
         path = ["/ping"],
         produces = ["application/json;charset=UTF-8"],
     )
-    @Unprotected
     fun ping(): String {
         logger.info("Mottok ping")
-        return JSONObject.quote("OK")
+        return "\"OK\""
     }
 
     data class BarnehagelisteResponse(
