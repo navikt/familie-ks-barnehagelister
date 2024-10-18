@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebConfig : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(MaskinportenTokenLoggingInterceptor())
+        registry.addInterceptor(MaskinportenTokenLoggingInterceptor()).addPathPatterns("/api/**")
         super.addInterceptors(registry)
     }
 }
