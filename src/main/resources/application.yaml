@@ -3,6 +3,9 @@ application.name: familie-ks-barnehagelister
 server.port: 8096
 
 spring:
+  mvc:
+    problemdetails:
+      enabled=true:
   autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   main:
     allow-bean-definition-overriding: true
@@ -18,7 +21,6 @@ spring:
       max-lifetime: 900000
       minimum-idle: 1
       data-source-properties.stringtype: unspecified # Nødvendig for å kunde sende en String til et json-felt i PostgresSql
-
 management:
   endpoint.health:
     show-details: always
