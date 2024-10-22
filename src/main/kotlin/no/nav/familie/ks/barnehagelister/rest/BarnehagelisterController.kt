@@ -1,5 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -68,6 +70,7 @@ class BarnehagelisterController(
         @RequestBody skjemaV1: SkjemaV1,
     ): ResponseEntity<BarnehagelisteResponse> {
         logger.info("Mottok skjema")
+        // val skjemaV1: SkjemaV1 = objectMapper.readValue(skjemaV1String, SkjemaV1::class.java)
 
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {
@@ -162,6 +165,7 @@ class BarnehagelisterController(
     )
     fun ping(): String {
         logger.info("Mottok ping")
+        error("Ping feilet")
         return "\"OK\""
     }
 
@@ -175,5 +179,16 @@ class BarnehagelisterController(
 
     data class ResponseLinker(
         val status: String,
+    )
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonPropertyOrder(value = ["melding", "path", "timestamp", "status", "error", "transaksjonsId"])
+    data class EksternTjenesteFeil(
+        val path: String,
+        val status: Int = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        var error: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR,
+        val melding: String,
+        val callId: String,
+        val timestamp: LocalDateTime = LocalDateTime.now(),
     )
 }
