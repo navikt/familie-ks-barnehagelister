@@ -8,6 +8,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
 import java.util.UUID
 
 @Service
@@ -16,9 +18,21 @@ class BarnehagelisteService(
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
-    fun mottaBarnehagelister(skjemaV1: SkjemaV1): ResponseEntity<BarnehagelisteResponse> {
-        logger.info("Mottok skjema")
-        // val skjemaV1: SkjemaV1 = objectMapper.readValue(skjemaV1String, SkjemaV1::class.java)
+    fun mottaBarnehagelister(
+        skjemaV1: SkjemaV1,
+        bindingResult: BindingResult,
+    ): ResponseEntity<BarnehagelisteResponse> {
+        if (bindingResult.hasErrors()) {
+            throw ValideringsfeilException(
+                bindingResult.allErrors.map {
+                    if (it is FieldError) {
+                        ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                    } else {
+                        ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                    }
+                },
+            )
+        }
 
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {

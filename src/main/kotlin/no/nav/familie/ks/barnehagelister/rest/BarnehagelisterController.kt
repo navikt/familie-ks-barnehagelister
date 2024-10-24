@@ -5,10 +5,11 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,7 +19,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"])
-@Validated
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
     @Operation(summary = "Send inn barnehagelister")
@@ -54,7 +54,8 @@ interface BarnehagelisterController {
         consumes = ["application/json;charset=UTF-8"],
     )
     fun mottaBarnehagelister(
-        @RequestBody skjemaV1: SkjemaV1,
+        @Valid @RequestBody skjemaV1: SkjemaV1,
+        bindingResult: BindingResult,
     ): ResponseEntity<BarnehagelisteResponse>
 
     @Operation(summary = "Hent status for innsendt barnehageliste")
@@ -109,4 +110,15 @@ data class BarnehagelisteResponse(
 
 data class ResponseLinker(
     val status: String,
+)
+
+class ValideringsfeilException(
+    errors: List<ValideringsfeilInfo>,
+) : RuntimeException() {
+    val errors = errors
+}
+
+data class ValideringsfeilInfo(
+    val parameter: String,
+    val detail: String,
 )
