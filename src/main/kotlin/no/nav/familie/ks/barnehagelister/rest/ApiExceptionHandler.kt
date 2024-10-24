@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.servlet.http.HttpServletRequest
+import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
 import no.nav.familie.prosessering.util.MDCConstants
 import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
@@ -46,6 +47,9 @@ class ApiExceptionHandler {
                     )
 
                 properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
+            }.apply {
+                logger.error("Ukjent server feil for ${this.properties }")
+                secureLogger.error("Ukjent server feil for ${this.properties }", e)
             }
 
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
@@ -75,12 +79,18 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.warn("Unauthorized ${this.properties }", e)
+                logger.info("Unauthorized for ${this.properties }")
+                secureLogger.error("Unauthorized for ${this.properties }", e)
             }
 
-    @ExceptionHandler(
-        value = [
-            HttpMessageNotReadableException::class,
+    @ApiResponse(
+        responseCode = "400",
+        description = "Bad request",
+        content = [
+            Content(
+                mediaType = "application/problem+json",
+                schema = Schema(implementation = ErrorResponse::class),
+            ),
         ],
     )
     @ApiResponse(
@@ -93,7 +103,13 @@ class ApiExceptionHandler {
             ),
         ],
     )
-    fun onConstraintViolation(
+    @ExceptionHandler(
+        value = [
+            HttpMessageNotReadableException::class,
+            ValideringsfeilException::class,
+        ],
+    )
+    fun onValideringsFeil(
         e: Exception,
         request: HttpServletRequest,
     ): ProblemDetail =
@@ -102,9 +118,27 @@ class ApiExceptionHandler {
             .apply {
                 type =
                     URI.create(
-                        "https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized",
+                        "https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError",
                     )
-                properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
+
+                when (e) {
+                    is HttpMessageNotReadableException -> {
+                        properties =
+                            mapOf(
+                                "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
+                            )
+                    }
+                    is ValideringsfeilException -> {
+                        properties =
+                            mapOf(
+                                "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
+                                "errors" to e.errors.map { it },
+                            )
+                    }
+                }
+            }.apply {
+                logger.info("ValidationError for ${this.properties }")
+                secureLogger.error("ValidationError for ${this.properties }", e)
             }
 }
 
@@ -115,4 +149,5 @@ class ErrorResponse(
     val instance: String,
     val type: URI,
     val callId: String,
+    val errors: List<ValideringsfeilInfo>?,
 )

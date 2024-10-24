@@ -2,6 +2,9 @@ package no.nav.familie.ks.barnehagelister.kontrakt
 
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import java.time.LocalDate
@@ -15,13 +18,13 @@ data class SkjemaV1(
         example = "19375e59-0f07-4c9b-a7bb-6f30fb43819b",
     )
     val id: UUID,
-    val barnehager: List<Barnehage>?,
-    val listeopplysninger: Listeopplysninger,
+    @field:Valid val barnehager: List<Barnehage>,
+    @field:NotNull @field:Valid val listeopplysninger: Listeopplysninger,
 )
 
 data class Listeopplysninger(
-    val kommunenavn: String,
-    val kommunenummer: String,
+    @field:NotBlank val kommunenavn: String,
+    @field:NotBlank val kommunenummer: String,
     @Schema(type = "string", format = "yearmonth", example = "2024-09") val innsendingGjelderArManed: YearMonth,
 )
 
@@ -29,19 +32,19 @@ data class Barnehage(
     @Schema(
         description = "Barnehagens navn",
     )
-    val navn: String,
+    @field:NotBlank val navn: String,
     @Schema(
         description = "Barnehagens organisasjonsnummer",
     )
-    val organisasjonsnummer: String,
+    @field:NotBlank val organisasjonsnummer: String,
     @Schema(
         description = "Barnehagens adresse",
     )
-    val adresse: Adresse?,
+    @field:Valid val adresse: Adresse?,
     @Schema(
         description = "Alle barn som er tildelt barnehageplass i barnehagen i gjeldende periode",
     )
-    val barnInfolinjer: List<BarnInfolinje>,
+    @field:Valid val barnInfolinjer: List<BarnInfolinje>,
 )
 
 data class BarnInfolinje(
@@ -86,22 +89,22 @@ data class Person(
         example = "12345678910",
         requiredMode = REQUIRED,
     )
-    val fodselsnummer: String,
+    @field:NotBlank val fodselsnummer: String,
     @Schema(
         description = "Fornavn",
         example = "Ola",
         requiredMode = REQUIRED,
     )
     @Size(max = 200, message = "Fornavn kan være maks 200 tegn.")
-    val fornavn: String,
+    @field:NotBlank val fornavn: String,
     @Schema(
         description = "Etternavn",
         example = "Nordmann",
         requiredMode = REQUIRED,
     )
     @Size(max = 200, message = "Etternavn kan være maks 200 tegn.")
-    val etternavn: String,
-    val adresse: Adresse?,
+    @field:NotBlank val etternavn: String,
+    @field:Valid val adresse: Adresse?,
 )
 
 data class Adresse(
@@ -126,9 +129,9 @@ data class Adresse(
         description = "Norsk postnummer, fire siffer",
         example = "0102",
     )
-    val postnummer: String,
+    @field:NotBlank val postnummer: String,
     @Schema(
         description = "Norsk poststed",
     )
-    val poststed: String,
+    @field:NotBlank val poststed: String,
 )

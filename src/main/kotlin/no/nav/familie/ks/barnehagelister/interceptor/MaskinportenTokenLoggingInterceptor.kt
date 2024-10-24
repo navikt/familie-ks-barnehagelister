@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.Metrics
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.security.token.support.core.jwt.JwtToken
 import no.nav.security.token.support.core.jwt.JwtTokenClaims
 import org.slf4j.LoggerFactory
@@ -44,7 +45,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
                     Pair(headerName, request.getHeader(headerName))
                 }
             }
-        SECURE_LOG.info("Request med ${request.requestURI } ${response.status} $headers")
+        secureLogger.info("Request med ${request.requestURI } ${response.status} $headers")
 
         val infoFraToken = hentInfoFraToken(request)
 
@@ -112,6 +113,5 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(MaskinportenTokenLoggingInterceptor::class.java)
-        private val SECURE_LOG = LoggerFactory.getLogger("secureLogger")
     }
 }

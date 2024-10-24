@@ -78,3 +78,5 @@ class ApplicationConfig {
         private val log = LoggerFactory.getLogger(ApplicationConfig::class.java)
     }
 }
+
+val secureLogger = LoggerFactory.getLogger("secureLogger")
