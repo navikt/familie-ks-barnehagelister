@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import java.net.URI
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -44,8 +45,36 @@ interface BarnehagelisterController {
                     ),
                 ],
             ),
-            ApiResponse(responseCode = "400", description = "Ugyldig format"),
-            ApiResponse(responseCode = "500", description = "Intern feil"),
+            ApiResponse(
+                responseCode = "400",
+                description = "Ugyldig format",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Intern feil",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
         ],
     )
     @PostMapping(
@@ -81,8 +110,36 @@ interface BarnehagelisterController {
                     ),
                 ],
             ),
-            ApiResponse(responseCode = "404", description = "Ikke funnet"),
-            ApiResponse(responseCode = "500", description = "Intern feil"),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Ikke funnet",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Intern feil",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
         ],
     )
     @GetMapping(
@@ -121,4 +178,14 @@ class ValideringsfeilException(
 data class ValideringsfeilInfo(
     val parameter: String,
     val detail: String,
+)
+
+class ProblemDetailMedCallIdOgErrors(
+    val status: Int,
+    val title: String,
+    val detail: String,
+    val instance: String,
+    val type: URI,
+    val callId: String,
+    val errors: List<ValideringsfeilInfo>?,
 )

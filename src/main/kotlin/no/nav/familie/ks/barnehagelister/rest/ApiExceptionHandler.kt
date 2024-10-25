@@ -1,8 +1,5 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
@@ -24,16 +21,6 @@ class ApiExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
 
     @ExceptionHandler(Exception::class)
-    @ApiResponse(
-        responseCode = "500",
-        description = "Internal Server Error",
-        content = [
-            Content(
-                mediaType = "application/problem+json",
-                schema = Schema(implementation = ErrorResponse::class),
-            ),
-        ],
-    )
     fun handleUkjentFeil(
         e: Exception,
         request: HttpServletRequest,
@@ -53,16 +40,6 @@ class ApiExceptionHandler {
             }
 
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
-    @ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized",
-        content = [
-            Content(
-                mediaType = "application/problem+json",
-                schema = Schema(implementation = ErrorResponse::class),
-            ),
-        ],
-    )
     fun onJwtTokenException(
         e: RuntimeException,
         request: HttpServletRequest,
@@ -83,26 +60,6 @@ class ApiExceptionHandler {
                 secureLogger.error("Unauthorized for ${this.properties }", e)
             }
 
-    @ApiResponse(
-        responseCode = "400",
-        description = "Bad request",
-        content = [
-            Content(
-                mediaType = "application/problem+json",
-                schema = Schema(implementation = ErrorResponse::class),
-            ),
-        ],
-    )
-    @ApiResponse(
-        responseCode = "400",
-        description = "Bad request",
-        content = [
-            Content(
-                mediaType = "application/problem+json",
-                schema = Schema(implementation = ErrorResponse::class),
-            ),
-        ],
-    )
     @ExceptionHandler(
         value = [
             HttpMessageNotReadableException::class,
@@ -141,13 +98,3 @@ class ApiExceptionHandler {
                 secureLogger.error("ValidationError for ${this.properties }", e)
             }
 }
-
-class ErrorResponse(
-    val status: Int,
-    val title: String,
-    val detail: String,
-    val instance: String,
-    val type: URI,
-    val callId: String,
-    val errors: List<ValideringsfeilInfo>?,
-)
