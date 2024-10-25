@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import java.net.URI
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -175,17 +174,53 @@ class ValideringsfeilException(
     val errors = errors
 }
 
+@Schema(
+    description = "Informasjon om valideringsfeil",
+)
 data class ValideringsfeilInfo(
+    @Schema(
+        description = "Hvilket felt som har valideringsfeil. Hvis info er ukjent, så er feltet satt til mangler",
+        example = "barnehager[0].navn",
+    )
     val parameter: String,
+    @Schema(
+        description = "Detalj om valideringsfeilen. Hvis man ikke har mer informasjon, så er feltet satt til mangler",
+        example = "must not be blank",
+    )
     val detail: String,
 )
 
+@Schema(description = "Problem Details med callId og errors. Basert på RFC 9457")
 class ProblemDetailMedCallIdOgErrors(
+    @Schema(
+        description = "HTTP statuskode",
+        example = "400",
+    )
     val status: Int,
+    @Schema(
+        description = "En kort beskrivelse av feilen",
+        example = "Bad request",
+    )
     val title: String,
+    @Schema(
+        description = "En lesbar beskrivelse av feilen",
+        example = "field must not be null",
+    )
     val detail: String,
+    @Schema(
+        description = "En URI referanse til endepunktet hvor feilen oppstod",
+        example = "/api/barnehagelister/v1",
+    )
     val instance: String,
-    val type: URI,
+    @Schema(
+        description = "En URI referanse til en spesifikk feiltype beskrevet på https://problems-registry.smartbear.com/",
+        example = "https://problems-registry.smartbear.com/validation-error/",
+    )
+    val type: String,
+    @Schema(
+        description = "En identifikator for feilen som kan brukes til å spore feilen ved senere henvendelser",
+        example = "57cf57cf06d84cc5883fc0a0a8804a7f",
+    )
     val callId: String,
     val errors: List<ValideringsfeilInfo>?,
 )

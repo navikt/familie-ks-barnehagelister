@@ -30,7 +30,7 @@ class ApiExceptionHandler {
             .apply {
                 type =
                     URI.create(
-                        "https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServerError",
+                        "https://problems-registry.smartbear.com/server-error/",
                     )
 
                 properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
@@ -49,7 +49,7 @@ class ApiExceptionHandler {
             .apply {
                 type =
                     URI.create(
-                        "https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized",
+                        "https://problems-registry.smartbear.com/unauthorized/",
                     )
                 properties =
                     mapOf(
@@ -75,7 +75,7 @@ class ApiExceptionHandler {
             .apply {
                 type =
                     URI.create(
-                        "https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError",
+                        "https://problems-registry.smartbear.com/validation-error/",
                     )
 
                 when (e) {
