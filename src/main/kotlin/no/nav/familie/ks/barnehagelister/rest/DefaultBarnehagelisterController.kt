@@ -3,6 +3,7 @@ package no.nav.familie.ks.barnehagelister.rest
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -11,8 +12,10 @@ import java.util.UUID
 class DefaultBarnehagelisterController(
     private val barnehagelisteService: BarnehagelisteService,
 ) : BarnehagelisterController {
-    override fun mottaBarnehagelister(skjemaV1: SkjemaV1): ResponseEntity<BarnehagelisteResponse> =
-        barnehagelisteService.mottaBarnehagelister(skjemaV1)
+    override fun mottaBarnehagelister(
+        skjemaV1: SkjemaV1,
+        bindingResult: BindingResult,
+    ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.mottaBarnehagelister(skjemaV1, bindingResult)
 
     override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
 
