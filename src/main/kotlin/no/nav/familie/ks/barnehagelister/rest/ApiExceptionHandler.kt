@@ -71,7 +71,7 @@ class ApiExceptionHandler {
         request: HttpServletRequest,
     ): ProblemDetail =
         ProblemDetail
-            .forStatusAndDetail(HttpStatus.BAD_REQUEST, e.message ?: "Bad request")
+            .forStatusAndDetail(HttpStatus.BAD_REQUEST, e.message ?: "Bad Request")
             .apply {
                 type =
                     URI.create(

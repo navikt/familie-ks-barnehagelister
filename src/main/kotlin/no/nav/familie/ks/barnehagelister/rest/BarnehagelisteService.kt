@@ -23,15 +23,15 @@ class BarnehagelisteService(
         bindingResult: BindingResult,
     ): ResponseEntity<BarnehagelisteResponse> {
         if (bindingResult.hasErrors()) {
-            throw ValideringsfeilException(
+            val feil =
                 bindingResult.allErrors.map {
                     if (it is FieldError) {
                         ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
                     } else {
                         ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
                     }
-                },
-            )
+                }
+            throw ValideringsfeilException(feil)
         }
 
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
@@ -67,7 +67,7 @@ class BarnehagelisteService(
     }
 
     fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> {
-        logger.info("Mottok status")
+        logger.info("Mottok status for transaksjonsId=$transaksjonsId")
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(transaksjonsId)
         return if (barnehageliste == null) {
             ResponseEntity.notFound().build()

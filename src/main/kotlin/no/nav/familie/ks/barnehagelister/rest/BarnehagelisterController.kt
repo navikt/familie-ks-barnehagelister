@@ -164,13 +164,19 @@ data class BarnehagelisteResponse(
     val links: ResponseLinker,
 )
 
+// enum class Status {
+//    MOTTATT,
+//    UNDER_BEHANDLING,
+//    FERDIG,
+// }
+
 data class ResponseLinker(
     val status: String,
 )
 
 class ValideringsfeilException(
     errors: List<ValideringsfeilInfo>,
-) : RuntimeException() {
+) : RuntimeException("Valideringsfeil") {
     val errors = errors
 }
 
