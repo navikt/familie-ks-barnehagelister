@@ -36,11 +36,11 @@ class BarnehagelisteService(
 
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {
-            val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, "MOTTATT"))
+            val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, BarnehagelisteStatus.MOTTATT))
             ResponseEntity.accepted().body(
                 BarnehagelisteResponse(
                     id = skjemaV1.id,
-                    status = "MOTTATT",
+                    status = BarnehagelisteStatus.MOTTATT,
                     mottattTid = innsendtListe.opprettetTid,
                     ferdigTid = innsendtListe.ferdigTid,
                     links =
