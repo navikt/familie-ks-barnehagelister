@@ -158,11 +158,16 @@ interface BarnehagelisterController {
 
 data class BarnehagelisteResponse(
     val id: UUID,
-    val status: String,
+    val status: BarnehagelisteStatus,
     val mottattTid: LocalDateTime,
     val ferdigTid: LocalDateTime?,
     val links: ResponseLinker,
 )
+
+enum class BarnehagelisteStatus {
+    MOTTATT,
+    FERDIG,
+}
 
 data class ResponseLinker(
     val status: String,
@@ -170,7 +175,7 @@ data class ResponseLinker(
 
 class ValideringsfeilException(
     errors: List<ValideringsfeilInfo>,
-) : RuntimeException() {
+) : RuntimeException("Valideringsfeil") {
     val errors = errors
 }
 

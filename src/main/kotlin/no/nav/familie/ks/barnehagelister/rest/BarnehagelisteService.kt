@@ -23,24 +23,24 @@ class BarnehagelisteService(
         bindingResult: BindingResult,
     ): ResponseEntity<BarnehagelisteResponse> {
         if (bindingResult.hasErrors()) {
-            throw ValideringsfeilException(
+            val feil =
                 bindingResult.allErrors.map {
                     if (it is FieldError) {
                         ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
                     } else {
                         ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
                     }
-                },
-            )
+                }
+            throw ValideringsfeilException(feil)
         }
 
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {
-            val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, "MOTTATT"))
+            val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, BarnehagelisteStatus.MOTTATT))
             ResponseEntity.accepted().body(
                 BarnehagelisteResponse(
                     id = skjemaV1.id,
-                    status = "MOTTATT",
+                    status = BarnehagelisteStatus.MOTTATT,
                     mottattTid = innsendtListe.opprettetTid,
                     ferdigTid = innsendtListe.ferdigTid,
                     links =
@@ -67,7 +67,7 @@ class BarnehagelisteService(
     }
 
     fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> {
-        logger.info("Mottok status")
+        logger.info("Mottok status for transaksjonsId=$transaksjonsId")
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(transaksjonsId)
         return if (barnehageliste == null) {
             ResponseEntity.notFound().build()
