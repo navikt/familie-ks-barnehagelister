@@ -55,6 +55,8 @@ spec:
               orgno: "933287335"
             - name: "Visma Enterprise AS"
               orgno: "982410339"
+            - name: "HUMAN DEDIKERT ISBJØRN SA"
+              orgno: "310028142"
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
