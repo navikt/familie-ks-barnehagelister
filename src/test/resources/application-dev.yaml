@@ -10,6 +10,6 @@ spring:
 prosessering:
   rolle: "928636f4-fd0d-4149-978e-a6fb68bb19de" # 0000-GA-STDAPPS
 
-MASKINPORTEN_WELL_KNOWN_URL: https://test.maskinporten.no/.well-known/oauth-authorization-server
+MASKINPORTEN_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 
