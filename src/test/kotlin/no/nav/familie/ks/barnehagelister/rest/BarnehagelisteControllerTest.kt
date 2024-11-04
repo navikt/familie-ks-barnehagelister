@@ -4,6 +4,7 @@ import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
 import no.nav.familie.ks.barnehagelister.kontrakt.Person
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,6 +30,7 @@ import java.nio.charset.Charset
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("dev")
 @ContextConfiguration(initializers = [DbContainerInitializer::class])
+@EnableMockOAuth2Server
 class BarnehagelisteControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
