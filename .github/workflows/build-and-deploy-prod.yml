@@ -21,6 +21,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
+            maven.pkg.github.com
             auth.docker.io:443
             collector-internet.external.prod-gcp.nav.cloud.nais.io:443
             deploy.nav.cloud.nais.io:443
