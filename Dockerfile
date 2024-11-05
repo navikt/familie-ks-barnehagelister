@@ -1,8 +1,5 @@
-FROM busybox:1.36.1-uclibc AS busybox
-
 # Final image
 FROM gcr.io/distroless/java21-debian12:nonroot
-COPY --from=busybox /bin/printenv /bin/printenv
 COPY --chown=nonroot:nonroot ./target/familie-ks-barnehagelister.jar /app/app.jar
 WORKDIR /app
 
