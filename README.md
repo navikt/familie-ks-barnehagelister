@@ -1,5 +1,10 @@
 # familie-ks-barnehagelister
 
+Eksternt API for å motta barnehagelister for Kontantstøtte.  
+Swagger:  
+[preprod](https://familie-ks-barnehagelister.ekstern.dev.nav.no/swagger-ui/index.html)  
+[prod](https://familie-ks-barnehagelister.nav.no/swagger-ui/index.html)
+
 ### Database
 
 #### Embedded database
@@ -41,7 +46,15 @@ Legg til databasen i Intellij:
 
 OBS: Pass på at du ikke kjører postgres lokalt på samme port (5432)
 
+### Testing av tjeneste i preprod
+For å teste tjenesten i preprod, så trenger man å få opprettet en maskinportentoken. Se dokumentasjon 
+på [nav-eksterne-api-dok](https://github.com/navikt/nav-ekstern-api-dok/blob/main/api-dok/teste-api/teste-api.md) for å 
+lage en konsument og for å generere nytt token. Hvis man velger en ny konsument, så må orgnr legges til i nais-preprod.yaml.
 
-## Kode generert av GitHub Copilot
 
+### Testing av tjenesten lokalt
+Lokalt kjører applikasjonen på port 8096. For å teste tjenesten lokalt, så kan man kjøre [DevLauncher](src/test/kotlin/no/nav/familie/ks/barnehagelister/DevLauncher.kt)  
+Link til [swagger](http://localhost:8096/swagger-ui/index.html) lokalt
+
+### Kode generert av GitHub Copilot
 Dette repoet bruker GitHub Copilot til å generere kode.
