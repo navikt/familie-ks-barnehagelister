@@ -3,6 +3,8 @@ package no.nav.familie.ks.barnehagelister.rest
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
+import no.nav.familie.ks.barnehagelister.task.MottattBarnehagelisteTask
+import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -15,6 +17,7 @@ import java.util.UUID
 @Service
 class BarnehagelisteService(
     private val barnehagelisterRepository: BarnehagelisterRepository,
+    val taskService: TaskService,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
@@ -37,18 +40,24 @@ class BarnehagelisteService(
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {
             val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, BarnehagelisteStatus.MOTTATT))
-            ResponseEntity.accepted().body(
-                BarnehagelisteResponse(
-                    id = skjemaV1.id,
-                    status = BarnehagelisteStatus.MOTTATT,
-                    mottattTid = innsendtListe.opprettetTid,
-                    ferdigTid = innsendtListe.ferdigTid,
-                    links =
-                        ResponseLinker(
-                            status = "/api/barnehagelister/status/${skjemaV1.id}",
-                        ),
-                ),
-            )
+            ResponseEntity
+                .accepted()
+                .body(
+                    BarnehagelisteResponse(
+                        id = skjemaV1.id,
+                        status = BarnehagelisteStatus.MOTTATT,
+                        mottattTid = innsendtListe.opprettetTid,
+                        ferdigTid = innsendtListe.ferdigTid,
+                        links =
+                            ResponseLinker(
+                                status = "/api/barnehagelister/status/${skjemaV1.id}",
+                            ),
+                    ),
+                ).also {
+                    MottattBarnehagelisteTask.opprettTask(skjemaV1.id).also {
+                        taskService.save(it)
+                    }
+                }
         } else {
             val httpStatusKode = if (barnehageliste.erFerdigProsessert()) HttpStatus.OK else HttpStatus.ACCEPTED
             ResponseEntity.status(httpStatusKode).body(
