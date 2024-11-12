@@ -124,7 +124,7 @@ interface BarnehagelisterController {
                 description = "Ikke funnet",
                 content = [
                     Content(
-                        mediaType = "application/problem+json",
+                        mediaType = "application/json",
                         schema = Schema(implementation = Void::class),
                     ),
                 ],
