@@ -125,7 +125,7 @@ interface BarnehagelisterController {
                 content = [
                     Content(
                         mediaType = "application/problem+json",
-                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                        schema = Schema(implementation = Void::class),
                     ),
                 ],
             ),
