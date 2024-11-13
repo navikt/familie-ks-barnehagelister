@@ -78,6 +78,9 @@ jobs:
       - name: Run Trivy vulnerability scanner
         if: github.event.pull_request.user.login != 'dependabot[bot]'
         uses: aquasecurity/trivy-action@master
+        env: # Workaround for rate limiting inntil denne er fikset: https://github.com/aquasecurity/trivy-action/issues/389
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db,aquasec/trivy-db,ghcr.io/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db,aquasec/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
         with:
           image-ref: '${{ steps.docker-push.outputs.image }}'
           format: 'sarif'
