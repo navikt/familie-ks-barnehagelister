@@ -45,6 +45,7 @@ jobs:
             sts.googleapis.com:443
             test.maskinporten.no:443
             tuf-repo-cdn.sigstore.dev:443
+            public.ecr.aws:443
 
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
