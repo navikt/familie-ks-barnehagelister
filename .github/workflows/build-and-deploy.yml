@@ -84,6 +84,7 @@ jobs:
         id: docker-push
         if: github.event.pull_request.user.login != 'dependabot[bot]'
         with:
+          pull: true # optional, default false
           team: teamfamilie
           push_image: true
           dockerfile: Dockerfile

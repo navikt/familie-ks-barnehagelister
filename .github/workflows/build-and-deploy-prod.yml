@@ -54,6 +54,7 @@ jobs:
       - uses: nais/docker-build-push@v0
         id: docker-push
         with:
+          pull: true # optional, default false
           team: teamfamilie
           push_image: true
           dockerfile: Dockerfile
