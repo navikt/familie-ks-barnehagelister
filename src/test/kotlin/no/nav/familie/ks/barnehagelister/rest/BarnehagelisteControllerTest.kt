@@ -4,6 +4,7 @@ import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
 import no.nav.familie.ks.barnehagelister.kontrakt.Person
+import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -36,7 +38,7 @@ class BarnehagelisteControllerTest {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun `GET ping  skal returnere 200 OK`() {
+    fun `GET ping skal returnere 200 OK`() {
         this.mockMvc
             .perform(get("/api/barnehagelister/ping"))
             .andExpect(status().isOk)
@@ -91,29 +93,11 @@ class BarnehagelisteControllerTest {
                         .copy(kommunenummer = " ", kommunenavn = " "),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
@@ -133,29 +117,11 @@ class BarnehagelisteControllerTest {
                         .copy(kommunenummer = "0x123", kommunenavn = "Oslo"),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
@@ -172,29 +138,11 @@ class BarnehagelisteControllerTest {
                     listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "", organisasjonsnummer = " ")),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
@@ -222,29 +170,11 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(6)
             .contains(
@@ -276,29 +206,11 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
@@ -331,29 +243,11 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
@@ -370,29 +264,11 @@ class BarnehagelisteControllerTest {
                     listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "Barnehagenavn", organisasjonsnummer = "03Z1245689")),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
@@ -420,29 +296,11 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
@@ -471,14 +329,13 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isAccepted)
+        this.mockMvc
+            .perform(
+                post("/api/barnehagelister/v1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-Correlation-Id", "callIdValue")
+                    .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
+            ).andExpect(status().isAccepted)
     }
 
     @Test
@@ -500,29 +357,11 @@ class BarnehagelisteControllerTest {
                     ),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
@@ -542,33 +381,41 @@ class BarnehagelisteControllerTest {
                         .copy(kommunenavn = "a".repeat(201)),
             )
 
-        val response =
-            this.mockMvc
-                .perform(
-                    post("/api/barnehagelister/v1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Correlation-Id", "callIdValue")
-                        .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
-                ).andExpect(status().isBadRequest)
-                .andExpect(content().contentType("application/problem+json"))
-                .andReturn()
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
 
-        val problemDetail =
-            objectMapper
-                .readValue<ProblemDetailMedCallIdOgErrors>(
-                    response.response.getContentAsString(Charset.forName("UTF-8")),
-                    ProblemDetailMedCallIdOgErrors::class.java,
-                )
+        val problemDetail = hentProblemDetail(response)
 
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
-        assertThat(problemDetail.title).isEqualTo("Bad Request")
-        assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
-        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+        assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
                 ValideringsfeilInfo("listeopplysninger.kommunenavn", "size must be between 1 and 200"),
             )
     }
+
+    private fun assertBadRequest(problemDetail: ProblemDetailMedCallIdOgErrors) {
+        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.title).isEqualTo("Bad Request")
+        assertThat(problemDetail.status).isEqualTo(400)
+        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
+        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+    }
+
+    private fun sendInvalidBarnehageliste(invalidBarnehageliste: SkjemaV1) =
+        this.mockMvc
+            .perform(
+                post("/api/barnehagelister/v1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-Correlation-Id", "callIdValue")
+                    .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
+            ).andExpect(status().isBadRequest)
+            .andExpect(content().contentType("application/problem+json"))
+            .andReturn()
+
+    private fun hentProblemDetail(response: MvcResult): ProblemDetailMedCallIdOgErrors =
+        objectMapper
+            .readValue(
+                response.response.getContentAsString(Charset.forName("UTF-8")),
+                ProblemDetailMedCallIdOgErrors::class.java,
+            )
 }
