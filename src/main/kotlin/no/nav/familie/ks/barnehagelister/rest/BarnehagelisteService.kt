@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import io.opentelemetry.api.trace.Span
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
@@ -25,6 +26,8 @@ class BarnehagelisteService(
         skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
     ): ResponseEntity<BarnehagelisteResponse> {
+        Span.current().setAttribute("transaksjonsId", skjemaV1.id.toString())
+
         if (bindingResult.hasErrors()) {
             val feil =
                 bindingResult.allErrors.map {
