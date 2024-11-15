@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.rest
 import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
 import no.nav.familie.ks.barnehagelister.kontrakt.BarnInfolinje
 import no.nav.familie.ks.barnehagelister.kontrakt.Barnehage
-import no.nav.familie.ks.barnehagelister.kontrakt.Endringstype
 import no.nav.familie.ks.barnehagelister.kontrakt.Listeopplysninger
 import no.nav.familie.ks.barnehagelister.kontrakt.Person
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
@@ -81,7 +80,6 @@ class BarnehagelisteTestdata {
                                 ),
                         ),
                     ),
-                endringstype = Endringstype.STARTET,
             )
 
         fun barnehagelistBlankeFelt(): SkjemaV1 =
@@ -142,7 +140,6 @@ class BarnehagelisteTestdata {
                                                         ),
                                                 ),
                                             ),
-                                        endringstype = Endringstype.STARTET,
                                     ),
                                 ),
                         ),

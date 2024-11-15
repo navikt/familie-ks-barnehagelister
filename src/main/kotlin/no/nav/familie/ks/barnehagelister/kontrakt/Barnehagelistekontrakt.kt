@@ -82,18 +82,7 @@ data class BarnInfolinje(
         description = "Den eller de barnet bor hos, bor barnet på institusjon er feltet tomt",
     )
     @field:Valid val foresatte: List<Person>?,
-    @Schema(
-        description = "Endringstype ",
-    )
-    val endringstype: Endringstype,
 )
-
-enum class Endringstype {
-    STARTET,
-    ENDRET,
-    INGEN_ENDRING,
-    SLUTTET,
-}
 
 data class Person(
     @Schema(
