@@ -43,6 +43,7 @@ spec:
     scopes:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
+          delegationSource: altinn
           enabled: true
           product: "familie"
           allowedIntegrations:

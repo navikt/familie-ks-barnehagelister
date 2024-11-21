@@ -44,6 +44,7 @@ spec:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
           enabled: true
+          delegationSource: altinn
           product: "familie"
           allowedIntegrations:
             - maskinporten
