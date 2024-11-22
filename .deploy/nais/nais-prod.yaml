@@ -49,6 +49,7 @@ spec:
           allowedIntegrations:
             - maskinporten
           atMaxAge: 680
+          separator: "/"
           consumers:
             - name: "NAV"
               orgno: "889640782"
