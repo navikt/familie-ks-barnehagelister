@@ -44,10 +44,12 @@ spec:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
           enabled: true
+          delegationSource: altinn
           product: "familie"
           allowedIntegrations:
             - maskinporten
           atMaxAge: 680
+          separator: "/"
           consumers:
             - name: "NAV"
               orgno: "889640782"

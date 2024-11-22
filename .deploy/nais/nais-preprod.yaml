@@ -43,11 +43,13 @@ spec:
     scopes:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
+          delegationSource: altinn
           enabled: true
           product: "familie"
           allowedIntegrations:
             - maskinporten
           atMaxAge: 680
+          separator: "/"
           consumers:
             - name: "NAV"
               orgno: "889640782"
