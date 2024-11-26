@@ -43,13 +43,13 @@ spec:
     scopes:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
-          enabled: true
+          separator: "/"
           delegationSource: altinn
+          enabled: true
           product: "familie"
           allowedIntegrations:
             - maskinporten
           atMaxAge: 680
-          separator: "/"
           accessibleForAll: true
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
