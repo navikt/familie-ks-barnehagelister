@@ -38,8 +38,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
                 if (headerName == "Authorization") {
                     Pair(
                         "Authorization",
-//                        request.getHeader(headerName)?.substring(0, 15),
-                        request.getHeader(headerName),
+                        request.getHeader(headerName)?.substring(0, 15),
                     )
                 } else {
                     Pair(headerName, request.getHeader(headerName))

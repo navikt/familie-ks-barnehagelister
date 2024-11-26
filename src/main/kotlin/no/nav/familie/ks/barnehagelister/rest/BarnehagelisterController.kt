@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import java.time.LocalDateTime
 import java.util.UUID
 
-@ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"])
+@ProtectedWithClaims(
+    issuer = "maskinporten",
+    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister", "supplier={authority=iso6523-actorid-upis, ID=0192:310028142}"],
+)
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
     @Operation(summary = "Send inn barnehagelister")
