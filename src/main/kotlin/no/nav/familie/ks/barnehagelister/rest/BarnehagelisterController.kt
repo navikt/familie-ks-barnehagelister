@@ -20,7 +20,7 @@ import java.util.UUID
 
 @ProtectedWithClaims(
     issuer = "maskinporten",
-    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister", "supplier={authority=iso6523-actorid-upis, ID=0192:310028142}"],
+    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister", "supplier=*"],
 )
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
