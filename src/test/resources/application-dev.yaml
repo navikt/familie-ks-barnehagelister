@@ -14,6 +14,7 @@ AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.w
 
 
 godkjente-leverandorer:
-  ider:
-    - "0192:310028142" # HUMAN DEDIKERT ISBJØRN SA
+  leverandorer:
+    - orgno: "0192:310028142"
+      navn: "HUMAN DEDIKERT ISBJØRN SA"
 

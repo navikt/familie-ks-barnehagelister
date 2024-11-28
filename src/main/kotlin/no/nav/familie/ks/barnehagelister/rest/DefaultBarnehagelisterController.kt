@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.rest
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -21,12 +20,16 @@ class DefaultBarnehagelisterController(
         bindingResult: BindingResult,
         request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse> {
-        val supplierId = request.hentSupplierId()
-        if (supplierId !in godkjenteLeverandører.ider) {
-            throw JwtTokenUnauthorizedException("Leverandør med orgnr ${supplierId.substringAfter(":")} er ikke en godkjent leverandør")
-        }
+        validerGodkjentLeverandør(request)
 
         return barnehagelisteService.mottaBarnehagelister(skjemaV1, bindingResult)
+    }
+
+    private fun validerGodkjentLeverandør(request: HttpServletRequest) {
+        val supplierId = request.hentSupplierId()
+        if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
+            throw UkjentLeverandørFeil("Leverandør med orgnr ${supplierId.substringAfter(":")} er ikke en godkjent leverandør")
+        }
     }
 
     override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)

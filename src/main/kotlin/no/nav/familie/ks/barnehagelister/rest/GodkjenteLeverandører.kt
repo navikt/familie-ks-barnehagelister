@@ -8,5 +8,14 @@ import org.springframework.stereotype.Component
 @Configuration
 @ConfigurationProperties(prefix = "godkjente-leverandorer")
 data class GodkjenteLeverandører(
-    var ider: List<String> = emptyList(),
+    var leverandorer: List<Leverandør> = emptyList(),
 )
+
+data class Leverandør(
+    var orgno: String = "",
+    var navn: String = "",
+)
+
+class UkjentLeverandørFeil(
+    message: String?,
+) : Exception(message)
