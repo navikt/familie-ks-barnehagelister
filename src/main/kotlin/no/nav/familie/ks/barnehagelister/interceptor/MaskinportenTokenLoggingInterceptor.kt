@@ -49,7 +49,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
         val infoFraToken = hentInfoFraToken(request)
 
         val melding = "[post-handle] $infoFraToken - ${request.method}: ${request.requestURI} (${response.status})"
-        val consumerId = hentConsumerId(request)
+        val consumerId = request.hentConsumerId()
 
         if (HttpStatus.valueOf(response.status).isError) {
             LOG.warn(melding)
@@ -66,7 +66,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
     }
 
     private fun hentInfoFraToken(request: HttpServletRequest): String {
-        val jwtClaims = hentClaims(request)
+        val jwtClaims = request.hentClaims()
 
         val clientId = jwtClaims?.get("client_id")
         val scope = jwtClaims?.get("scope")
@@ -77,40 +77,45 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
         return tokenData
     }
 
-    private fun hentConsumerId(request: HttpServletRequest): String {
-        val jwtClaims = hentClaims(request)
-
-        return if ((
-                jwtClaims?.get(
-                    "consumer",
-                ) as? Map<String, String>
-            )?.get(
-                "ID",
-            ) == null
-        ) {
-            "MANGLER"
-        } else {
-            (jwtClaims?.get("consumer") as? Map<String, String>)?.get("ID").toString()
-        }
-    }
-
-    private fun hentClaims(request: HttpServletRequest): JwtTokenClaims? {
-        val authorizationHeader = request.getHeader("Authorization")
-        val token =
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                authorizationHeader.substring(7)
-            } else {
-                null
-            }
-
-        if (token == null) {
-            return null
-        } else {
-            return JwtToken(token).jwtTokenClaims
-        }
-    }
-
     companion object {
         private val LOG = LoggerFactory.getLogger(MaskinportenTokenLoggingInterceptor::class.java)
+    }
+}
+
+fun HttpServletRequest.hentConsumerId(): String {
+    val jwtClaims = hentClaims()
+
+    val consumerId = (jwtClaims?.get("consumer") as? Map<String, String>)?.get("ID")
+    return if (consumerId == null) {
+        "MANGLER"
+    } else {
+        consumerId.toString()
+    }
+}
+
+fun HttpServletRequest.hentSupplierId(): String {
+    val jwtClaims = hentClaims()
+
+    val supplierId = (jwtClaims?.get("supplier") as? Map<String, String>)?.get("ID")
+    return if (supplierId == null) {
+        "MANGLER"
+    } else {
+        supplierId.toString()
+    }
+}
+
+fun HttpServletRequest.hentClaims(): JwtTokenClaims? {
+    val authorizationHeader = getHeader("Authorization")
+    val token =
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            authorizationHeader.substring(7)
+        } else {
+            null
+        }
+
+    if (token == null) {
+        return null
+    } else {
+        return JwtToken(token).jwtTokenClaims
     }
 }

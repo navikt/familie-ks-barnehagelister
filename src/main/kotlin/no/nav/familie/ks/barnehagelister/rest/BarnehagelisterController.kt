@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -20,7 +21,7 @@ import java.util.UUID
 
 @ProtectedWithClaims(
     issuer = "maskinporten",
-    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister", "supplier=*"],
+    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"],
 )
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
@@ -87,6 +88,7 @@ interface BarnehagelisterController {
     fun mottaBarnehagelister(
         @Valid @RequestBody skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
+        request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse>
 
     @Operation(summary = "Hent status for innsendt barnehageliste")

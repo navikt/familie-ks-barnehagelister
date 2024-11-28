@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/familie-ks-barnehagelister
@@ -12,4 +11,9 @@ prosessering:
 
 MASKINPORTEN_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
+
+
+godkjente-leverandorer:
+  ider:
+    - "0192:310028142" # HUMAN DEDIKERT ISBJØRN SA
 
