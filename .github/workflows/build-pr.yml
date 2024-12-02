@@ -4,6 +4,17 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review ]
 
 jobs:
+  avslutt-andre-workflows-samme-branch:
+    name: Avslutt andre workflows på samme branch
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
   ktlint:
     name: Ktlint
     runs-on: ubuntu-latest
