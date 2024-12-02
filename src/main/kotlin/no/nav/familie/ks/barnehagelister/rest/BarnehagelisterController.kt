@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import java.time.LocalDateTime
 import java.util.UUID
 
-@ProtectedWithClaims(issuer = "maskinporten", claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"])
+@ProtectedWithClaims(
+    issuer = "maskinporten",
+    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"],
+)
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
     @Operation(summary = "Send inn barnehagelister")
@@ -84,6 +88,7 @@ interface BarnehagelisterController {
     fun mottaBarnehagelister(
         @Valid @RequestBody skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
+        request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse>
 
     @Operation(summary = "Hent status for innsendt barnehageliste")
@@ -147,6 +152,7 @@ interface BarnehagelisterController {
     )
     fun status(
         @PathVariable transaksjonsId: UUID,
+        request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse>
 
     @GetMapping(

@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
@@ -17,10 +18,14 @@ class UnprotectedBarnehagelisteController(
     override fun mottaBarnehagelister(
         skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
+        request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.mottaBarnehagelister(skjemaV1, bindingResult)
 
     @Unprotected
-    override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
+    override fun status(
+        transaksjonsId: UUID,
+        request: HttpServletRequest,
+    ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
 
     @Unprotected
     override fun ping(): String = barnehagelisteService.ping()
