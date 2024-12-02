@@ -54,16 +54,3 @@ jobs:
           path: target/jacoco/UT/jacoco.xml
           retention-days: 1
           overwrite: true
-      - name: Dependabot metadata
-        if: github.event.pull_request.user.login == 'dependabot[bot]'
-        id: metadata
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Approve a PR
-        if: github.event.pull_request.user.login == 'dependabot[bot]'
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
