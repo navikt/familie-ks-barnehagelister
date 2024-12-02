@@ -44,7 +44,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
                     Pair(headerName, request.getHeader(headerName))
                 }
             }
-        secureLogger.info("Request med ${request.requestURI } ${response.status} $headers")
+        secureLogger.info("Request med ${request.requestURI} ${response.status} $headers")
 
         val infoFraToken = hentInfoFraToken(request)
 
@@ -96,11 +96,14 @@ fun HttpServletRequest.hentConsumerId(): String {
 fun HttpServletRequest.hentSupplierId(): String {
     val jwtClaims = hentClaims()
 
-    val supplierId = (jwtClaims?.get("supplier") as? Map<String, String>)?.get("ID")
-    return if (supplierId == null) {
+    val organisasjonsNummer =
+        (jwtClaims?.get("supplier") as? Map<String, String>)
+            ?.get("ID")
+            ?.substringAfter(":") // ID er på format 0192:<orgno>
+    return if (organisasjonsNummer == null) {
         "MANGLER"
     } else {
-        supplierId.toString()
+        organisasjonsNummer.toString()
     }
 }
 

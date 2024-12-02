@@ -13,6 +13,7 @@ import java.util.UUID
 @RestController
 class UnprotectedBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
+    private val godkjenteLeverandører: GodkjenteLeverandører,
 ) : BarnehagelisterController {
     @Unprotected
     override fun mottaBarnehagelister(

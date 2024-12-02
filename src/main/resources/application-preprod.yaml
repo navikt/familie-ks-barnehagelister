@@ -3,7 +3,7 @@ prosessering:
 
 godkjente-leverandorer:
   leverandorer:
-    - orgno: "0192:310028142"
+    - orgno: "310028142"
       navn: "HUMAN DEDIKERT ISBJØRN SA"
-    - orgno: "0192:982410339"
+    - orgno: "982410339"
       navn: "VISMA preprod-org"
