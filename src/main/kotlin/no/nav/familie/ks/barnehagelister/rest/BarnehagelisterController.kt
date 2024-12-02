@@ -152,6 +152,7 @@ interface BarnehagelisterController {
     )
     fun status(
         @PathVariable transaksjonsId: UUID,
+        request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse>
 
     @GetMapping(

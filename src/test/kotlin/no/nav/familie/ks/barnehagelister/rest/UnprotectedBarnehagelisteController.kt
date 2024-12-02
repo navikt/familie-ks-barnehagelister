@@ -13,7 +13,6 @@ import java.util.UUID
 @RestController
 class UnprotectedBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
-    private val godkjenteLeverandører: GodkjenteLeverandører,
 ) : BarnehagelisterController {
     @Unprotected
     override fun mottaBarnehagelister(
@@ -23,7 +22,10 @@ class UnprotectedBarnehagelisteController(
     ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.mottaBarnehagelister(skjemaV1, bindingResult)
 
     @Unprotected
-    override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
+    override fun status(
+        transaksjonsId: UUID,
+        request: HttpServletRequest,
+    ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
 
     @Unprotected
     override fun ping(): String = barnehagelisteService.ping()

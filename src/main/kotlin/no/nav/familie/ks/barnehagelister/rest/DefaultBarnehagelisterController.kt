@@ -36,7 +36,13 @@ class DefaultBarnehagelisterController(
         }
     }
 
-    override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
+    override fun status(
+        transaksjonsId: UUID,
+        request: HttpServletRequest,
+    ): ResponseEntity<BarnehagelisteResponse> {
+        validerGodkjentLeverandør(request)
+        return barnehagelisteService.status(transaksjonsId)
+    }
 
     override fun ping(): String = barnehagelisteService.ping()
 }
