@@ -35,8 +35,8 @@ class ApiExceptionHandler {
 
                 properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
             }.apply {
-                logger.error("Ukjent server feil for ${this.properties }")
-                secureLogger.error("Ukjent server feil for ${this.properties }", e)
+                logger.error("Ukjent server feil for ${this.properties}")
+                secureLogger.error("Ukjent server feil for ${this.properties}", e)
             }
 
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
@@ -56,8 +56,8 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.info("Unauthorized for ${this.properties }")
-                secureLogger.error("Unauthorized for ${this.properties }", e)
+                logger.info("Unauthorized for ${this.properties}")
+                secureLogger.error("Unauthorized for ${this.properties}", e)
             }
 
     @ExceptionHandler(
@@ -85,6 +85,7 @@ class ApiExceptionHandler {
                                 "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                             )
                     }
+
                     is ValideringsfeilException -> {
                         properties =
                             mapOf(
@@ -94,7 +95,28 @@ class ApiExceptionHandler {
                     }
                 }
             }.apply {
-                logger.info("ValidationError for ${this.properties }")
-                secureLogger.error("ValidationError for ${this.properties }", e)
+                logger.info("ValidationError for ${this.properties}")
+                secureLogger.error("ValidationError for ${this.properties}", e)
+            }
+
+    @ExceptionHandler(value = [UkjentLeverandørFeil::class])
+    fun onUkjentLeverandørFeil(
+        e: Exception,
+        request: HttpServletRequest,
+    ): ProblemDetail =
+        ProblemDetail
+            .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
+            .apply {
+                type =
+                    URI.create(
+                        "https://problems-registry.smartbear.com/forbidden/",
+                    )
+                properties =
+                    mapOf(
+                        "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
+                    )
+            }.apply {
+                logger.info("Kalte applikasjonen med en ukjent leverandør. ${this.properties}")
+                secureLogger.error("Kalte applikasjonen med en ukjent leverandør. ${this.properties}", e)
             }
 }
