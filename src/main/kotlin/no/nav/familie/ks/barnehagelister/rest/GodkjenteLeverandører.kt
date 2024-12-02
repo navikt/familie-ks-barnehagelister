@@ -12,8 +12,8 @@ data class GodkjenteLeverandører(
 )
 
 data class Leverandør(
-    var orgno: String = "",
-    var navn: String = "",
+    var orgno: String,
+    var navn: String,
 )
 
 class UkjentLeverandørFeil(
