@@ -32,7 +32,7 @@ fun HttpServletRequest.hentConsumerId(): String? {
     val jwtClaims = hentClaims()
 
     val consumerId = (jwtClaims?.get("consumer") as? Map<String, String>)?.get("ID")
-    return consumerId.toString()
+    return consumerId
 }
 
 fun HttpServletRequest.hentSupplierId(): String? {
@@ -42,7 +42,7 @@ fun HttpServletRequest.hentSupplierId(): String? {
         (jwtClaims?.get("supplier") as? Map<String, String>)
             ?.get("ID")
             ?.substringAfter(":") // ID er på format 0192:<orgno>
-    return organisasjonsNummer.toString()
+    return organisasjonsNummer
 }
 
 fun HttpServletRequest.hentClaims(): JwtTokenClaims? {

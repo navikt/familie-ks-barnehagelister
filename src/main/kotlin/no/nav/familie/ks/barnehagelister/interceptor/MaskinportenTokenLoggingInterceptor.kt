@@ -45,9 +45,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
             LOG.info(melding)
         }
 
-        if (!consumerIdCounters.containsKey(orgNo)) {
-            consumerIdCounters[orgNo] = Metrics.counter("maskinporten.token.consumer", "id", orgNo)
-        }
+        consumerIdCounters.putIfAbsent(orgNo, Metrics.counter("maskinporten.token.consumer", "id", orgNo))
         consumerIdCounters[orgNo]!!.increment()
 
         super.afterCompletion(request, response, handler, ex)

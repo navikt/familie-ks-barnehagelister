@@ -26,10 +26,7 @@ class DefaultBarnehagelisterController(
     }
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {
-        val supplierId = request.hentSupplierId()
-        if (supplierId == null) {
-            throw UkjentLeverandørFeil("No supplier in request.")
-        }
+        val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
 
         if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
             throw UkjentLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
