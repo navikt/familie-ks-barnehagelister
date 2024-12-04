@@ -25,12 +25,12 @@ import java.util.UUID
 )
 @RequestMapping("/api/barnehagelister")
 interface BarnehagelisterController {
-    @Operation(summary = "Send inn barnehagelister")
+    @Operation(summary = "Send in kindergarten list")
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "202",
-                description = "Mottatt og under behandling",
+                description = "Received and under processing",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -40,7 +40,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "200",
-                description = "Ferdig prosessert",
+                description = "Done processing",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -50,7 +50,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "400",
-                description = "Ugyldig format",
+                description = "Invalid format",
                 content = [
                     Content(
                         mediaType = "application/problem+json",
@@ -70,7 +70,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "500",
-                description = "Intern feil",
+                description = "Internal error",
                 content = [
                     Content(
                         mediaType = "application/problem+json",
@@ -91,12 +91,12 @@ interface BarnehagelisterController {
         request: HttpServletRequest,
     ): ResponseEntity<BarnehagelisteResponse>
 
-    @Operation(summary = "Hent status for innsendt barnehageliste")
+    @Operation(summary = "Get status for submitted kindergartnen list")
     @ApiResponses(
         value = [
             ApiResponse(
                 responseCode = "200",
-                description = "Ferdig prosessert",
+                description = "Done processing",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -106,7 +106,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "202",
-                description = "Prosesseres",
+                description = "Processing",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -126,7 +126,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "404",
-                description = "Ikke funnet",
+                description = "Not found",
                 content = [
                     Content(
                         mediaType = "application/json",
@@ -136,7 +136,7 @@ interface BarnehagelisterController {
             ),
             ApiResponse(
                 responseCode = "500",
-                description = "Intern feil",
+                description = "Internal error",
                 content = [
                     Content(
                         mediaType = "application/problem+json",
@@ -180,56 +180,58 @@ data class ResponseLinker(
 )
 
 class ValideringsfeilException(
-    errors: List<ValideringsfeilInfo>,
-) : RuntimeException("Valideringsfeil") {
-    val errors = errors
-}
+    val errors: List<ValideringsfeilInfo>,
+) : RuntimeException("Validation error")
 
 @Schema(
-    description = "Informasjon om valideringsfeil",
+    name = "ValidationErrorInformation",
+    description = "Information about validation errors",
 )
 data class ValideringsfeilInfo(
     @Schema(
-        description = "Hvilket felt som har valideringsfeil. Hvis info er ukjent, så er feltet satt til mangler",
+        description = "Which field has validation errors. If the info is unknown, then the field is set to missing",
         example = "barnehager[0].navn",
     )
     val parameter: String,
     @Schema(
-        description = "Detalj om valideringsfeilen. Hvis man ikke har mer informasjon, så er feltet satt til mangler",
+        description = "Details about the validation error. If no more information is available, the field is set to missing",
         example = "must not be blank",
     )
     val detail: String,
 )
 
-@Schema(description = "Problem Details med callId og errors. Basert på RFC 9457")
+@Schema(
+    name = "ProblemDetailWithCallIdOgErrors",
+    description = "Problem Details with callId and errors. Based on RFC 9457",
+)
 class ProblemDetailMedCallIdOgErrors(
     @Schema(
-        description = "HTTP statuskode",
+        description = "HTTP statuscode",
         example = "400",
     )
     val status: Int,
     @Schema(
-        description = "En kort beskrivelse av feilen",
+        description = "A short description of the error",
         example = "Bad request",
     )
     val title: String,
     @Schema(
-        description = "En lesbar beskrivelse av feilen",
+        description = "A readable description of the error",
         example = "field must not be null",
     )
     val detail: String,
     @Schema(
-        description = "En URI referanse til endepunktet hvor feilen oppstod",
+        description = "A URI reference to the endpoint where the error occurred",
         example = "/api/barnehagelister/v1",
     )
     val instance: String,
     @Schema(
-        description = "En URI referanse til en spesifikk feiltype beskrevet på https://problems-registry.smartbear.com/",
+        description = "A URI reference to a specific error type described at https://problems-registry.smartbear.com/",
         example = "https://problems-registry.smartbear.com/validation-error/",
     )
     val type: String,
     @Schema(
-        description = "En identifikator for feilen som kan brukes til å spore feilen ved senere henvendelser",
+        description = "An identifier for the error that can be used to track the error in later inquiries",
         example = "57cf57cf06d84cc5883fc0a0a8804a7f",
     )
     val callId: String,
