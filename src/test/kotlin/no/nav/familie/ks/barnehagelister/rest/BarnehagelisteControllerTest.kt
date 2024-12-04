@@ -125,8 +125,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Kommunenummer må ha 4 tall"),
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Kommunenummer må være et numerisk felt"),
+                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Municipality number must have 4 digits"),
+                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Municipality number must be a numeric field"),
             )
     }
 
@@ -251,8 +251,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Fødselsnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Fødselsnummer må ha 11 tall"),
+                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Social Security Number must be a numeric field"),
+                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Social Security Number must have 11 digits"),
             )
     }
 
@@ -272,8 +272,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "organisasjonsnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "organisasjonsnummer må ha 9 tall"),
+                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "Organization number must be a numeric field"),
+                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "Organization number must have 9 digits"),
             )
     }
 
@@ -304,8 +304,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "postnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "postnummer må ha 4 tall"),
+                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Postal code must be a numeric field"),
+                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Postal code must have 4 digits"),
             )
     }
 
@@ -365,8 +365,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "H, L, U eller K etterfult av 4 siffer"),
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "bruksenhetsnummer må ha 5 tegn"),
+                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "H, L, U, or K followed by 4 digits"),
+                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "Unit number must have 5 characters"),
             )
     }
 

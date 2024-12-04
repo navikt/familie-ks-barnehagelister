@@ -164,5 +164,6 @@ data class Adresse(
         name = "postalTown",
         description = "Norwegian city name",
     )
-    @field:NotBlank val poststed: String,
+    @field:NotBlank
+    val poststed: String,
 )
