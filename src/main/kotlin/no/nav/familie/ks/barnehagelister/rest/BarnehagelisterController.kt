@@ -164,15 +164,22 @@ interface BarnehagelisterController {
 
 data class BarnehagelisteResponse(
     val id: UUID,
-    val status: BarnehagelisteStatus,
+    val status: BarnehagelisteStatusEngelsk,
     val mottattTid: LocalDateTime,
     val ferdigTid: LocalDateTime?,
     val links: ResponseLinker,
 )
 
-enum class BarnehagelisteStatus {
-    MOTTATT,
-    FERDIG,
+enum class BarnehagelisteStatus(
+    val engelsk: BarnehagelisteStatusEngelsk,
+) {
+    MOTTATT(BarnehagelisteStatusEngelsk.RECEIVED),
+    FERDIG(BarnehagelisteStatusEngelsk.DONE),
+}
+
+enum class BarnehagelisteStatusEngelsk {
+    RECEIVED,
+    DONE,
 }
 
 data class ResponseLinker(

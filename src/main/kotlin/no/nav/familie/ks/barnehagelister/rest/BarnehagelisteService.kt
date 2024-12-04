@@ -45,7 +45,7 @@ class BarnehagelisteService(
                 .body(
                     BarnehagelisteResponse(
                         id = skjemaV1.id,
-                        status = BarnehagelisteStatus.MOTTATT,
+                        status = BarnehagelisteStatus.MOTTATT.engelsk,
                         mottattTid = innsendtListe.opprettetTid,
                         ferdigTid = innsendtListe.ferdigTid,
                         links =
@@ -63,7 +63,7 @@ class BarnehagelisteService(
             ResponseEntity.status(httpStatusKode).body(
                 BarnehagelisteResponse(
                     id = skjemaV1.id,
-                    status = barnehageliste.status,
+                    status = barnehageliste.status.engelsk,
                     mottattTid = barnehageliste.opprettetTid,
                     ferdigTid = barnehageliste.ferdigTid,
                     links =
@@ -85,7 +85,7 @@ class BarnehagelisteService(
             ResponseEntity.status(httpStatusKode).body(
                 BarnehagelisteResponse(
                     id = transaksjonsId,
-                    status = barnehageliste.status,
+                    status = barnehageliste.status.engelsk,
                     mottattTid = barnehageliste.opprettetTid,
                     ferdigTid = barnehageliste.ferdigTid,
                     links =
