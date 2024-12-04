@@ -177,6 +177,7 @@ enum class BarnehagelisteStatus(
     FERDIG(BarnehagelisteStatusEngelsk.DONE),
 }
 
+
 enum class BarnehagelisteStatusEngelsk {
     RECEIVED,
     DONE,

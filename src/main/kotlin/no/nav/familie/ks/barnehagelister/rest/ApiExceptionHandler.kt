@@ -26,7 +26,7 @@ class ApiExceptionHandler {
         request: HttpServletRequest,
     ): ProblemDetail =
         ProblemDetail
-            .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Ukjent feil")
+            .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Unknown error")
             .apply {
                 type =
                     URI.create(

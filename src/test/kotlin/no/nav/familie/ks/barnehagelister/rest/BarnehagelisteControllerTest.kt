@@ -57,7 +57,7 @@ class BarnehagelisteControllerTest {
             ).andExpect(status().isAccepted)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
-            .andExpect(jsonPath("status").value("MOTTATT"))
+            .andExpect(jsonPath("status").value("RECEIVED"))
             .andExpect(jsonPath("mottattTid").isNotEmpty)
             .andExpect(jsonPath("ferdigTid").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
@@ -76,7 +76,7 @@ class BarnehagelisteControllerTest {
             .andExpect(status().isAccepted)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
-            .andExpect(jsonPath("status").value("MOTTATT"))
+            .andExpect(jsonPath("status").value("RECEIVED"))
             .andExpect(jsonPath("mottattTid").isNotEmpty)
             .andExpect(jsonPath("ferdigTid").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
@@ -397,7 +397,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
+        assertThat(problemDetail.detail).isEqualTo("Validation error")
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
