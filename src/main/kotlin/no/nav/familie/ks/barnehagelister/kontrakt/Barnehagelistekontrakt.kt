@@ -64,7 +64,7 @@ data class Barnehage(
 data class BarnInfolinje(
     @Schema(
         name = "agreedHoursInKindergarten",
-        description = "Number of hours per week the child has agreed to stay in the kindergarten",
+        description = "Number of hours per week it is agreed upon that the child will stay in the kindergarten",
         example = "37.5",
     )
     val avtaltOppholdstidTimer: Double,
@@ -152,13 +152,13 @@ data class Adresse(
     @field:Size(min = 1, max = 200)
     val adresselinje2: String?,
     @Schema(
-        name = "postalNumber",
-        description = "Norwegian postal code, four digits",
+        name = "zipCode",
+        description = "Norwegian zip code, four digits",
         example = "0102",
     )
     @field:NotBlank
-    @field:Size(min = 4, max = 4, message = "Postal code must have 4 digits")
-    @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Postal code must be a numeric field")
+    @field:Size(min = 4, max = 4, message = "Zip code must have 4 digits")
+    @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Zip code must be a numeric field")
     val postnummer: String,
     @Schema(
         name = "postalTown",
