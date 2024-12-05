@@ -162,10 +162,13 @@ interface BarnehagelisterController {
     fun ping(): String
 }
 
+@Schema(name = "KindergartenListResponse")
 data class BarnehagelisteResponse(
     val id: UUID,
     val status: BarnehagelisteStatusEngelsk,
+    @Schema(name = "ReceivedTime")
     val mottattTid: LocalDateTime,
+    @Schema(name = "FinishedTime")
     val ferdigTid: LocalDateTime?,
     val links: ResponseLinker,
 )
@@ -182,6 +185,7 @@ enum class BarnehagelisteStatusEngelsk {
     DONE,
 }
 
+@Schema(name = "ResponseLinks")
 data class ResponseLinker(
     val status: String,
 )
@@ -208,7 +212,7 @@ data class ValideringsfeilInfo(
 )
 
 @Schema(
-    name = "ProblemDetailWithCallIdOgErrors",
+    name = "ProblemDetailWithCallIdAndErrors",
     description = "Problem Details with callId and errors. Based on RFC 9457",
 )
 class ProblemDetailMedCallIdOgErrors(

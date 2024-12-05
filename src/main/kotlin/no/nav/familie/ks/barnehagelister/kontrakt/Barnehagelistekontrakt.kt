@@ -26,6 +26,7 @@ data class SkjemaV1(
     @field:Valid val listeopplysninger: Listeopplysninger,
 )
 
+@Schema(name = "ListInformation")
 data class Listeopplysninger(
     @Schema(name = "municipalityName")
     @field:NotBlank
@@ -40,6 +41,7 @@ data class Listeopplysninger(
     val innsendingGjelderArManed: YearMonth,
 )
 
+@Schema(name = "Kindergarten")
 data class Barnehage(
     @Schema(name = "name", description = "Name of the kindergarten")
     @field:NotBlank
@@ -54,13 +56,14 @@ data class Barnehage(
     @field:Valid
     val adresse: Adresse?,
     @Schema(
-        name = "childInformation",
+        name = "childrenInformation",
         description = "All children assigned a place in the kindergarten during the relevant period",
     )
     @field:Valid
     val barnInfolinjer: List<BarnInfolinje>,
 )
 
+@Schema(name = "ChildInformation")
 data class BarnInfolinje(
     @Schema(
         name = "agreedHoursInKindergarten",
