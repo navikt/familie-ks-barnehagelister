@@ -304,8 +304,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Postal code must be a numeric field"),
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Postal code must have 4 digits"),
+                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Zip code must be a numeric field"),
+                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Zip code must have 4 digits"),
             )
     }
 
