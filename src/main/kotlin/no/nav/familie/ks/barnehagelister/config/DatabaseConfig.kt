@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.config
 
 import no.nav.familie.kontrakter.felles.objectMapper
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.prosessering.PropertiesWrapperTilStringConverter
 import no.nav.familie.prosessering.StringTilPropertiesWrapperConverter
 import org.postgresql.util.PGobject

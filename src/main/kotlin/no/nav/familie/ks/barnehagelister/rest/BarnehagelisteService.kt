@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.task.MottattBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService

@@ -2,9 +2,9 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
-import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
-import no.nav.familie.ks.barnehagelister.kontrakt.Person
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import no.nav.familie.ks.barnehagelister.kontrakt.Address
+import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
+import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -65,7 +65,7 @@ class BarnehagelisteControllerTest {
 
     @Test
     fun `POST gyldig barnehagelister uten barnehager skal returnere 202 OK`() {
-        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(barnehager = null)
+        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(kindergartens = null)
         this.mockMvc
             .perform(
                 post("/api/barnehagelister/v1")
@@ -86,11 +86,11 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i listeopplysninger ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenummer = " ", kommunenavn = " "),
+                        .listInformation
+                        .copy(municipalityNumber = " ", municipalityName = " "),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -110,11 +110,11 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at at kommunenummer er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenummer = "0x123", kommunenavn = "Oslo"),
+                        .listInformation
+                        .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -134,8 +134,8 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Barnehage ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "", organisasjonsnummer = " ")),
+                kindergartens =
+                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "", organizationNumber = " ")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -155,16 +155,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Adresse ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = " ",
-                                    adresselinje1 = " ",
-                                    adresselinje2 = " ",
-                                    postnummer = " ",
-                                    poststed = " ",
+                            address =
+                                Address(
+                                    unitNumber = " ",
+                                    addressLine1 = " ",
+                                    addressLine2 = " ",
+                                    zipCode = " ",
+                                    postalTown = " ",
                                 ),
                         ),
                     ),
@@ -187,18 +187,18 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Person ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
                                     BarnehagelisteTestdata.lagBarninfolinje().copy(
-                                        barn =
-                                            Person(
-                                                fornavn = " ",
-                                                fodselsnummer = " ",
-                                                etternavn = " ",
-                                                adresse = null,
+                                        child =
+                                            PersonDTO(
+                                                firstName = " ",
+                                                socialSecurityNumber = " ",
+                                                lastName = " ",
+                                                address = null,
                                             ),
                                     ),
                                 ),
@@ -224,18 +224,18 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - Fødselsnummer må være 11 tegn og numerisk`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
                                     BarnehagelisteTestdata.lagBarninfolinje().copy(
-                                        barn =
-                                            Person(
-                                                fornavn = "Ola Ola",
-                                                fodselsnummer = "02011212345A",
-                                                etternavn = "Nordmann",
-                                                adresse = null,
+                                        child =
+                                            PersonDTO(
+                                                firstName = "Ola Ola",
+                                                socialSecurityNumber = "02011212345A",
+                                                lastName = "Nordmann",
+                                                address = null,
                                             ),
                                     ),
                                 ),
@@ -260,8 +260,8 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at organisasjonsnummer er 9 tall`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "Barnehagenavn", organisasjonsnummer = "03Z1245689")),
+                kindergartens =
+                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -281,16 +281,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at postnummer er 4 numeriske tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "H0101",
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "Z12456",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = "H0101",
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "Z12456",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -314,16 +314,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider gyldig bruksnummer`(bruksnummer: String) {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = bruksnummer,
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "0102",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = bruksnummer,
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "0102",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -342,16 +342,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at ugylidg bruksnummer gir valideringsfeil`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "A056230101",
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "0102",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = "A056230101",
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "0102",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -374,11 +374,11 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenavn = "a".repeat(201)),
+                        .listInformation
+                        .copy(municipalityName = "a".repeat(201)),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -401,7 +401,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
-    private fun sendInvalidBarnehageliste(invalidBarnehageliste: SkjemaV1) =
+    private fun sendInvalidBarnehageliste(invalidBarnehageliste: FormV1) =
         this.mockMvc
             .perform(
                 post("/api/barnehagelister/v1")
