@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.mapTilSkjemaV1
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
+import no.nav.familie.ks.barnehagelister.kontrakt.KindergartenlistResponse
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -20,7 +21,7 @@ class DefaultBarnehagelisterController(
         formV1: FormV1,
         bindingResult: BindingResult,
         request: HttpServletRequest,
-    ): ResponseEntity<BarnehagelisteResponse> {
+    ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
         return barnehagelisteService.mottaBarnehagelister(formV1.mapTilSkjemaV1(), bindingResult)
@@ -37,7 +38,7 @@ class DefaultBarnehagelisterController(
     override fun status(
         transaksjonsId: UUID,
         request: HttpServletRequest,
-    ): ResponseEntity<BarnehagelisteResponse> {
+    ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
         return barnehagelisteService.status(transaksjonsId)
     }

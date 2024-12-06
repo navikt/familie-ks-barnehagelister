@@ -2,6 +2,9 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
+import no.nav.familie.ks.barnehagelister.kontrakt.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.kontrakt.KindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.kontrakt.ResponseLinks
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.task.MottattBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService
@@ -24,7 +27,7 @@ class BarnehagelisteService(
     fun mottaBarnehagelister(
         skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
-    ): ResponseEntity<BarnehagelisteResponse> {
+    ): ResponseEntity<KindergartenlistResponse> {
         if (bindingResult.hasErrors()) {
             val feil =
                 bindingResult.allErrors.map {
@@ -43,13 +46,13 @@ class BarnehagelisteService(
             ResponseEntity
                 .accepted()
                 .body(
-                    BarnehagelisteResponse(
+                    KindergartenlistResponse(
                         id = skjemaV1.id,
                         status = BarnehagelisteStatus.MOTTATT.engelsk,
-                        mottattTid = innsendtListe.opprettetTid,
-                        ferdigTid = innsendtListe.ferdigTid,
+                        receivedTime = innsendtListe.opprettetTid,
+                        finishedTime = innsendtListe.ferdigTid,
                         links =
-                            ResponseLinker(
+                            ResponseLinks(
                                 status = "/api/barnehagelister/status/${skjemaV1.id}",
                             ),
                     ),
@@ -61,13 +64,13 @@ class BarnehagelisteService(
         } else {
             val httpStatusKode = if (barnehageliste.erFerdigProsessert()) HttpStatus.OK else HttpStatus.ACCEPTED
             ResponseEntity.status(httpStatusKode).body(
-                BarnehagelisteResponse(
+                KindergartenlistResponse(
                     id = skjemaV1.id,
                     status = barnehageliste.status.engelsk,
-                    mottattTid = barnehageliste.opprettetTid,
-                    ferdigTid = barnehageliste.ferdigTid,
+                    receivedTime = barnehageliste.opprettetTid,
+                    finishedTime = barnehageliste.ferdigTid,
                     links =
-                        ResponseLinker(
+                        ResponseLinks(
                             status = "/api/barnehagelister/status/${skjemaV1.id}",
                         ),
                 ),
@@ -75,7 +78,7 @@ class BarnehagelisteService(
         }
     }
 
-    fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> {
+    fun status(transaksjonsId: UUID): ResponseEntity<KindergartenlistResponse> {
         logger.info("Mottok status for transaksjonsId=$transaksjonsId")
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(transaksjonsId)
         return if (barnehageliste == null) {
@@ -83,13 +86,13 @@ class BarnehagelisteService(
         } else {
             val httpStatusKode = if (barnehageliste.erFerdigProsessert()) HttpStatus.OK else HttpStatus.ACCEPTED
             ResponseEntity.status(httpStatusKode).body(
-                BarnehagelisteResponse(
+                KindergartenlistResponse(
                     id = transaksjonsId,
                     status = barnehageliste.status.engelsk,
-                    mottattTid = barnehageliste.opprettetTid,
-                    ferdigTid = barnehageliste.ferdigTid,
+                    receivedTime = barnehageliste.opprettetTid,
+                    finishedTime = barnehageliste.ferdigTid,
                     links =
-                        ResponseLinker(
+                        ResponseLinks(
                             status = "/api/barnehagelister/status/$transaksjonsId",
                         ),
                 ),

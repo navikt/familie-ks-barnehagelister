@@ -16,7 +16,7 @@ class SwaggerDocumentationConfig {
     @Bean
     fun openApi(): OpenAPI =
         OpenAPI()
-            .info(Info().title("Innsending av barnehagelister for Kontantstøtte").version("1.0.0"))
+            .info(Info().title("Submission of kindergarten lists for Kontantstøtte").version("1.0.0"))
             .components(Components().addSecuritySchemes(bearer, bearerTokenSecurityScheme()))
             .addSecurityItem(SecurityRequirement().addList(bearer, listOf("read", "write")))
 
