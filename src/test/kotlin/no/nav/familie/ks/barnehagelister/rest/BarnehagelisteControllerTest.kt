@@ -58,8 +58,8 @@ class BarnehagelisteControllerTest {
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
             .andExpect(jsonPath("status").value("RECEIVED"))
-            .andExpect(jsonPath("mottattTid").isNotEmpty)
-            .andExpect(jsonPath("ferdigTid").value(null))
+            .andExpect(jsonPath("receivedTime").isNotEmpty)
+            .andExpect(jsonPath("finishedTime").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
     }
 
@@ -77,8 +77,8 @@ class BarnehagelisteControllerTest {
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
             .andExpect(jsonPath("status").value("RECEIVED"))
-            .andExpect(jsonPath("mottattTid").isNotEmpty)
-            .andExpect(jsonPath("ferdigTid").value(null))
+            .andExpect(jsonPath("receivedTime").isNotEmpty)
+            .andExpect(jsonPath("finishedTime").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
     }
 

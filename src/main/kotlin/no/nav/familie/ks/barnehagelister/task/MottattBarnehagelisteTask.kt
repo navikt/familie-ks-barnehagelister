@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import no.nav.familie.ks.barnehagelister.kontrakt.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
-import no.nav.familie.ks.barnehagelister.rest.BarnehagelisteStatus
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
 import no.nav.familie.prosessering.domene.Task
