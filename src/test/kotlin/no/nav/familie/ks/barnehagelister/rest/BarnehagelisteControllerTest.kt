@@ -83,7 +83,7 @@ class BarnehagelisteControllerTest {
     }
 
     @Test
-    fun `POST barnehageliste - valider at String i listeopplysninger ikke er blanke`() {
+    fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 listInformation =
@@ -101,13 +101,13 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenavn", "must not be blank"),
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
             )
     }
 
     @Test
-    fun `POST barnehageliste - valider at at kommunenummer er 4 siffer`() {
+    fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 listInformation =
@@ -125,8 +125,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Municipality number must have 4 digits"),
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Municipality number must be a numeric field"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must have 4 digits"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must be a numeric field"),
             )
     }
 
@@ -146,8 +146,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo("barnehager[0].navn", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].name", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "must not be blank"),
             )
     }
 
@@ -178,8 +178,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(6)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].adresse.poststed", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].address.postalTown", "must not be blank"),
             )
     }
 
@@ -214,9 +214,9 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.etternavn", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fornavn", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.socialSecurityNumber", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.firstName", "must not be blank"),
             )
     }
 
@@ -251,8 +251,14 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Social Security Number must be a numeric field"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Social Security Number must have 11 digits"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
+                    "Social Security Number must be a numeric field",
+                ),
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
+                    "Social Security Number must have 11 digits",
+                ),
             )
     }
 
@@ -272,8 +278,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "Organization number must be a numeric field"),
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "Organization number must have 9 digits"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must be a numeric field"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must have 9 digits"),
             )
     }
 
@@ -304,14 +310,14 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Zip code must be a numeric field"),
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "Zip code must have 4 digits"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must be a numeric field"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must have 4 digits"),
             )
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["H0101", "U1234", "L5423", "K0123"])
-    fun `POST barnehageliste - valider gyldig bruksnummer`(bruksnummer: String) {
+    fun `POST barnehageliste - valider gyldig bruksenhetnummer`(bruksenhetnummer: String) {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
@@ -319,7 +325,7 @@ class BarnehagelisteControllerTest {
                         BarnehagelisteTestdata.lagBarnehage().copy(
                             address =
                                 Address(
-                                    unitNumber = bruksnummer,
+                                    unitNumber = bruksenhetnummer,
                                     addressLine1 = "1",
                                     addressLine2 = null,
                                     zipCode = "0102",
@@ -339,7 +345,7 @@ class BarnehagelisteControllerTest {
     }
 
     @Test
-    fun `POST barnehageliste - valider at ugylidg bruksnummer gir valideringsfeil`() {
+    fun `POST barnehageliste - valider at ugylidg bruksenhetnummer gir valideringsfeil`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
@@ -365,8 +371,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "H, L, U, or K followed by 4 digits"),
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "Unit number must have 5 characters"),
+                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "H, L, U, or K followed by 4 digits"),
+                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "Unit number must have 5 characters"),
             )
     }
 
@@ -389,7 +395,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenavn", "size must be between 1 and 200"),
+                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
             )
     }
 
