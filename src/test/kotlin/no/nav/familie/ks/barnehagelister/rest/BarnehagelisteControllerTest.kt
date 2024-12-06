@@ -2,9 +2,9 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
-import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
-import no.nav.familie.ks.barnehagelister.kontrakt.Person
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import no.nav.familie.ks.barnehagelister.kontrakt.Address
+import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
+import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -57,15 +57,15 @@ class BarnehagelisteControllerTest {
             ).andExpect(status().isAccepted)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
-            .andExpect(jsonPath("status").value("MOTTATT"))
-            .andExpect(jsonPath("mottattTid").isNotEmpty)
-            .andExpect(jsonPath("ferdigTid").value(null))
+            .andExpect(jsonPath("status").value("RECEIVED"))
+            .andExpect(jsonPath("receivedTime").isNotEmpty)
+            .andExpect(jsonPath("finishedTime").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
     }
 
     @Test
     fun `POST gyldig barnehagelister uten barnehager skal returnere 202 OK`() {
-        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(barnehager = null)
+        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(kindergartens = null)
         this.mockMvc
             .perform(
                 post("/api/barnehagelister/v1")
@@ -76,21 +76,21 @@ class BarnehagelisteControllerTest {
             .andExpect(status().isAccepted)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
-            .andExpect(jsonPath("status").value("MOTTATT"))
-            .andExpect(jsonPath("mottattTid").isNotEmpty)
-            .andExpect(jsonPath("ferdigTid").value(null))
+            .andExpect(jsonPath("status").value("RECEIVED"))
+            .andExpect(jsonPath("receivedTime").isNotEmpty)
+            .andExpect(jsonPath("finishedTime").value(null))
             .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
     }
 
     @Test
-    fun `POST barnehageliste - valider at String i listeopplysninger ikke er blanke`() {
+    fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenummer = " ", kommunenavn = " "),
+                        .listInformation
+                        .copy(municipalityNumber = " ", municipalityName = " "),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -101,20 +101,20 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenavn", "must not be blank"),
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
             )
     }
 
     @Test
-    fun `POST barnehageliste - valider at at kommunenummer er 4 siffer`() {
+    fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenummer = "0x123", kommunenavn = "Oslo"),
+                        .listInformation
+                        .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -125,8 +125,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Kommunenummer må ha 4 tall"),
-                ValideringsfeilInfo("listeopplysninger.kommunenummer", "Kommunenummer må være et numerisk felt"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must have 4 digits"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must be a numeric field"),
             )
     }
 
@@ -134,8 +134,8 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Barnehage ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "", organisasjonsnummer = " ")),
+                kindergartens =
+                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "", organizationNumber = " ")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -146,8 +146,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo("barnehager[0].navn", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].name", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "must not be blank"),
             )
     }
 
@@ -155,16 +155,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Adresse ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = " ",
-                                    adresselinje1 = " ",
-                                    adresselinje2 = " ",
-                                    postnummer = " ",
-                                    poststed = " ",
+                            address =
+                                Address(
+                                    unitNumber = " ",
+                                    addressLine1 = " ",
+                                    addressLine2 = " ",
+                                    zipCode = " ",
+                                    postalTown = " ",
                                 ),
                         ),
                     ),
@@ -178,8 +178,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(6)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].adresse.poststed", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].address.postalTown", "must not be blank"),
             )
     }
 
@@ -187,18 +187,18 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i Person ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
                                     BarnehagelisteTestdata.lagBarninfolinje().copy(
-                                        barn =
-                                            Person(
-                                                fornavn = " ",
-                                                fodselsnummer = " ",
-                                                etternavn = " ",
-                                                adresse = null,
+                                        child =
+                                            PersonDTO(
+                                                firstName = " ",
+                                                socialSecurityNumber = " ",
+                                                lastName = " ",
+                                                address = null,
                                             ),
                                     ),
                                 ),
@@ -214,9 +214,9 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.etternavn", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "must not be blank"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fornavn", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.socialSecurityNumber", "must not be blank"),
+                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.firstName", "must not be blank"),
             )
     }
 
@@ -224,18 +224,18 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - Fødselsnummer må være 11 tegn og numerisk`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
                                     BarnehagelisteTestdata.lagBarninfolinje().copy(
-                                        barn =
-                                            Person(
-                                                fornavn = "Ola Ola",
-                                                fodselsnummer = "02011212345A",
-                                                etternavn = "Nordmann",
-                                                adresse = null,
+                                        child =
+                                            PersonDTO(
+                                                firstName = "Ola Ola",
+                                                socialSecurityNumber = "02011212345A",
+                                                lastName = "Nordmann",
+                                                address = null,
                                             ),
                                     ),
                                 ),
@@ -251,8 +251,14 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Fødselsnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].barnInfolinjer[0].barn.fodselsnummer", "Fødselsnummer må ha 11 tall"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
+                    "Social Security Number must be a numeric field",
+                ),
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
+                    "Social Security Number must have 11 digits",
+                ),
             )
     }
 
@@ -260,8 +266,8 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at organisasjonsnummer er 9 tall`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(navn = "Barnehagenavn", organisasjonsnummer = "03Z1245689")),
+                kindergartens =
+                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -272,8 +278,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "organisasjonsnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].organisasjonsnummer", "organisasjonsnummer må ha 9 tall"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must be a numeric field"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must have 9 digits"),
             )
     }
 
@@ -281,16 +287,16 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at postnummer er 4 numeriske tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "H0101",
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "Z12456",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = "H0101",
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "Z12456",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -304,26 +310,26 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "postnummer må være et numerisk felt"),
-                ValideringsfeilInfo("barnehager[0].adresse.postnummer", "postnummer må ha 4 tall"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must be a numeric field"),
+                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must have 4 digits"),
             )
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["H0101", "U1234", "L5423", "K0123"])
-    fun `POST barnehageliste - valider gyldig bruksnummer`(bruksnummer: String) {
+    fun `POST barnehageliste - valider gyldig bruksenhetnummer`(bruksenhetnummer: String) {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = bruksnummer,
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "0102",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = bruksenhetnummer,
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "0102",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -339,19 +345,19 @@ class BarnehagelisteControllerTest {
     }
 
     @Test
-    fun `POST barnehageliste - valider at ugylidg bruksnummer gir valideringsfeil`() {
+    fun `POST barnehageliste - valider at ugylidg bruksenhetnummer gir valideringsfeil`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         BarnehagelisteTestdata.lagBarnehage().copy(
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "A056230101",
-                                    adresselinje1 = "1",
-                                    adresselinje2 = null,
-                                    postnummer = "0102",
-                                    poststed = "Oslo",
+                            address =
+                                Address(
+                                    unitNumber = "A056230101",
+                                    addressLine1 = "1",
+                                    addressLine2 = null,
+                                    zipCode = "0102",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
@@ -365,8 +371,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "H, L, U eller K etterfult av 4 siffer"),
-                ValideringsfeilInfo("barnehager[0].adresse.bruksenhetsnummer", "bruksenhetsnummer må ha 5 tegn"),
+                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "H, L, U, or K followed by 4 digits"),
+                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "Unit number must have 5 characters"),
             )
     }
 
@@ -374,11 +380,11 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listeopplysninger =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listeopplysninger
-                        .copy(kommunenavn = "a".repeat(201)),
+                        .listInformation
+                        .copy(municipalityName = "a".repeat(201)),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -389,7 +395,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listeopplysninger.kommunenavn", "size must be between 1 and 200"),
+                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
             )
     }
 
@@ -397,11 +403,11 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("Valideringsfeil")
+        assertThat(problemDetail.detail).isEqualTo("Validation error")
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
-    private fun sendInvalidBarnehageliste(invalidBarnehageliste: SkjemaV1) =
+    private fun sendInvalidBarnehageliste(invalidBarnehageliste: FormV1) =
         this.mockMvc
             .perform(
                 post("/api/barnehagelister/v1")

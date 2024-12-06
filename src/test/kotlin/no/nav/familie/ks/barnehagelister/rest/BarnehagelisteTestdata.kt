@@ -1,142 +1,142 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.ks.barnehagelister.kontrakt.Adresse
-import no.nav.familie.ks.barnehagelister.kontrakt.BarnInfolinje
-import no.nav.familie.ks.barnehagelister.kontrakt.Barnehage
-import no.nav.familie.ks.barnehagelister.kontrakt.Listeopplysninger
-import no.nav.familie.ks.barnehagelister.kontrakt.Person
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import no.nav.familie.ks.barnehagelister.kontrakt.Address
+import no.nav.familie.ks.barnehagelister.kontrakt.ChildInformation
+import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
+import no.nav.familie.ks.barnehagelister.kontrakt.Kindergarten
+import no.nav.familie.ks.barnehagelister.kontrakt.ListInformation
+import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
 class BarnehagelisteTestdata {
     companion object {
-        fun gyldigBarnehageliste(): SkjemaV1 =
-            SkjemaV1(
+        fun gyldigBarnehageliste(): FormV1 =
+            FormV1(
                 id = UUID.randomUUID(),
-                listeopplysninger =
-                    Listeopplysninger(
-                        kommunenummer = "0301",
-                        kommunenavn = "Oslo",
-                        innsendingGjelderArManed = YearMonth.now(),
+                listInformation =
+                    ListInformation(
+                        municipalityName = "Oslo",
+                        municipalityNumber = "0301",
+                        submissionForYearMonth = YearMonth.now(),
                     ),
-                barnehager =
+                kindergartens =
                     listOf(
                         lagBarnehage(),
                     ),
             )
 
         fun lagBarnehage() =
-            Barnehage(
-                organisasjonsnummer = "123456789",
-                navn = "Eksempel Barnehage",
-                adresse =
-                    Adresse(
-                        bruksenhetsnummer = "H0101",
-                        adresselinje1 = "Svingen 1",
-                        adresselinje2 = null,
-                        postnummer = "0102",
-                        poststed = "Oslo",
+            Kindergarten(
+                organizationNumber = "123456789",
+                name = "Eksempel Barnehage",
+                address =
+                    Address(
+                        unitNumber = "H0101",
+                        addressLine1 = "Svingen 1",
+                        addressLine2 = null,
+                        zipCode = "0102",
+                        postalTown = "Oslo",
                     ),
-                barnInfolinjer =
+                childrenInformation =
                     listOf(
                         lagBarninfolinje(),
                     ),
             )
 
         fun lagBarninfolinje() =
-            BarnInfolinje(
-                avtaltOppholdstidTimer = 37.5,
-                startdato = LocalDate.of(2023, 1, 1),
-                sluttdato = null,
-                barn =
-                    Person(
-                        fodselsnummer = "12345678910",
-                        fornavn = "Ola",
-                        etternavn = "Nordmann",
-                        adresse =
-                            Adresse(
-                                bruksenhetsnummer = "H0101",
-                                adresselinje1 = "Svingen 1",
-                                adresselinje2 = null,
-                                postnummer = "0102",
-                                poststed = "Oslo",
+            ChildInformation(
+                agreedHoursInKindergarten = 37.5,
+                startDate = LocalDate.of(2023, 1, 1),
+                endDate = null,
+                child =
+                    PersonDTO(
+                        socialSecurityNumber = "12345678910",
+                        firstName = "Ola",
+                        lastName = "Nordmann",
+                        address =
+                            Address(
+                                unitNumber = "H0101",
+                                addressLine1 = "Svingen 1",
+                                addressLine2 = null,
+                                zipCode = "0102",
+                                postalTown = "Oslo",
                             ),
                     ),
-                foresatte =
+                guardians =
                     listOf(
-                        Person(
-                            fodselsnummer = "10987654321",
-                            fornavn = "Kari",
-                            etternavn = "Nordmann",
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "H0101",
-                                    adresselinje1 = "Svingen 1",
-                                    adresselinje2 = null,
-                                    postnummer = "0102",
-                                    poststed = "Oslo",
+                        PersonDTO(
+                            socialSecurityNumber = "10987654321",
+                            firstName = "Kari",
+                            lastName = "Nordmann",
+                            address =
+                                Address(
+                                    unitNumber = "H0101",
+                                    addressLine1 = "Svingen 1",
+                                    addressLine2 = null,
+                                    zipCode = "0102",
+                                    postalTown = "Oslo",
                                 ),
                         ),
                     ),
             )
 
-        fun barnehagelistBlankeFelt(): SkjemaV1 =
-            SkjemaV1(
+        fun barnehagelistBlankeFelt(): FormV1 =
+            FormV1(
                 id = UUID.randomUUID(),
-                listeopplysninger =
-                    Listeopplysninger(
-                        kommunenummer = " ",
-                        kommunenavn = " ",
-                        innsendingGjelderArManed = YearMonth.now(),
+                listInformation =
+                    ListInformation(
+                        municipalityNumber = " ",
+                        municipalityName = " ",
+                        submissionForYearMonth = YearMonth.now(),
                     ),
-                barnehager =
+                kindergartens =
                     listOf(
-                        Barnehage(
-                            organisasjonsnummer = " ",
-                            navn = " ",
-                            adresse =
-                                Adresse(
-                                    bruksenhetsnummer = "",
-                                    adresselinje1 = "",
-                                    adresselinje2 = "",
-                                    postnummer = "",
-                                    poststed = "",
+                        Kindergarten(
+                            organizationNumber = " ",
+                            name = " ",
+                            address =
+                                Address(
+                                    unitNumber = "",
+                                    addressLine1 = "",
+                                    addressLine2 = "",
+                                    zipCode = "",
+                                    postalTown = "",
                                 ),
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
-                                    BarnInfolinje(
-                                        avtaltOppholdstidTimer = 37.5,
-                                        startdato = LocalDate.of(2023, 1, 1),
-                                        sluttdato = null,
-                                        barn =
-                                            Person(
-                                                fodselsnummer = "12345678910",
-                                                fornavn = "Ola",
-                                                etternavn = "Nordmann",
-                                                adresse =
-                                                    Adresse(
-                                                        bruksenhetsnummer = "H0101",
-                                                        adresselinje1 = "Svingen 1",
-                                                        adresselinje2 = null,
-                                                        postnummer = "0102",
-                                                        poststed = "Oslo",
+                                    ChildInformation(
+                                        agreedHoursInKindergarten = 37.5,
+                                        startDate = LocalDate.of(2023, 1, 1),
+                                        endDate = null,
+                                        child =
+                                            PersonDTO(
+                                                socialSecurityNumber = "12345678910",
+                                                firstName = "Ola",
+                                                lastName = "Nordmann",
+                                                address =
+                                                    Address(
+                                                        unitNumber = "H0101",
+                                                        addressLine1 = "Svingen 1",
+                                                        addressLine2 = null,
+                                                        zipCode = "0102",
+                                                        postalTown = "Oslo",
                                                     ),
                                             ),
-                                        foresatte =
+                                        guardians =
                                             listOf(
-                                                Person(
-                                                    fodselsnummer = "",
-                                                    fornavn = "",
-                                                    etternavn = "",
-                                                    adresse =
-                                                        Adresse(
-                                                            bruksenhetsnummer = "",
-                                                            adresselinje1 = "Svingen 1",
-                                                            adresselinje2 = null,
-                                                            postnummer = "0102",
-                                                            poststed = "Oslo",
+                                                PersonDTO(
+                                                    socialSecurityNumber = "",
+                                                    firstName = "",
+                                                    lastName = "",
+                                                    address =
+                                                        Address(
+                                                            unitNumber = "",
+                                                            addressLine1 = "Svingen 1",
+                                                            addressLine2 = null,
+                                                            zipCode = "0102",
+                                                            postalTown = "Oslo",
                                                         ),
                                                 ),
                                             ),
