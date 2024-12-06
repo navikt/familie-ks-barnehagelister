@@ -1,6 +1,11 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.ks.barnehagelister.kontrakt.*
+import no.nav.familie.ks.barnehagelister.kontrakt.Address
+import no.nav.familie.ks.barnehagelister.kontrakt.ChildInformation
+import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
+import no.nav.familie.ks.barnehagelister.kontrakt.Kindergarten
+import no.nav.familie.ks.barnehagelister.kontrakt.ListInformation
+import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
