@@ -23,7 +23,7 @@ import java.util.UUID
     issuer = "maskinporten",
     claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"],
 )
-@RequestMapping("/api/barnehagelister")
+@RequestMapping("/api/kindergartenlists", "/api/barnehagelister")
 interface BarnehagelisterController {
     @Operation(summary = "Send in kindergarten list")
     @ApiResponses(

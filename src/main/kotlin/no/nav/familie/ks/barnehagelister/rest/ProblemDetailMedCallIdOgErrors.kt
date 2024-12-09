@@ -24,7 +24,7 @@ class ProblemDetailMedCallIdOgErrors(
     val detail: String,
     @Schema(
         description = "A URI reference to the endpoint where the error occurred",
-        example = "/api/barnehagelister/v1",
+        example = "/api/kindergartenlists/v1",
     )
     val instance: String,
     @Schema(

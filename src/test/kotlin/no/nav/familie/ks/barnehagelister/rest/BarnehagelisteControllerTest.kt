@@ -40,7 +40,7 @@ class BarnehagelisteControllerTest {
     @Test
     fun `GET ping skal returnere 200 OK`() {
         this.mockMvc
-            .perform(get("/api/barnehagelister/ping"))
+            .perform(get("/api/kindergartenlists/ping"))
             .andExpect(status().isOk)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(content().json("\"OK\""))
@@ -51,7 +51,7 @@ class BarnehagelisteControllerTest {
         val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste()
         this.mockMvc
             .perform(
-                post("/api/barnehagelister/v1")
+                post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody)),
             ).andExpect(status().isAccepted)
@@ -60,7 +60,7 @@ class BarnehagelisteControllerTest {
             .andExpect(jsonPath("status").value("RECEIVED"))
             .andExpect(jsonPath("receivedTime").isNotEmpty)
             .andExpect(jsonPath("finishedTime").value(null))
-            .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
+            .andExpect(jsonPath("links.status").value("/api/kindergartenlists/status/${requestBody.id}"))
     }
 
     @Test
@@ -68,7 +68,7 @@ class BarnehagelisteControllerTest {
         val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(kindergartens = null)
         this.mockMvc
             .perform(
-                post("/api/barnehagelister/v1")
+                post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody)),
             )
@@ -79,7 +79,7 @@ class BarnehagelisteControllerTest {
             .andExpect(jsonPath("status").value("RECEIVED"))
             .andExpect(jsonPath("receivedTime").isNotEmpty)
             .andExpect(jsonPath("finishedTime").value(null))
-            .andExpect(jsonPath("links.status").value("/api/barnehagelister/status/${requestBody.id}"))
+            .andExpect(jsonPath("links.status").value("/api/kindergartenlists/status/${requestBody.id}"))
     }
 
     @Test
@@ -337,7 +337,7 @@ class BarnehagelisteControllerTest {
 
         this.mockMvc
             .perform(
-                post("/api/barnehagelister/v1")
+                post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Correlation-Id", "callIdValue")
                     .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
@@ -410,7 +410,7 @@ class BarnehagelisteControllerTest {
     private fun sendInvalidBarnehageliste(invalidBarnehageliste: FormV1) =
         this.mockMvc
             .perform(
-                post("/api/barnehagelister/v1")
+                post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Correlation-Id", "callIdValue")
                     .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
