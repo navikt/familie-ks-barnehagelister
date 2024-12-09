@@ -53,7 +53,7 @@ class BarnehagelisteService(
                         finishedTime = innsendtListe.ferdigTid,
                         links =
                             ResponseLinks(
-                                status = "/api/barnehagelister/status/${skjemaV1.id}",
+                                status = "/api/kindergartenlists/status/${skjemaV1.id}",
                             ),
                     ),
                 ).also {
@@ -71,7 +71,7 @@ class BarnehagelisteService(
                     finishedTime = barnehageliste.ferdigTid,
                     links =
                         ResponseLinks(
-                            status = "/api/barnehagelister/status/${skjemaV1.id}",
+                            status = "/api/kindergartenlists/status/${skjemaV1.id}",
                         ),
                 ),
             )
@@ -93,7 +93,7 @@ class BarnehagelisteService(
                     finishedTime = barnehageliste.ferdigTid,
                     links =
                         ResponseLinks(
-                            status = "/api/barnehagelister/status/$transaksjonsId",
+                            status = "/api/kindergartenlists/status/$transaksjonsId",
                         ),
                 ),
             )
