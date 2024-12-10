@@ -14,7 +14,7 @@ class ValideringsfeilException(
 data class ValideringsfeilInfo(
     @Schema(
         description = "Which field has validation errors. If the info is unknown, then the field is set to missing",
-        example = "barnehager[0].navn",
+        example = "kindergartens[0].navn",
     )
     val parameter: String,
     @Schema(
