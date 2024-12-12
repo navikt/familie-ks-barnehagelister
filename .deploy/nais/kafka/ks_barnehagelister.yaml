@@ -1,0 +1,32 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: ks-motta-barnehagelister
+  namespace: teamfamilie
+  labels:
+    team: teamfamilie
+spec:
+  pool: nav-dev
+  config: # optional; all fields are optional too; defaults shown
+    cleanupPolicy: delete  # delete, compact
+    minimumInSyncReplicas: 2
+    partitions: 1
+    replication: 3  # see min/max requirements
+    retentionBytes: -1  # -1 means unlimited
+    retentionHours: 745 # Litt mer enn 31 dager
+  acl:
+    - team: teamfamilie
+      application: familie-ks-sak #owner
+      access: write   # readwrite
+    - team: teamfamilie
+      application: familie-baks-kafka-manager
+      access: read
+    - team: teamfamilie
+      application: familie-ef-personhendelse
+      access: read
+    - team: dv-familie
+      application: dvh-fambt-konsumer
+      access: read
+    - team: dv-familie
+      application: dvh-familie-konsument
+      access: read
