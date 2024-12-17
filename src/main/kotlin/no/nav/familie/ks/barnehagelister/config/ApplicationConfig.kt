@@ -68,7 +68,7 @@ class ApplicationConfig {
                 SpringTokenValidationContextHolder()
                     .getTokenValidationContext()
                     .getClaims("azuread")
-                    ?.get("groups") as List<String>? ?: emptyList()
+                    .get("groups") as List<String>? ?: emptyList()
             } catch (e: Exception) {
                 emptyList()
             }
