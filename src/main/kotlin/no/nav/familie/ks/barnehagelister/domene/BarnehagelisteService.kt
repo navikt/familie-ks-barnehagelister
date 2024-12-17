@@ -12,13 +12,16 @@ import java.util.UUID
 @Service
 class BarnehagelisteService(
     private val barnehagelisterRepository: BarnehagelisterRepository,
-    val taskService: TaskService,
+    private val taskService: TaskService,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
     fun mottaBarnehagelister(skjemaV1: SkjemaV1): Barnehagelister {
         val eksisterendeBarnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
-        if (eksisterendeBarnehageliste != null) return eksisterendeBarnehageliste
+        if (eksisterendeBarnehageliste != null) {
+            logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
+            return eksisterendeBarnehageliste
+        }
 
         val lagretBarnehageliste =
             barnehagelisterRepository
@@ -28,11 +31,10 @@ class BarnehagelisteService(
                         skjemaV1,
                         BarnehagelisteStatus.MOTTATT,
                     ),
-                ).also {
-                    MottattBarnehagelisteTask.opprettTask(skjemaV1.id).also {
-                        taskService.save(it)
-                    }
-                }
+                )
+
+        val opprettetTask = MottattBarnehagelisteTask.opprettTask(skjemaV1.id)
+        taskService.save(opprettetTask)
 
         return lagretBarnehageliste
     }
