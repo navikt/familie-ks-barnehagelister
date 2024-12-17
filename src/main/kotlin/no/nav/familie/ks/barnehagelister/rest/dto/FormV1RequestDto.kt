@@ -3,6 +3,9 @@ package no.nav.familie.ks.barnehagelister.rest.dto
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
+import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
+import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehage
+import no.nav.familie.ks.barnehagelister.domene.mapTilListeopplysninger
 import java.util.UUID
 
 // TODO sanitize JSON input according to OWASP
@@ -20,3 +23,10 @@ data class FormV1RequestDto(
     @field:Valid
     val listInformationRequestDto: ListInformationRequestDto,
 )
+
+fun FormV1RequestDto.mapTilSkjemaV1(): SkjemaV1 =
+    SkjemaV1(
+        id = this.id,
+        barnehager = this.kindergartens?.map { it.mapTilBarnehage() },
+        listeopplysninger = this.listInformationRequestDto.mapTilListeopplysninger(),
+    )

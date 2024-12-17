@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
+import no.nav.familie.ks.barnehagelister.domene.Adresse
 
 data class AddressRequestDto(
     @Schema(
@@ -40,3 +41,12 @@ data class AddressRequestDto(
     @field:NotBlank
     val postalTown: String,
 )
+
+fun AddressRequestDto.mapTilAdresse(): Adresse =
+    Adresse(
+        bruksenhetsnummer = this.unitNumber,
+        adresselinje1 = this.addressLine1,
+        adresselinje2 = this.addressLine2,
+        postnummer = this.zipCode,
+        poststed = this.postalTown,
+    )

@@ -6,6 +6,8 @@ import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
+import no.nav.familie.ks.barnehagelister.domene.Person
+import no.nav.familie.ks.barnehagelister.domene.mapTilAdresse
 
 data class PersonRequestDto(
     @Schema(
@@ -38,3 +40,11 @@ data class PersonRequestDto(
     @field:Valid
     val address: AddressRequestDto?,
 )
+
+fun PersonRequestDto.mapTilPerson(): Person =
+    Person(
+        fodselsnummer = this.socialSecurityNumber,
+        fornavn = this.firstName,
+        etternavn = this.lastName,
+        adresse = this.address?.mapTilAdresse(),
+    )
