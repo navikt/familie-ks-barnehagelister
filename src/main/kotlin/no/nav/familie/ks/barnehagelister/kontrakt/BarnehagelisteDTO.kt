@@ -123,10 +123,10 @@ data class PersonDTO(
         description = "Whether the address is confidential or not",
         example = "false",
     )
-    val confidentialAdress: Boolean = false,
+    val confidentialAddress: Boolean = false,
 ) {
     @AssertTrue(message = "Must either have an address or be a confidential adress")
-    private fun isAddressOrConfidentialAdress() = (address != null && !confidentialAdress) || (address == null && confidentialAdress)
+    private fun isAddressOrConfidentialAddress() = (address != null && !confidentialAddress) || (address == null && confidentialAddress)
 }
 
 data class Address(
