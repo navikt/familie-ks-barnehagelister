@@ -1,11 +1,11 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.kontrakt.Address
-import no.nav.familie.ks.barnehagelister.kontrakt.ChildInformation
-import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
-import no.nav.familie.ks.barnehagelister.kontrakt.Kindergarten
-import no.nav.familie.ks.barnehagelister.kontrakt.ListInformation
-import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
+import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.ChildInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.ListInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
@@ -17,11 +17,11 @@ data class SkjemaV1(
     val listeopplysninger: Listeopplysninger,
 )
 
-fun FormV1.mapTilSkjemaV1(): SkjemaV1 =
+fun FormV1RequestDto.mapTilSkjemaV1(): SkjemaV1 =
     SkjemaV1(
         id = this.id,
         barnehager = this.kindergartens?.map { it.mapTilBarnehage() },
-        listeopplysninger = this.listInformation.mapTilListeopplysninger(),
+        listeopplysninger = this.listInformationRequestDto.mapTilListeopplysninger(),
     )
 
 data class Listeopplysninger(
@@ -30,7 +30,7 @@ data class Listeopplysninger(
     val innsendingGjelderArManed: YearMonth,
 )
 
-fun ListInformation.mapTilListeopplysninger(): Listeopplysninger =
+fun ListInformationRequestDto.mapTilListeopplysninger(): Listeopplysninger =
     Listeopplysninger(
         kommunenavn = this.municipalityName,
         kommunenummer = this.municipalityNumber,
@@ -44,7 +44,7 @@ data class Barnehage(
     val barnInfolinjer: List<BarnInfolinje>,
 )
 
-fun Kindergarten.mapTilBarnehage(): Barnehage =
+fun KindergartenRequestDto.mapTilBarnehage(): Barnehage =
     Barnehage(
         navn = this.name,
         organisasjonsnummer = this.organizationNumber,
@@ -59,7 +59,7 @@ data class BarnInfolinje(
     val foresatte: List<Person>?,
 )
 
-fun ChildInformation.mapTilBarnInfolinje(): BarnInfolinje =
+fun ChildInformationRequestDto.mapTilBarnInfolinje(): BarnInfolinje =
     BarnInfolinje(
         avtaltOppholdstidTimer = this.agreedHoursInKindergarten,
         startdato = this.startDate,
@@ -74,7 +74,7 @@ data class Person(
     val adresse: Adresse?,
 )
 
-fun PersonDTO.mapTilPerson(): Person =
+fun PersonRequestDto.mapTilPerson(): Person =
     Person(
         fodselsnummer = this.socialSecurityNumber,
         fornavn = this.firstName,
@@ -90,7 +90,7 @@ data class Adresse(
     val poststed: String,
 )
 
-fun Address.mapTilAdresse(): Adresse =
+fun AddressRequestDto.mapTilAdresse(): Adresse =
     Adresse(
         bruksenhetsnummer = this.unitNumber,
         adresselinje1 = this.addressLine1,

@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.mapTilSkjemaV1
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
-import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
-import no.nav.familie.ks.barnehagelister.kontrakt.KindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -19,13 +19,13 @@ class DefaultBarnehagelisterController(
     private val godkjenteLeverandører: GodkjenteLeverandører,
 ) : BarnehagelisterController {
     override fun mottaBarnehagelister(
-        formV1: FormV1,
+        formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
-        return barnehagelisteService.mottaBarnehagelister(formV1.mapTilSkjemaV1(), bindingResult)
+        return barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), bindingResult)
     }
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {

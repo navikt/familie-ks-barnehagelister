@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.kontrakt.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 import java.util.UUID

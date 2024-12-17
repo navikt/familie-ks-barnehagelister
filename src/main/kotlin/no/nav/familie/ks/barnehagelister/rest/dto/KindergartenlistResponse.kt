@@ -1,4 +1,4 @@
-package no.nav.familie.ks.barnehagelister.kontrakt
+package no.nav.familie.ks.barnehagelister.rest.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
@@ -9,11 +9,11 @@ data class KindergartenlistResponse(
     val status: BarnehagelisteStatusEngelsk,
     val receivedTime: LocalDateTime,
     val finishedTime: LocalDateTime?,
-    val links: ResponseLinks,
+    val links: ResponseLinksResponseDto,
 )
 
 @Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list")
-data class ResponseLinks(
+data class ResponseLinksResponseDto(
     val status: String,
 )
 

@@ -1,38 +1,38 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.ks.barnehagelister.kontrakt.Address
-import no.nav.familie.ks.barnehagelister.kontrakt.ChildInformation
-import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
-import no.nav.familie.ks.barnehagelister.kontrakt.Kindergarten
-import no.nav.familie.ks.barnehagelister.kontrakt.ListInformation
-import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
+import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.ChildInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.ListInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
 class BarnehagelisteTestdata {
     companion object {
-        fun gyldigBarnehageliste(): FormV1 =
-            FormV1(
+        fun gyldigBarnehageliste(): FormV1RequestDto =
+            FormV1RequestDto(
                 id = UUID.randomUUID(),
-                listInformation =
-                    ListInformation(
+                listInformationRequestDto =
+                    ListInformationRequestDto(
                         municipalityName = "Oslo",
                         municipalityNumber = "0301",
                         submissionForYearMonth = YearMonth.now(),
                     ),
                 kindergartens =
                     listOf(
-                        lagBarnehage(),
+                        lagKindergartenRequestDto(),
                     ),
             )
 
-        fun lagBarnehage() =
-            Kindergarten(
+        fun lagKindergartenRequestDto() =
+            KindergartenRequestDto(
                 organizationNumber = "123456789",
                 name = "Eksempel Barnehage",
                 address =
-                    Address(
+                    AddressRequestDto(
                         unitNumber = "H0101",
                         addressLine1 = "Svingen 1",
                         addressLine2 = null,
@@ -41,22 +41,22 @@ class BarnehagelisteTestdata {
                     ),
                 childrenInformation =
                     listOf(
-                        lagBarninfolinje(),
+                        lagChildInformationRequestDto(),
                     ),
             )
 
-        fun lagBarninfolinje() =
-            ChildInformation(
+        fun lagChildInformationRequestDto() =
+            ChildInformationRequestDto(
                 agreedHoursInKindergarten = 37.5,
                 startDate = LocalDate.of(2023, 1, 1),
                 endDate = null,
                 child =
-                    PersonDTO(
+                    PersonRequestDto(
                         socialSecurityNumber = "12345678910",
                         firstName = "Ola",
                         lastName = "Nordmann",
                         address =
-                            Address(
+                            AddressRequestDto(
                                 unitNumber = "H0101",
                                 addressLine1 = "Svingen 1",
                                 addressLine2 = null,
@@ -66,12 +66,12 @@ class BarnehagelisteTestdata {
                     ),
                 guardians =
                     listOf(
-                        PersonDTO(
+                        PersonRequestDto(
                             socialSecurityNumber = "10987654321",
                             firstName = "Kari",
                             lastName = "Nordmann",
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = "H0101",
                                     addressLine1 = "Svingen 1",
                                     addressLine2 = null,
@@ -82,22 +82,22 @@ class BarnehagelisteTestdata {
                     ),
             )
 
-        fun barnehagelistBlankeFelt(): FormV1 =
-            FormV1(
+        fun barnehagelistBlankeFelt(): FormV1RequestDto =
+            FormV1RequestDto(
                 id = UUID.randomUUID(),
-                listInformation =
-                    ListInformation(
+                listInformationRequestDto =
+                    ListInformationRequestDto(
                         municipalityNumber = " ",
                         municipalityName = " ",
                         submissionForYearMonth = YearMonth.now(),
                     ),
                 kindergartens =
                     listOf(
-                        Kindergarten(
+                        KindergartenRequestDto(
                             organizationNumber = " ",
                             name = " ",
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = "",
                                     addressLine1 = "",
                                     addressLine2 = "",
@@ -106,17 +106,17 @@ class BarnehagelisteTestdata {
                                 ),
                             childrenInformation =
                                 listOf(
-                                    ChildInformation(
+                                    ChildInformationRequestDto(
                                         agreedHoursInKindergarten = 37.5,
                                         startDate = LocalDate.of(2023, 1, 1),
                                         endDate = null,
                                         child =
-                                            PersonDTO(
+                                            PersonRequestDto(
                                                 socialSecurityNumber = "12345678910",
                                                 firstName = "Ola",
                                                 lastName = "Nordmann",
                                                 address =
-                                                    Address(
+                                                    AddressRequestDto(
                                                         unitNumber = "H0101",
                                                         addressLine1 = "Svingen 1",
                                                         addressLine2 = null,
@@ -126,12 +126,12 @@ class BarnehagelisteTestdata {
                                             ),
                                         guardians =
                                             listOf(
-                                                PersonDTO(
+                                                PersonRequestDto(
                                                     socialSecurityNumber = "",
                                                     firstName = "",
                                                     lastName = "",
                                                     address =
-                                                        Address(
+                                                        AddressRequestDto(
                                                             unitNumber = "",
                                                             addressLine1 = "Svingen 1",
                                                             addressLine2 = null,
