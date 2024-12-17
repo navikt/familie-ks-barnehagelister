@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
+import org.springframework.http.ResponseEntity
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -28,3 +29,10 @@ enum class BarnehagelisteStatusEngelsk {
     RECEIVED,
     DONE,
 }
+
+fun KindergartenlistResponse.toResponseEntity() =
+    if (finishedTime == null) {
+        ResponseEntity.accepted().body(this)
+    } else {
+        ResponseEntity.ok().build()
+    }

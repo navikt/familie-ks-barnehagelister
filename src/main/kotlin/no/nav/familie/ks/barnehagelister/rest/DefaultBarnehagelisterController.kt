@@ -2,10 +2,12 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
+import no.nav.familie.ks.barnehagelister.domene.tilKindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.mapTilSkjemaV1
+import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -27,7 +29,9 @@ class DefaultBarnehagelisterController(
         validerGodkjentLeverandør(request)
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        return barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), bindingResult)
+        val barnehagelister = barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1())
+
+        return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
     }
 
     override fun status(
@@ -35,10 +39,15 @@ class DefaultBarnehagelisterController(
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
-        return barnehagelisteService.status(transaksjonsId)
+
+        return barnehagelisteService
+            .hentBarnehagelister(transaksjonsId)
+            ?.tilKindergartenlistResponse()
+            ?.toResponseEntity()
+            ?: ResponseEntity.notFound().build()
     }
 
-    override fun ping(): String = barnehagelisteService.ping()
+    override fun ping(): String = "\"OK\""
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {
         val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
