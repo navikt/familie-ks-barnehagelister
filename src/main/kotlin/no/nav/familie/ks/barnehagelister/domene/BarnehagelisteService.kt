@@ -1,11 +1,11 @@
-package no.nav.familie.ks.barnehagelister.rest
+package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
-import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.kontrakt.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.kontrakt.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.kontrakt.ResponseLinks
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
+import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilException
+import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilInfo
 import no.nav.familie.ks.barnehagelister.task.MottattBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
