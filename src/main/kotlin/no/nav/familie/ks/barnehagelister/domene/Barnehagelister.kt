@@ -1,6 +1,8 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.kontrakt.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
 import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 import java.util.UUID
@@ -12,6 +14,16 @@ data class Barnehagelister(
     val status: BarnehagelisteStatus,
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
     val ferdigTid: LocalDateTime? = null,
-) {
-    fun erFerdigProsessert(): Boolean = ferdigTid != null
-}
+)
+
+fun Barnehagelister.tilKindergartenlistResponse() =
+    KindergartenlistResponse(
+        id = rawJson.id,
+        status = BarnehagelisteStatus.MOTTATT.engelsk,
+        receivedTime = opprettetTid,
+        finishedTime = ferdigTid,
+        links =
+            ResponseLinksResponseDto(
+                status = "/api/kindergartenlists/status/${rawJson.id}",
+            ),
+    )

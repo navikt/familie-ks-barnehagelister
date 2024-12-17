@@ -5,7 +5,7 @@ import no.nav.security.token.support.core.jwt.JwtToken
 import no.nav.security.token.support.core.jwt.JwtTokenClaims
 
 fun HttpServletRequest.hentHeaders() =
-    getHeaderNames()?.toList()?.map { headerName ->
+    headerNames?.toList()?.map { headerName ->
         if (headerName == "Authorization") {
             Pair(
                 "Authorization",
@@ -55,10 +55,10 @@ fun HttpServletRequest.hentClaims(): JwtTokenClaims? {
             null
         }
 
-    if (token == null) {
-        return null
+    return if (token == null) {
+        null
     } else {
-        return JwtToken(token).jwtTokenClaims
+        JwtToken(token).jwtTokenClaims
     }
 }
 

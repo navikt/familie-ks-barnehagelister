@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
-import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
-import no.nav.familie.ks.barnehagelister.kontrakt.KindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
@@ -86,7 +86,7 @@ interface BarnehagelisterController {
         consumes = ["application/json;charset=UTF-8"],
     )
     fun mottaBarnehagelister(
-        @Valid @RequestBody formV1: FormV1,
+        @Valid @RequestBody formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse>

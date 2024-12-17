@@ -2,9 +2,9 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
-import no.nav.familie.ks.barnehagelister.kontrakt.Address
-import no.nav.familie.ks.barnehagelister.kontrakt.FormV1
-import no.nav.familie.ks.barnehagelister.kontrakt.PersonDTO
+import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -86,10 +86,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformation =
+                listInformationRequestDto =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformation
+                        .listInformationRequestDto
                         .copy(municipalityNumber = " ", municipalityName = " "),
             )
 
@@ -101,8 +101,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
-                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
+                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "must not be blank"),
+                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "must not be blank"),
             )
     }
 
@@ -110,10 +110,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformation =
+                listInformationRequestDto =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformation
+                        .listInformationRequestDto
                         .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
             )
 
@@ -125,8 +125,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must have 4 digits"),
-                ValideringsfeilInfo("listInformation.municipalityNumber", "Municipality number must be a numeric field"),
+                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "Municipality number must have 4 digits"),
+                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "Municipality number must be a numeric field"),
             )
     }
 
@@ -135,7 +135,7 @@ class BarnehagelisteControllerTest {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "", organizationNumber = " ")),
+                    listOf(BarnehagelisteTestdata.lagKindergartenRequestDto().copy(name = "", organizationNumber = " ")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -157,9 +157,9 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = " ",
                                     addressLine1 = " ",
                                     addressLine2 = " ",
@@ -189,12 +189,12 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             childrenInformation =
                                 listOf(
-                                    BarnehagelisteTestdata.lagBarninfolinje().copy(
+                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
                                         child =
-                                            PersonDTO(
+                                            PersonRequestDto(
                                                 firstName = " ",
                                                 socialSecurityNumber = " ",
                                                 lastName = " ",
@@ -226,12 +226,12 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             childrenInformation =
                                 listOf(
-                                    BarnehagelisteTestdata.lagBarninfolinje().copy(
+                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
                                         child =
-                                            PersonDTO(
+                                            PersonRequestDto(
                                                 firstName = "Ola Ola",
                                                 socialSecurityNumber = "02011212345A",
                                                 lastName = "Nordmann",
@@ -267,7 +267,9 @@ class BarnehagelisteControllerTest {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
-                    listOf(BarnehagelisteTestdata.lagBarnehage().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689")),
+                    listOf(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
+                    ),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -289,9 +291,9 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = "H0101",
                                     addressLine1 = "1",
                                     addressLine2 = null,
@@ -322,9 +324,9 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = bruksenhetnummer,
                                     addressLine1 = "1",
                                     addressLine2 = null,
@@ -350,9 +352,9 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagBarnehage().copy(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
                             address =
-                                Address(
+                                AddressRequestDto(
                                     unitNumber = "A056230101",
                                     addressLine1 = "1",
                                     addressLine2 = null,
@@ -380,10 +382,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformation =
+                listInformationRequestDto =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformation
+                        .listInformationRequestDto
                         .copy(municipalityName = "a".repeat(201)),
             )
 
@@ -395,7 +397,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
+                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "size must be between 1 and 200"),
             )
     }
 
@@ -407,7 +409,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
-    private fun sendInvalidBarnehageliste(invalidBarnehageliste: FormV1) =
+    private fun sendInvalidBarnehageliste(invalidBarnehageliste: FormV1RequestDto) =
         this.mockMvc
             .perform(
                 post("/api/kindergartenlists/v1")
