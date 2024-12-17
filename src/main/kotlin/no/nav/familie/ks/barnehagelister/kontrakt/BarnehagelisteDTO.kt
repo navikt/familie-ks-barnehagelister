@@ -115,19 +115,8 @@ data class PersonDTO(
     @field:NotBlank
     val lastName: String,
     @field:Valid
-    @Schema(
-        description = "Address for where the child lives. If the address is confidential it should be ommited.",
-    )
     val address: Address?,
-    @Schema(
-        description = "Whether the address is confidential or not",
-        example = "false",
-    )
-    val confidentialAddress: Boolean = false,
-) {
-    @AssertTrue(message = "Must either have an address or be a confidential adress")
-    private fun isAddressOrConfidentialAddress() = (address != null && !confidentialAddress) || (address == null && confidentialAddress)
-}
+)
 
 data class Address(
     @Schema(
@@ -151,16 +140,42 @@ data class Address(
     @field:Size(min = 1, max = 200)
     val addressLine2: String?,
     @Schema(
-        description = "Norwegian zip code, four digits",
+        description = "Norwegian zip code, four digits. Mandatory unless confidential address",
         example = "0102",
     )
-    @field:NotBlank
     @field:Size(min = 4, max = 4, message = "Zip code must have 4 digits")
     @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Zip code must be a numeric field")
-    val zipCode: String,
+    val zipCode: String?,
     @Schema(
-        description = "Norwegian city name",
+        description = "Norwegian city name. Mandatory unless confidential address",
     )
-    @field:NotBlank
-    val postalTown: String,
-)
+    val postalTown: String?,
+    @Schema(
+        description = "Whether the address is confidential or not. No other fields may be set if true",
+        example = "false",
+    )
+    val confidentialAddress: Boolean = false,
+) {
+    @AssertTrue(message = "A confidential address may not have any address fields set")
+    private fun isAddressOrConfidentialAddress(): Boolean =
+        if (confidentialAddress) {
+            noAdressFieldsAreSet()
+        } else {
+            true
+        }
+
+    @AssertTrue(message = "Mandatory fields zipCode and/or postalTown are not set")
+    private fun isMandatoryFieldsSet(): Boolean =
+        if (!confidentialAddress) {
+            !zipCode.isNullOrBlank() && !postalTown.isNullOrBlank()
+        } else {
+            true
+        }
+
+    private fun noAdressFieldsAreSet(): Boolean =
+        unitNumber == null &&
+            addressLine1 == null &&
+            addressLine2 == null &&
+            zipCode == null &&
+            postalTown == null
+}

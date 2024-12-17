@@ -86,15 +86,28 @@ data class Adresse(
     val bruksenhetsnummer: String?,
     val adresselinje1: String?,
     val adresselinje2: String?,
-    val postnummer: String,
-    val poststed: String,
+    val postnummer: String?,
+    val poststed: String?,
+    val hemmeligAdresse: Boolean,
 )
 
 fun Address.mapTilAdresse(): Adresse =
-    Adresse(
-        bruksenhetsnummer = this.unitNumber,
-        adresselinje1 = this.addressLine1,
-        adresselinje2 = this.addressLine2,
-        postnummer = this.zipCode,
-        poststed = this.postalTown,
-    )
+    if (this.confidentialAddress) {
+        Adresse(
+            null,
+            null,
+            null,
+            null,
+            null,
+            hemmeligAdresse = true,
+        )
+    } else {
+        Adresse(
+            bruksenhetsnummer = this.unitNumber,
+            adresselinje1 = this.addressLine1,
+            adresselinje2 = this.addressLine2,
+            postnummer = this.zipCode,
+            poststed = this.postalTown,
+            hemmeligAdresse = false,
+        )
+    }

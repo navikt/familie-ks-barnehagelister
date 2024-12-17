@@ -165,6 +165,7 @@ class BarnehagelisteControllerTest {
                                     addressLine2 = " ",
                                     zipCode = " ",
                                     postalTown = " ",
+                                    confidentialAddress = false,
                                 ),
                         ),
                     ),
@@ -176,10 +177,12 @@ class BarnehagelisteControllerTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(6)
+            .hasSize(5)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].address.zipCode", "must not be blank"),
-                ValideringsfeilInfo("kindergartens[0].address.postalTown", "must not be blank"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].address.mandatoryFieldsSet",
+                    "Mandatory fields zipCode and/or postalTown are not set",
+                ),
             )
     }
 
@@ -212,7 +215,7 @@ class BarnehagelisteControllerTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(6)
+            .hasSize(5)
             .contains(
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.socialSecurityNumber", "must not be blank"),
@@ -236,7 +239,6 @@ class BarnehagelisteControllerTest {
                                                 socialSecurityNumber = "02011212345A",
                                                 lastName = "Nordmann",
                                                 address = null,
-                                                confidentialAddress = true,
                                             ),
                                     ),
                                 ),
@@ -422,8 +424,8 @@ class BarnehagelisteControllerTest {
                                                         addressLine2 = null,
                                                         zipCode = "0102",
                                                         postalTown = "Oslo",
+                                                        confidentialAddress = true,
                                                     ),
-                                                confidentialAddress = true,
                                             ),
                                     ),
                                 ),
@@ -439,8 +441,8 @@ class BarnehagelisteControllerTest {
             .hasSize(1)
             .contains(
                 ValideringsfeilInfo(
-                    "kindergartens[0].childrenInformation[0].child.addressOrConfidentialAdress",
-                    "Must either have an address or be a confidential adress",
+                    "kindergartens[0].childrenInformation[0].child.address.addressOrConfidentialAddress",
+                    "A confidential address may not have any address fields set",
                 ),
             )
     }
