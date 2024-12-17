@@ -3,6 +3,7 @@ package no.nav.familie.ks.barnehagelister.kontrakt
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED
 import jakarta.validation.Valid
+import jakarta.validation.constraints.AssertTrue
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
@@ -114,8 +115,19 @@ data class PersonDTO(
     @field:NotBlank
     val lastName: String,
     @field:Valid
+    @Schema(
+        description = "Address for where the child lives. If the address is confidential it should be ommited.",
+    )
     val address: Address?,
-)
+    @Schema(
+        description = "Whether the address is confidential or not",
+        example = "false",
+    )
+    val confidentialAdress: Boolean = false,
+) {
+    @AssertTrue(message = "Must either have an address or be a confidential adress")
+    private fun isAddressOrConfidentialAdress() = (address != null && !confidentialAdress) || (address == null && confidentialAdress)
+}
 
 data class Address(
     @Schema(

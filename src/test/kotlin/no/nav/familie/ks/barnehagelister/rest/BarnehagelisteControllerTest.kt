@@ -212,7 +212,7 @@ class BarnehagelisteControllerTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(5)
+            .hasSize(6)
             .contains(
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.socialSecurityNumber", "must not be blank"),
@@ -236,6 +236,7 @@ class BarnehagelisteControllerTest {
                                                 socialSecurityNumber = "02011212345A",
                                                 lastName = "Nordmann",
                                                 address = null,
+                                                confidentialAdress = true,
                                             ),
                                     ),
                                 ),
@@ -396,6 +397,51 @@ class BarnehagelisteControllerTest {
             .hasSize(1)
             .contains(
                 ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
+            )
+    }
+
+    @Test
+    fun `POST barnehageliste - valider ingen adresse hvis hemmelig adresse`() {
+        val invalidBarnehageliste =
+            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+                kindergartens =
+                    listOf(
+                        BarnehagelisteTestdata.lagBarnehage().copy(
+                            childrenInformation =
+                                listOf(
+                                    BarnehagelisteTestdata.lagBarninfolinje().copy(
+                                        child =
+                                            PersonDTO(
+                                                firstName = "Ola Ola",
+                                                socialSecurityNumber = "02011212345",
+                                                lastName = "Nordmann",
+                                                address =
+                                                    Address(
+                                                        unitNumber = "H1234",
+                                                        addressLine1 = "1",
+                                                        addressLine2 = null,
+                                                        zipCode = "0102",
+                                                        postalTown = "Oslo",
+                                                    ),
+                                                confidentialAdress = true,
+                                            ),
+                                    ),
+                                ),
+                        ),
+                    ),
+            )
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
+
+        val problemDetail = hentProblemDetail(response)
+
+        assertBadRequest(problemDetail)
+        assertThat(problemDetail.errors)
+            .hasSize(1)
+            .contains(
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.addressOrConfidentialAdress",
+                    "Must either have an address or be a confidential adress",
+                ),
             )
     }
 
