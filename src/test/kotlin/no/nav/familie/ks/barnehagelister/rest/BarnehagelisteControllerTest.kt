@@ -125,8 +125,14 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "Municipality number must have 4 digits"),
-                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "Municipality number must be a numeric field"),
+                ValideringsfeilInfo(
+                    "listInformationRequestDto.municipalityNumber",
+                    "Municipality number must have 4 digits",
+                ),
+                ValideringsfeilInfo(
+                    "listInformationRequestDto.municipalityNumber",
+                    "Municipality number must be a numeric field",
+                ),
             )
     }
 
@@ -176,10 +182,12 @@ class BarnehagelisteControllerTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(6)
+            .hasSize(5)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].address.zipCode", "must not be blank"),
-                ValideringsfeilInfo("kindergartens[0].address.postalTown", "must not be blank"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].address.mandatoryFieldsSet",
+                    "Mandatory fields zipCode and/or postalTown are not set",
+                ),
             )
     }
 
@@ -215,7 +223,10 @@ class BarnehagelisteControllerTest {
             .hasSize(5)
             .contains(
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
-                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.socialSecurityNumber", "must not be blank"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
+                    "must not be blank",
+                ),
                 ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.firstName", "must not be blank"),
             )
     }
@@ -268,7 +279,9 @@ class BarnehagelisteControllerTest {
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
+                        BarnehagelisteTestdata
+                            .lagKindergartenRequestDto()
+                            .copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
                     ),
             )
 
@@ -280,7 +293,10 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must be a numeric field"),
+                ValideringsfeilInfo(
+                    "kindergartens[0].organizationNumber",
+                    "Organization number must be a numeric field",
+                ),
                 ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must have 9 digits"),
             )
     }
@@ -398,6 +414,51 @@ class BarnehagelisteControllerTest {
             .hasSize(1)
             .contains(
                 ValideringsfeilInfo("listInformationRequestDto.municipalityName", "size must be between 1 and 200"),
+            )
+    }
+
+    @Test
+    fun `POST barnehageliste - valider ingen adresse hvis hemmelig adresse`() {
+        val invalidBarnehageliste =
+            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+                kindergartens =
+                    listOf(
+                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                            childrenInformation =
+                                listOf(
+                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
+                                        child =
+                                            PersonRequestDto(
+                                                firstName = "Ola Ola",
+                                                socialSecurityNumber = "02011212345",
+                                                lastName = "Nordmann",
+                                                address =
+                                                    AddressRequestDto(
+                                                        unitNumber = "H0101",
+                                                        addressLine1 = "1",
+                                                        addressLine2 = null,
+                                                        zipCode = "1234",
+                                                        postalTown = "Oslo",
+                                                        confidentialAddress = true,
+                                                    ),
+                                            ),
+                                    ),
+                                ),
+                        ),
+                    ),
+            )
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
+
+        val problemDetail = hentProblemDetail(response)
+
+        assertBadRequest(problemDetail)
+        assertThat(problemDetail.errors)
+            .hasSize(1)
+            .contains(
+                ValideringsfeilInfo(
+                    "kindergartens[0].childrenInformation[0].child.address.addressOrConfidentialAddress",
+                    "A confidential address may not have any address fields set",
+                ),
             )
     }
 
