@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Person
-import no.nav.familie.ks.barnehagelister.domene.mapTilAdresse
 
 data class PersonRequestDto(
     @Schema(

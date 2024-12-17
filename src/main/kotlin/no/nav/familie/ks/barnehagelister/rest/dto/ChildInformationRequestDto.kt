@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.rest.dto
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.domene.BarnInfolinje
-import no.nav.familie.ks.barnehagelister.domene.mapTilPerson
 import java.time.LocalDate
 
 data class ChildInformationRequestDto(

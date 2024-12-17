@@ -1,8 +1,6 @@
 package no.nav.familie.ks.barnehagelister.domene
 
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
-import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilException
-import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilInfo
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.validation.BindingResult
-import org.springframework.validation.FieldError
 import java.util.UUID
 
 @Service
@@ -28,18 +25,6 @@ class BarnehagelisteService(
         skjemaV1: SkjemaV1,
         bindingResult: BindingResult,
     ): ResponseEntity<KindergartenlistResponse> {
-        if (bindingResult.hasErrors()) {
-            val feil =
-                bindingResult.allErrors.map {
-                    if (it is FieldError) {
-                        ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
-                    } else {
-                        ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
-                    }
-                }
-            throw ValideringsfeilException(feil)
-        }
-
         val barnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         return if (barnehageliste == null) {
             val innsendtListe = barnehagelisterRepository.insert(Barnehagelister(skjemaV1.id, skjemaV1, BarnehagelisteStatus.MOTTATT))

@@ -9,6 +9,7 @@ import no.nav.familie.ks.barnehagelister.rest.dto.mapTilSkjemaV1
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -24,16 +25,9 @@ class DefaultBarnehagelisterController(
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
+        bindingResult.kastValideringsfeilHvisValideringFeiler()
 
         return barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), bindingResult)
-    }
-
-    private fun validerGodkjentLeverandør(request: HttpServletRequest) {
-        val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
-
-        if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
-            throw UkjentLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
-        }
     }
 
     override fun status(
@@ -45,4 +39,26 @@ class DefaultBarnehagelisterController(
     }
 
     override fun ping(): String = barnehagelisteService.ping()
+
+    private fun validerGodkjentLeverandør(request: HttpServletRequest) {
+        val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
+
+        if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
+            throw UkjentLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
+        }
+    }
+
+    private fun BindingResult.kastValideringsfeilHvisValideringFeiler() {
+        if (hasErrors()) {
+            val feil =
+                allErrors.map {
+                    if (it is FieldError) {
+                        ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                    } else {
+                        ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                    }
+                }
+            throw ValideringsfeilException(feil)
+        }
+    }
 }
