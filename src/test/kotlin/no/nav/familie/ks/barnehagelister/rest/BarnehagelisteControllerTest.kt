@@ -86,10 +86,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityNumber = " ", municipalityName = " "),
             )
 
@@ -110,10 +110,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
             )
 
@@ -398,10 +398,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityName = "a".repeat(201)),
             )
 

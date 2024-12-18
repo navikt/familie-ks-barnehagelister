@@ -19,12 +19,12 @@ data class FormV1RequestDto(
     val kindergartens: List<KindergartenRequestDto>?,
     @field:NotNull
     @field:Valid
-    val listInformationRequestDto: ListInformationRequestDto,
+    val listInformation: ListInformationRequestDto,
 )
 
 fun FormV1RequestDto.mapTilSkjemaV1(): SkjemaV1 =
     SkjemaV1(
         id = this.id,
         barnehager = this.kindergartens?.map { it.mapTilBarnehage() },
-        listeopplysninger = this.listInformationRequestDto.mapTilListeopplysninger(),
+        listeopplysninger = this.listInformation.mapTilListeopplysninger(),
     )
