@@ -33,6 +33,7 @@ data class ChildInformationRequestDto(
 
 fun ChildInformationRequestDto.mapTilBarnInfolinje(): BarnInfolinje =
     BarnInfolinje(
+        barn = child.mapTilPerson(),
         avtaltOppholdstidTimer = this.agreedHoursInKindergarten,
         startdato = this.startDate,
         sluttdato = this.endDate,
