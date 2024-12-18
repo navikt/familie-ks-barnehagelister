@@ -101,8 +101,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "must not be blank"),
-                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
             )
     }
 
@@ -126,11 +126,11 @@ class BarnehagelisteControllerTest {
             .hasSize(2)
             .contains(
                 ValideringsfeilInfo(
-                    "listInformationRequestDto.municipalityNumber",
+                    "listInformation.municipalityNumber",
                     "Municipality number must have 4 digits",
                 ),
                 ValideringsfeilInfo(
-                    "listInformationRequestDto.municipalityNumber",
+                    "listInformation.municipalityNumber",
                     "Municipality number must be a numeric field",
                 ),
             )
@@ -413,7 +413,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "size must be between 1 and 200"),
+                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
             )
     }
 
