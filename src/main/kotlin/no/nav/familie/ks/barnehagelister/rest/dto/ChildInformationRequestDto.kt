@@ -5,6 +5,7 @@ import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.domene.BarnInfolinje
 import java.time.LocalDate
 
+@Schema(name = "ChildInformation")
 data class ChildInformationRequestDto(
     @Schema(
         description = "Number of hours per week it is agreed upon that the child will stay in the kindergarten",

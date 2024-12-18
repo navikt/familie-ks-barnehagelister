@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Person
 
+@Schema(name = "Person")
 data class PersonRequestDto(
     @Schema(
         description = "Identifier for the person, i.e., SSN or D-number",
