@@ -4,6 +4,7 @@ data class Adresse(
     val bruksenhetsnummer: String?,
     val adresselinje1: String?,
     val adresselinje2: String?,
-    val postnummer: String,
-    val poststed: String,
+    val postnummer: String?,
+    val poststed: String?,
+    val hemmeligAdresse: Boolean = false,
 )

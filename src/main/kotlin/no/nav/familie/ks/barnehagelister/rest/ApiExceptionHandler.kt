@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
@@ -69,9 +70,19 @@ class ApiExceptionHandler {
     fun onValideringsFeil(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail =
-        ProblemDetail
-            .forStatusAndDetail(HttpStatus.BAD_REQUEST, e.message ?: "Bad Request")
+    ): ProblemDetail {
+        val message =
+            if (e.cause is MissingKotlinParameterException) {
+                val cause = e.cause as MissingKotlinParameterException
+                val missingParameter = cause.parameter
+
+                "Couldn't parse request due to missing or null parameter: ${missingParameter.name}"
+            } else {
+                e.message ?: "Bad request"
+            }
+
+        return ProblemDetail
+            .forStatusAndDetail(HttpStatus.BAD_REQUEST, message)
             .apply {
                 type =
                     URI.create(
@@ -98,6 +109,7 @@ class ApiExceptionHandler {
                 logger.info("ValidationError for ${this.properties}")
                 secureLogger.error("ValidationError for ${this.properties}", e)
             }
+    }
 
     @ExceptionHandler(value = [UkjentLeverandørFeil::class])
     fun onUkjentLeverandørFeil(

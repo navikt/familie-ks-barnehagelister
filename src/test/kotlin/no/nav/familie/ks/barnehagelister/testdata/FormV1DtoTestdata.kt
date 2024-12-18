@@ -15,7 +15,7 @@ class FormV1DtoTestdata {
         fun gyldigBarnehageliste(): FormV1RequestDto =
             FormV1RequestDto(
                 id = UUID.randomUUID(),
-                listInformationRequestDto =
+                listInformation =
                     ListInformationRequestDto(
                         municipalityName = "Oslo",
                         municipalityNumber = "0301",
@@ -85,7 +85,7 @@ class FormV1DtoTestdata {
         fun barnehagelistBlankeFelt(): FormV1RequestDto =
             FormV1RequestDto(
                 id = UUID.randomUUID(),
-                listInformationRequestDto =
+                listInformation =
                     ListInformationRequestDto(
                         municipalityNumber = " ",
                         municipalityName = " ",

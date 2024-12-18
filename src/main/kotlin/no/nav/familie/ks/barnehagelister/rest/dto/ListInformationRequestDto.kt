@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Listeopplysninger
 import java.time.YearMonth
 
+@Schema(name = "ListInformation", requiredMode = Schema.RequiredMode.REQUIRED)
 data class ListInformationRequestDto(
     @field:NotBlank
     @field:Size(min = 1, max = 200)

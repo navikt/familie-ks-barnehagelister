@@ -1,11 +1,12 @@
 package no.nav.familie.ks.barnehagelister.rest.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
-import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.AssertTrue
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Adresse
 
+@Schema(name = "Address")
 data class AddressRequestDto(
     @Schema(
         description = """Unit number identifies a residential unit within a building or part of a building. 
@@ -31,22 +32,60 @@ data class AddressRequestDto(
         description = "Norwegian zip code, four digits",
         example = "0102",
     )
-    @field:NotBlank
     @field:Size(min = 4, max = 4, message = "Zip code must have 4 digits")
     @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Zip code must be a numeric field")
-    val zipCode: String,
+    val zipCode: String?,
     @Schema(
         description = "Norwegian city name",
     )
-    @field:NotBlank
-    val postalTown: String,
-)
+    val postalTown: String?,
+    @Schema(
+        description = "Whether the address is confidential or not. No other fields may be set if true",
+        example = "false",
+    )
+    val confidentialAddress: Boolean = false,
+) {
+    @AssertTrue(message = "A confidential address may not have any address fields set")
+    private fun isAddressOrConfidentialAddress(): Boolean =
+        if (confidentialAddress) {
+            noAdressFieldsAreSet()
+        } else {
+            true
+        }
+
+    @AssertTrue(message = "Mandatory fields zipCode and/or postalTown are not set")
+    private fun isMandatoryFieldsSet(): Boolean =
+        if (!confidentialAddress) {
+            !zipCode.isNullOrBlank() && !postalTown.isNullOrBlank()
+        } else {
+            true
+        }
+
+    private fun noAdressFieldsAreSet(): Boolean =
+        unitNumber == null &&
+            addressLine1 == null &&
+            addressLine2 == null &&
+            zipCode == null &&
+            postalTown == null
+}
 
 fun AddressRequestDto.mapTilAdresse(): Adresse =
-    Adresse(
-        bruksenhetsnummer = this.unitNumber,
-        adresselinje1 = this.addressLine1,
-        adresselinje2 = this.addressLine2,
-        postnummer = this.zipCode,
-        poststed = this.postalTown,
-    )
+    if (this.confidentialAddress) {
+        Adresse(
+            null,
+            null,
+            null,
+            null,
+            null,
+            hemmeligAdresse = true,
+        )
+    } else {
+        Adresse(
+            bruksenhetsnummer = this.unitNumber,
+            adresselinje1 = this.addressLine1,
+            adresselinje2 = this.addressLine2,
+            postnummer = this.zipCode,
+            poststed = this.postalTown,
+            hemmeligAdresse = false,
+        )
+    }

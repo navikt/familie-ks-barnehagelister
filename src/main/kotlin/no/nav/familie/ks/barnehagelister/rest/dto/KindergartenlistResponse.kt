@@ -13,7 +13,7 @@ data class KindergartenlistResponse(
     val links: ResponseLinksResponseDto,
 )
 
-@Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list")
+@Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list", name = "ResponseLinks")
 data class ResponseLinksResponseDto(
     val status: String,
 )
