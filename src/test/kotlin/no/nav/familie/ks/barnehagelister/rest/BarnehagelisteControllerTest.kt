@@ -86,10 +86,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityNumber = " ", municipalityName = " "),
             )
 
@@ -101,8 +101,8 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "must not be blank"),
-                ValideringsfeilInfo("listInformationRequestDto.municipalityNumber", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
+                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
             )
     }
 
@@ -110,10 +110,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
             )
 
@@ -126,11 +126,11 @@ class BarnehagelisteControllerTest {
             .hasSize(2)
             .contains(
                 ValideringsfeilInfo(
-                    "listInformationRequestDto.municipalityNumber",
+                    "listInformation.municipalityNumber",
                     "Municipality number must have 4 digits",
                 ),
                 ValideringsfeilInfo(
-                    "listInformationRequestDto.municipalityNumber",
+                    "listInformation.municipalityNumber",
                     "Municipality number must be a numeric field",
                 ),
             )
@@ -398,10 +398,10 @@ class BarnehagelisteControllerTest {
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
             BarnehagelisteTestdata.gyldigBarnehageliste().copy(
-                listInformationRequestDto =
+                listInformation =
                     BarnehagelisteTestdata
                         .gyldigBarnehageliste()
-                        .listInformationRequestDto
+                        .listInformation
                         .copy(municipalityName = "a".repeat(201)),
             )
 
@@ -413,7 +413,7 @@ class BarnehagelisteControllerTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listInformationRequestDto.municipalityName", "size must be between 1 and 200"),
+                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
             )
     }
 

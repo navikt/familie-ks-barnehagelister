@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Adresse
 
+@Schema(name = "Address")
 data class AddressRequestDto(
     @Schema(
         description = """Unit number identifies a residential unit within a building or part of a building. 
