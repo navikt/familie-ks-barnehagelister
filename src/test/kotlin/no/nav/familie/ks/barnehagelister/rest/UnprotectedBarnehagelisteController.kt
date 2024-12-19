@@ -36,11 +36,11 @@ class UnprotectedBarnehagelisteController(
 
     @Unprotected
     override fun status(
-        transaksjonsId: UUID,
+        id: UUID,
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> =
         barnehagelisteService
-            .hentBarnehagelister(transaksjonsId)
+            .hentBarnehagelister(id)
             ?.tilKindergartenlistResponse()
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()
