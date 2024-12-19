@@ -34,5 +34,5 @@ fun KindergartenlistResponse.toResponseEntity() =
     if (finishedTime == null) {
         ResponseEntity.accepted().body(this)
     } else {
-        ResponseEntity.ok().build()
+        ResponseEntity.ok().body(this)
     }
