@@ -35,13 +35,13 @@ class DefaultBarnehagelisterController(
     }
 
     override fun status(
-        transaksjonsId: UUID,
+        id: UUID,
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
         return barnehagelisteService
-            .hentBarnehagelister(transaksjonsId)
+            .hentBarnehagelister(id)
             ?.tilKindergartenlistResponse()
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()
