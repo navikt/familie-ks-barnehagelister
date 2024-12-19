@@ -1,4 +1,4 @@
-package no.nav.familie.ks.barnehagelister.rest
+package no.nav.familie.ks.barnehagelister.testdata
 
 import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.ChildInformationRequestDto
@@ -10,7 +10,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
-class BarnehagelisteTestdata {
+class FormV1DtoTestdata {
     companion object {
         fun gyldigBarnehageliste(): FormV1RequestDto =
             FormV1RequestDto(
