@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -91,7 +92,7 @@ interface BarnehagelisterController {
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse>
 
-    @Operation(summary = "Get status for submitted kindergartnen list")
+    @Operation(summary = "Get status for submitted kindergarten list")
     @ApiResponses(
         value = [
             ApiResponse(
@@ -147,11 +148,15 @@ interface BarnehagelisterController {
         ],
     )
     @GetMapping(
-        path = ["/status/{transaksjonsId}"],
+        path = ["/status/{id}"],
         produces = ["application/json;charset=UTF-8"],
     )
     fun status(
-        @PathVariable transaksjonsId: UUID,
+        @Parameter(
+            description = "The id of the submitted kindergarten list",
+            example = "19375e59-0f07-4c9b-a7bb-6f30fb43819b",
+        )
+        @PathVariable id: UUID,
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse>
 
