@@ -82,6 +82,8 @@ spec:
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
+  kafka:
+    pool: nav-dev
   
   
   azure:
