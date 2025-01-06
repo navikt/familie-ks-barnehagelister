@@ -1,6 +1,5 @@
 package no.nav.familie.ks.barnehagelister.config
 
-import no.nav.familie.kontrakter.felles.Applikasjon
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
@@ -34,7 +33,7 @@ class KafkaConfig(
             ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG to true,
             // Den sikrer at data ikke mistes
             ProducerConfig.ACKS_CONFIG to "all",
-            ProducerConfig.CLIENT_ID_CONFIG to Applikasjon.FAMILIE_KS_SAK.name,
+            ProducerConfig.CLIENT_ID_CONFIG to "FAMILIE_KS_BARNEHAGELISTER",
         ) + securityConfig()
 
     private fun securityConfig() =
