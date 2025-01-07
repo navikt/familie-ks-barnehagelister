@@ -17,8 +17,6 @@ class BarnehagebarnKafkaProducer(
     fun sendBarnehageBarn(barnehageBarn: BarnehageBarnKS) {
         val melding = objectMapper.writeValueAsString(barnehageBarn)
 
-        logger.info("Sendt $melding")
-
         val logMeldingMetadata =
             "Topicnavn: ${BARNEHAGELISTE_TOPIC} \n" +
                 "Nøkkel: ${barnehageBarn.id} \n"
