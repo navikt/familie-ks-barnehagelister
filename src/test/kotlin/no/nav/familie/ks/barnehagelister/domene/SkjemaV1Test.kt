@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.kafka.BarnehageBarnKS
+import no.nav.familie.ks.barnehagelister.kafka.Barnehagebarn
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,6 +29,6 @@ class SkjemaV1Test {
         val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehageBarnKS()
 
         // Assert
-        assertThat(barnehageBarnKS).isEqualTo(emptyList<BarnehageBarnKS>())
+        assertThat(barnehageBarnKS).isEqualTo(emptyList<Barnehagebarn>())
     }
 }
