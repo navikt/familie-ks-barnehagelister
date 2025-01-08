@@ -26,10 +26,6 @@
         <felles.version>3.20241127123724_adfc561</felles.version>
         <token-validation-spring.version>5.0.13</token-validation-spring.version>
         <springdoc.version>2.6.0</springdoc.version>
-
-        <!-- Kafka -->
-        <avro.version>1.12.0</avro.version>
-        <confluent.version>7.7.1</confluent.version>
     </properties>
 
     <dependencies>
@@ -108,14 +104,6 @@
             <version>${token-validation-spring.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>no.nav.familie.eksterne.kontrakter</groupId>-->
-        <!--            <artifactId>skatteetaten</artifactId>-->
-        <!--            <version>${familie.kontrakter.skatteetaten}</version>-->
-        <!--        </dependency>-->
-
-        <!-- https://github.com/spring-projects/spring-boot/issues/33044#issuecomment-1379812611 -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>

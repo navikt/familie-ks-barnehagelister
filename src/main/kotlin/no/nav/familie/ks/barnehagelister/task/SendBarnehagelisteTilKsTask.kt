@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.task
 
 import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehageBarnKS
-import no.nav.familie.ks.barnehagelister.kafka.BarnehagebarnKafkaProducer
+import no.nav.familie.ks.barnehagelister.kafka.IBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.prosessering.AsyncTaskStep
@@ -23,7 +23,7 @@ import java.util.UUID
 )
 class SendBarnehagelisteTilKsTask(
     private val barnehagelisterRepository: BarnehagelisterRepository,
-    private val barnehagebarnKafkaProducer: BarnehagebarnKafkaProducer,
+    private val barnehagebarnKafkaProducer: IBarnehagebarnKafkaProducer,
 ) : AsyncTaskStep {
     override fun doTask(task: Task) {
         logger.info("Sender barnehageliste til KS-sak")

@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
-import no.nav.familie.ks.barnehagelister.kafka.BarnehagebarnKafkaProducer
+import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
@@ -20,7 +20,7 @@ import java.util.UUID
 
 class SendBarnehagelisteTilKsTaskTest {
     val barnehagelisterRepository = mockk<BarnehagelisterRepository>()
-    val barnehagebarnKafkaProducer = mockk<BarnehagebarnKafkaProducer>()
+    val barnehagebarnKafkaProducer = mockk<DummyBarnehagebarnKafkaProducer>()
 
     val sendBarnehagelisteTilKsTask =
         SendBarnehagelisteTilKsTask(
