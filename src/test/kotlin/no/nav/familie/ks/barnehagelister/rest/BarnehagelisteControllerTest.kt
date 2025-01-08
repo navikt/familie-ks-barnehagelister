@@ -5,6 +5,7 @@ import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
+import no.nav.familie.ks.barnehagelister.testdata.FormV1DtoTestdata
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -48,7 +49,7 @@ class BarnehagelisteControllerTest {
 
     @Test
     fun `POST gyldig barnehagelister skal returnerere 202 OK`() {
-        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste()
+        val requestBody = FormV1DtoTestdata.gyldigBarnehageliste()
         this.mockMvc
             .perform(
                 post("/api/kindergartenlists/v1")
@@ -65,7 +66,7 @@ class BarnehagelisteControllerTest {
 
     @Test
     fun `POST gyldig barnehagelister uten barnehager skal returnere 202 OK`() {
-        val requestBody = BarnehagelisteTestdata.gyldigBarnehageliste().copy(kindergartens = null)
+        val requestBody = FormV1DtoTestdata.gyldigBarnehageliste().copy(kindergartens = null)
         this.mockMvc
             .perform(
                 post("/api/kindergartenlists/v1")
@@ -85,9 +86,9 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at String i listInformation ikke er blanke`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 listInformation =
-                    BarnehagelisteTestdata
+                    FormV1DtoTestdata
                         .gyldigBarnehageliste()
                         .listInformation
                         .copy(municipalityNumber = " ", municipalityName = " "),
@@ -109,9 +110,9 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at at municipalityNumber er 4 siffer`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 listInformation =
-                    BarnehagelisteTestdata
+                    FormV1DtoTestdata
                         .gyldigBarnehageliste()
                         .listInformation
                         .copy(municipalityNumber = "0x123", municipalityName = "Oslo"),
@@ -139,9 +140,9 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at String i Barnehage ikke er blanke`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
-                    listOf(BarnehagelisteTestdata.lagKindergartenRequestDto().copy(name = "", organizationNumber = " ")),
+                    listOf(FormV1DtoTestdata.lagKindergartenRequestDto().copy(name = "", organizationNumber = " ")),
             )
 
         val response = sendInvalidBarnehageliste(invalidBarnehageliste)
@@ -160,10 +161,10 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at String i Adresse ikke er blanke`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             address =
                                 AddressRequestDto(
                                     unitNumber = " ",
@@ -194,13 +195,13 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at String i Person ikke er blanke`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             childrenInformation =
                                 listOf(
-                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
+                                    FormV1DtoTestdata.lagChildInformationRequestDto().copy(
                                         child =
                                             PersonRequestDto(
                                                 firstName = " ",
@@ -234,13 +235,13 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - Fødselsnummer må være 11 tegn og numerisk`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             childrenInformation =
                                 listOf(
-                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
+                                    FormV1DtoTestdata.lagChildInformationRequestDto().copy(
                                         child =
                                             PersonRequestDto(
                                                 firstName = "Ola Ola",
@@ -276,12 +277,10 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at organisasjonsnummer er 9 tall`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata
-                            .lagKindergartenRequestDto()
-                            .copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
                     ),
             )
 
@@ -304,10 +303,10 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at postnummer er 4 numeriske tegn`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             address =
                                 AddressRequestDto(
                                     unitNumber = "H0101",
@@ -337,10 +336,10 @@ class BarnehagelisteControllerTest {
     @ValueSource(strings = ["H0101", "U1234", "L5423", "K0123"])
     fun `POST barnehageliste - valider gyldig bruksenhetnummer`(bruksenhetnummer: String) {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             address =
                                 AddressRequestDto(
                                     unitNumber = bruksenhetnummer,
@@ -365,10 +364,10 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider at ugylidg bruksenhetnummer gir valideringsfeil`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             address =
                                 AddressRequestDto(
                                     unitNumber = "A056230101",
@@ -397,9 +396,9 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider input større enn 200 tegn`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 listInformation =
-                    BarnehagelisteTestdata
+                    FormV1DtoTestdata
                         .gyldigBarnehageliste()
                         .listInformation
                         .copy(municipalityName = "a".repeat(201)),
@@ -420,13 +419,13 @@ class BarnehagelisteControllerTest {
     @Test
     fun `POST barnehageliste - valider ingen adresse hvis hemmelig adresse`() {
         val invalidBarnehageliste =
-            BarnehagelisteTestdata.gyldigBarnehageliste().copy(
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        BarnehagelisteTestdata.lagKindergartenRequestDto().copy(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(
                             childrenInformation =
                                 listOf(
-                                    BarnehagelisteTestdata.lagChildInformationRequestDto().copy(
+                                    FormV1DtoTestdata.lagChildInformationRequestDto().copy(
                                         child =
                                             PersonRequestDto(
                                                 firstName = "Ola Ola",
