@@ -30,7 +30,7 @@ class DefaultBarnehagelisterController(
         validerGodkjentLeverandør(request)
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        val leverandørOrgNr = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
+        val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
 
         val barnehagelister =
             barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr)
