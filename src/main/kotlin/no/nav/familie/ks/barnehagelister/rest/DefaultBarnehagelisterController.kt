@@ -51,10 +51,10 @@ class DefaultBarnehagelisterController(
 
         return when {
             barnehagelister != null && barnehagelister.leverandorOrgNr != leverandørOrgNr ->
-                error("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
+                throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
 
             barnehagelister != null && kommunenummer != barnehagelister.rawJson.listeopplysninger.kommunenummer ->
-                error("The requested kindergarten list were not sent in by municipality $kommunenummer")
+                throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by municipality $kommunenummer")
 
             else ->
                 barnehagelister
@@ -67,10 +67,10 @@ class DefaultBarnehagelisterController(
     override fun ping(): String = "\"OK\""
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {
-        val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
+        val supplierId = request.hentSupplierId() ?: throw UgyldigKommuneEllerLeverandørFeil("No supplier in request.")
 
         if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
-            throw UkjentLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
+            throw UgyldigKommuneEllerLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
         }
     }
 

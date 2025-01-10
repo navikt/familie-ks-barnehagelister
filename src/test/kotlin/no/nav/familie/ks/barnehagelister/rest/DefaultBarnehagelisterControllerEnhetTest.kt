@@ -65,7 +65,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
 
             // Act && Assert
             val exception =
-                assertThrows<UkjentLeverandørFeil> {
+                assertThrows<UgyldigKommuneEllerLeverandørFeil> {
                     barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
                 }
 
@@ -98,7 +98,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
 
         // Act && Assert
         val exception =
-            assertThrows<IllegalStateException> {
+            assertThrows<UgyldigKommuneEllerLeverandørFeil> {
                 barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
             }
 
@@ -130,7 +130,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
 
         // Act & Assert
         val exception =
-            assertThrows<IllegalStateException> {
+            assertThrows<UgyldigKommuneEllerLeverandørFeil> {
                 barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
             }
 
