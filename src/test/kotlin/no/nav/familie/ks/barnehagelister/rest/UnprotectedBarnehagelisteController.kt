@@ -29,7 +29,10 @@ class UnprotectedBarnehagelisteController(
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
         val barnehagelister =
-            barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1())
+            barnehagelisteService.mottaBarnehagelister(
+                formV1RequestDto.mapTilSkjemaV1(),
+                "testleverandørOrgNr",
+            )
 
         return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
     }

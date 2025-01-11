@@ -16,7 +16,10 @@ class BarnehagelisteService(
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
-    fun mottaBarnehagelister(skjemaV1: SkjemaV1): Barnehagelister {
+    fun mottaBarnehagelister(
+        skjemaV1: SkjemaV1,
+        leverandørOrgNr: String,
+    ): Barnehagelister {
         val eksisterendeBarnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         if (eksisterendeBarnehageliste != null) {
             logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
@@ -27,9 +30,10 @@ class BarnehagelisteService(
             barnehagelisterRepository
                 .insert(
                     Barnehagelister(
-                        skjemaV1.id,
-                        skjemaV1,
-                        BarnehagelisteStatus.MOTTATT,
+                        id = skjemaV1.id,
+                        rawJson = skjemaV1,
+                        status = BarnehagelisteStatus.MOTTATT,
+                        leverandorOrgNr = leverandørOrgNr,
                     ),
                 )
 
