@@ -3,6 +3,7 @@ package no.nav.familie.ks.barnehagelister.rest
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.tilKindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
@@ -29,7 +30,10 @@ class DefaultBarnehagelisterController(
         validerGodkjentLeverandør(request)
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        val barnehagelister = barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1())
+        val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
+
+        val barnehagelister =
+            barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr)
 
         return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
     }
@@ -40,20 +44,33 @@ class DefaultBarnehagelisterController(
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
-        return barnehagelisteService
-            .hentBarnehagelister(id)
-            ?.tilKindergartenlistResponse()
-            ?.toResponseEntity()
-            ?: ResponseEntity.notFound().build()
+        val barnehagelister = barnehagelisteService.hentBarnehagelister(id)
+
+        val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
+        val kommunenummer = request.hentConsumerId() ?: error("No municipality in request.")
+
+        return when {
+            barnehagelister != null && barnehagelister.leverandorOrgNr != leverandørOrgNr ->
+                throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
+
+            barnehagelister != null && kommunenummer != barnehagelister.rawJson.listeopplysninger.kommunenummer ->
+                throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by municipality $kommunenummer")
+
+            else ->
+                barnehagelister
+                    ?.tilKindergartenlistResponse()
+                    ?.toResponseEntity()
+                    ?: ResponseEntity.notFound().build()
+        }
     }
 
     override fun ping(): String = "\"OK\""
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {
-        val supplierId = request.hentSupplierId() ?: throw UkjentLeverandørFeil("No supplier in request.")
+        val supplierId = request.hentSupplierId() ?: throw UgyldigKommuneEllerLeverandørFeil("No supplier in request.")
 
         if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
-            throw UkjentLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
+            throw UgyldigKommuneEllerLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
         }
     }
 

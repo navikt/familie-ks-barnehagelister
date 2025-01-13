@@ -14,6 +14,6 @@ data class Leverandør(
     var navn: String,
 )
 
-class UkjentLeverandørFeil(
+class UgyldigKommuneEllerLeverandørFeil(
     message: String?,
 ) : Exception(message)
