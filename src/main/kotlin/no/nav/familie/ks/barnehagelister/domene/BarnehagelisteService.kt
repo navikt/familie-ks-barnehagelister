@@ -50,12 +50,13 @@ class BarnehagelisteService(
         return barnehagelisterRepository.findByIdOrNull(barnehagelisterId)
     }
 
-    fun setListeFerdig(barnehageliste: Barnehagelister){
-        barnehagelisterRepository.update(barnehageliste
-            .copy(
-                status = BarnehagelisteStatus.FERDIG,
-                ferdigTid = LocalDateTime.now(),
-            )
+    fun settTilFerdig(barnehageliste: Barnehagelister) {
+        barnehagelisterRepository.update(
+            barnehageliste
+                .copy(
+                    status = BarnehagelisteStatus.FERDIG,
+                    ferdigTid = LocalDateTime.now(),
+                ),
         )
     }
 }

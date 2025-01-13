@@ -1,9 +1,13 @@
 package no.nav.familie.ks.barnehagelister.task
 
-import io.mockk.*
+import io.mockk.clearAllMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
-import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
@@ -44,8 +48,8 @@ class LesBarnehagelisteTaskTest {
         val mockTask = Task("", "")
 
         every { barnehagelisteService.hentBarnehagelister(barnehagelisteId) } returns mockBarnehagelister
-        every { barnehagelisteService.setListeFerdig(mockBarnehagelister) } just runs
-        every {taskService.save(any())} returns mockTask
+        every { barnehagelisteService.settTilFerdig(mockBarnehagelister) } just runs
+        every { taskService.save(any()) } returns mockTask
 
         val task = LesBarnehagelisteTask.opprettTask(barnehagelisteId)
 

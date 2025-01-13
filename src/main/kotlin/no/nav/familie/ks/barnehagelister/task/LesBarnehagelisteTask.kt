@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.task
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
@@ -11,9 +10,7 @@ import no.nav.familie.prosessering.domene.Task
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 import java.util.Properties
 import java.util.UUID
 
@@ -48,7 +45,7 @@ class LesBarnehagelisteTask(
             taskService.save(SendBarnehagebarnTilKsTask.opprettTask(barn.id))
         }
 
-        barnehagelisteService.setListeFerdig(barnehageliste)
+        barnehagelisteService.settTilFerdig(barnehageliste)
     }
 
     companion object {

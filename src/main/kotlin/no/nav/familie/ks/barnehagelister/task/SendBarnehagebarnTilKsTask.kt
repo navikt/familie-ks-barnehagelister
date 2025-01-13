@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.task
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.kafka.IBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
@@ -42,7 +41,6 @@ class SendBarnehagebarnTilKsTask(
         ) { "Barnehageliste med id ${barnehageliste.id} er ikke ferdig prossesert" }
 
         barnehagebarnKafkaProducer.sendBarnehageBarn(barnehagebarn)
-
     }
 
     companion object {

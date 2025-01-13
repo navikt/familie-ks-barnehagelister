@@ -10,7 +10,6 @@ import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
 import org.assertj.core.api.Assertions.assertThat
