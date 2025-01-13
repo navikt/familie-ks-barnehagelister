@@ -111,8 +111,8 @@ class ApiExceptionHandler {
             }
     }
 
-    @ExceptionHandler(value = [UkjentLeverandørFeil::class])
-    fun onUkjentLeverandørFeil(
+    @ExceptionHandler(value = [UgyldigKommuneEllerLeverandørFeil::class])
+    fun onUgyldigKommuneEllerLeverandørFeil(
         e: Exception,
         request: HttpServletRequest,
     ): ProblemDetail =
@@ -128,7 +128,7 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.info("Kalte applikasjonen med en ukjent leverandør. ${this.properties}")
-                secureLogger.error("Kalte applikasjonen med en ukjent leverandør. ${this.properties}", e)
+                logger.info("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
+                secureLogger.error("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
             }
 }

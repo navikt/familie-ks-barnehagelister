@@ -34,7 +34,7 @@ import java.nio.charset.Charset
 @ActiveProfiles("dev")
 @ContextConfiguration(initializers = [DbContainerInitializer::class])
 @EnableMockOAuth2Server
-class BarnehagelisteControllerTest {
+class UnprotectedBarnehagelisteControllerIntegrasjonTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
