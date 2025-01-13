@@ -1,3 +1,4 @@
+test
 # familie-ks-barnehagelister
 
 Eksternt API for å motta barnehagelister for Kontantstøtte.  
