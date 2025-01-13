@@ -57,7 +57,7 @@ class SkjemaV1TestData {
             )
 
         // BarnehageBarnKs som samsvarer med lagSkjemaV1()
-        fun lagTilhørendeBarnehageBarnKs() =
+        fun lagTilhørendeBarnehageBarnKs(barnehagelisteId: UUID = skjemaV1Id) =
             Barnehagebarn(
                 ident = lagBarn().fodselsnummer,
                 fom = lagBarnInfolinje().startdato,
@@ -65,7 +65,7 @@ class SkjemaV1TestData {
                 antallTimerIBarnehage = lagBarnInfolinje().avtaltOppholdstidTimer,
                 kommuneNavn = lagListeOpplysninger().kommunenavn,
                 kommuneNr = lagListeOpplysninger().kommunenummer,
-                arkivReferanse = skjemaV1Id.toString(),
+                barnehagelisteId = barnehagelisteId,
                 organisasjonsnummer = lagBarnehage().organisasjonsnummer,
             )
     }

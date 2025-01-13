@@ -12,7 +12,7 @@ class SkjemaV1Test {
         val gyldigSkjemaV1 = SkjemaV1TestData.lagSkjemaV1()
 
         // Act
-        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehageBarnKS()!!.first()
+        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehagebarn()!!.first()
 
         // Assert
         val forventetBarnehageBarnKS = SkjemaV1TestData.lagTilhørendeBarnehageBarnKs()
@@ -26,7 +26,7 @@ class SkjemaV1Test {
         val gyldigSkjemaV1 = SkjemaV1TestData.lagSkjemaV1().copy(barnehager = emptyList())
 
         // Act
-        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehageBarnKS()
+        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehagebarn()
 
         // Assert
         assertThat(barnehageBarnKS).isEqualTo(emptyList<Barnehagebarn>())

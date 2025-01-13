@@ -8,7 +8,7 @@ CREATE TABLE barnehagebarn
     endringstype             VARCHAR                                      NOT NULL,
     kommune_navm             VARCHAR                                      NOT NULL,
     kommune_nr               VARCHAR                                      NOT NULL,
-    arkiv_referanse          UUID                                         NOT NULL,
+    fk_barnehagelister_id    UUID references barnehagelister (id)         NOT NULL,
     organisasjonsnummer      VARCHAR                                      NOT NULL,
     -- Base entitet felter
     versjon                  BIGINT       DEFAULT 0                       NOT NULL,

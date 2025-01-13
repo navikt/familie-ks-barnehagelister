@@ -1,5 +1,8 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
+import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
+import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.prosessering.AsyncTaskStep
@@ -16,38 +19,41 @@ import java.util.UUID
 
 @Service
 @TaskStepBeskrivelse(
-    taskStepType = MottattBarnehagelisteTask.TASK_STEP_TYPE,
+    taskStepType = LesBarnehagelisteTask.TASK_STEP_TYPE,
     beskrivelse = "Har mottatt barnehagelister. Validerer og trigger videre håndtering.",
     maxAntallFeil = 3,
     triggerTidVedFeilISekunder = 5,
 )
-class MottattBarnehagelisteTask(
-    private val barnehagelisterRepository: BarnehagelisterRepository,
+class LesBarnehagelisteTask(
+    private val barnehagebarnRepository: BarnehagebarnRepository,
     private val taskService: TaskService,
+    private val barnehagelisteService: BarnehagelisteService,
 ) : AsyncTaskStep {
     override fun doTask(task: Task) {
         logger.info("Kjører task for mottak av ny barnehageliste.")
         val barnehagelisteId = UUID.fromString(task.payload)
 
         val barnehageliste =
-            barnehagelisterRepository.findByIdOrNull(barnehagelisteId) ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
+            barnehagelisteService.hentBarnehagelister(barnehagelisteId) ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
 
-        barnehageliste
-            .copy(
-                status = BarnehagelisteStatus.FERDIG,
-                ferdigTid = LocalDateTime.now(),
-            ).also {
-                barnehagelisterRepository.update(it)
-            }
-    }
+        if (barnehageliste.status == BarnehagelisteStatus.FERDIG) {
+            return
+        }
 
-    override fun onCompletion(task: Task) {
-        taskService.save(SendBarnehagelisteTilKsTask.opprettTask(UUID.fromString(task.payload)))
+        val barnehagebarn = barnehageliste.rawJson.mapTilBarnehagebarn()
+
+        barnehagebarnRepository.insertAll(barnehagebarn)
+
+        barnehagebarn.forEach { barn ->
+            taskService.save(SendBarnehagebarnTilKsTask.opprettTask(barn.id))
+        }
+
+        barnehagelisteService.setListeFerdig(barnehageliste)
     }
 
     companion object {
         const val TASK_STEP_TYPE = "mottattBarnehagelisteTask"
-        private val logger: Logger = LoggerFactory.getLogger(MottattBarnehagelisteTask::class.java)
+        private val logger: Logger = LoggerFactory.getLogger(LesBarnehagelisteTask::class.java)
 
         fun opprettTask(barnehagelisteId: UUID): Task =
             Task(

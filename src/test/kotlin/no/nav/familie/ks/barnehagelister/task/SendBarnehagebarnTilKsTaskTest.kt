@@ -6,8 +6,10 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
+import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
@@ -18,13 +20,15 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import java.util.UUID
 
-class SendBarnehagelisteTilKsTaskTest {
-    val barnehagelisterRepository = mockk<BarnehagelisterRepository>()
+class SendBarnehagebarnTilKsTaskTest {
+    val barnehagelisteService = mockk<BarnehagelisteService>()
     val barnehagebarnKafkaProducer = mockk<DummyBarnehagebarnKafkaProducer>()
+    val barnehagebarnRepository = mockk<BarnehagebarnRepository>()
 
-    val sendBarnehagelisteTilKsTask =
-        SendBarnehagelisteTilKsTask(
-            barnehagelisterRepository = barnehagelisterRepository,
+    val sendBarnehagebarnTilKsTask =
+        SendBarnehagebarnTilKsTask(
+            barnehagebarnRepository = barnehagebarnRepository,
+            barnehagelisteService = barnehagelisteService,
             barnehagebarnKafkaProducer = barnehagebarnKafkaProducer,
         )
 
@@ -46,15 +50,19 @@ class SendBarnehagelisteTilKsTaskTest {
                 status = BarnehagelisteStatus.FERDIG,
             )
 
-        every { barnehagelisterRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagelister
+        val mockBarnehagebarn =
+            SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
 
-        val sendBarnehagelisteTask = SendBarnehagelisteTilKsTask.opprettTask(barnehagelisteId)
+        every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
+        every { barnehagelisteService.hentBarnehagelister(barnehagelisteId) } returns mockBarnehagelister
+
+        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
 
         // Act
-        sendBarnehagelisteTilKsTask.doTask(sendBarnehagelisteTask)
+        sendBarnehagebarnTilKsTask.doTask(sendBarnehagelisteTask)
 
         // Assert
-        verify(exactly = 1) { barnehagebarnKafkaProducer.sendBarnehageBarn(any()) }
+        verify(exactly = 1) { barnehagebarnKafkaProducer.sendBarnehageBarn(mockBarnehagebarn) }
     }
 
     @Test
@@ -67,38 +75,21 @@ class SendBarnehagelisteTilKsTaskTest {
                 status = BarnehagelisteStatus.MOTTATT,
             )
 
-        every { barnehagelisterRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagelister
+        val mockBarnehagebarn =
+            SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
 
-        val sendBarnehagelisteTask = SendBarnehagelisteTilKsTask.opprettTask(barnehagelisteId)
+        every { barnehagelisteService.hentBarnehagelister(barnehagelisteId) } returns mockBarnehagelister
+        every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
+
+        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
 
         // Act && Assert
         val exception =
             assertThrows<IllegalStateException> {
-                sendBarnehagelisteTilKsTask.doTask(sendBarnehagelisteTask)
+                sendBarnehagebarnTilKsTask.doTask(sendBarnehagelisteTask)
             }
 
         // Assert
         assertThat(exception.message).isEqualTo("Barnehageliste med id $barnehagelisteId er ikke ferdig prossesert")
-    }
-
-    @Test
-    fun `Skal ikke legge barnehagebarn på kø når det ikke er noen barnehage`() {
-        // Arrange
-        val mockBarnehagelister =
-            Barnehagelister(
-                id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1().copy(barnehager = emptyList()),
-                status = BarnehagelisteStatus.FERDIG,
-            )
-
-        every { barnehagelisterRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagelister
-
-        val sendBarnehagelisteTask = SendBarnehagelisteTilKsTask.opprettTask(barnehagelisteId)
-
-        // Act
-        sendBarnehagelisteTilKsTask.doTask(sendBarnehagelisteTask)
-
-        // Assert
-        verify(exactly = 0) { barnehagebarnKafkaProducer.sendBarnehageBarn(any()) }
     }
 }
