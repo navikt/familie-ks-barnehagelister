@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 import kotlin.reflect.KClass
 
+fun String.erKunTall() = this.all { char -> char.isDigit() }
+
 @Constraint(validatedBy = [OrganisasjonsnummerValidator::class])
 @Target(AnnotationTarget.FIELD)
 annotation class Organisasjonsnummer(
@@ -21,7 +23,7 @@ class OrganisasjonsnummerValidator : ConstraintValidator<Organisasjonsnummer, St
         organisasjonsnummer.trim().apply {
             val valid =
                 harOrganisasjonsnummerRiktigLengde(this) &&
-                    erOrganisasjonsnummerKunTall(this) &&
+                    organisasjonsnummer.erKunTall() &&
                     erGyldigOrganisasjonsnummer(this)
 
             if (!valid) {

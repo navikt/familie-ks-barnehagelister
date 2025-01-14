@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 annotation class Fødselsnummer(
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<*>> = [],
-    val message: String = "Fødselsnummer er ikke ugyldig",
+    val message: String = "Social Security Number is not valid",
 )
 
 class FødselsnummerValidator : ConstraintValidator<Fødselsnummer, String> {

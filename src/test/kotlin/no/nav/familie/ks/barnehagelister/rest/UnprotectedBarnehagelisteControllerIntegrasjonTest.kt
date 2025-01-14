@@ -265,7 +265,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             .contains(
                 ValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
-                    "Social Security Number must be a numeric field",
+                    "Social Security Number is not valid",
                 ),
                 ValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
@@ -447,7 +447,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
                                         child =
                                             PersonRequestDto(
                                                 firstName = "Ola Ola",
-                                                socialSecurityNumber = "02011212345",
+                                                socialSecurityNumber = "30438227985",
                                                 lastName = "Nordmann",
                                                 address =
                                                     AddressRequestDto(
