@@ -18,11 +18,11 @@ import java.util.UUID
 
 @Profile("!dev")
 @RestController
-class DefaultBarnehagelisterController(
+class DefaultBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
     private val godkjenteLeverandører: GodkjenteLeverandører,
-) : BarnehagelisterController {
-    override fun mottaBarnehagelister(
+) : BarnehagelisteController {
+    override fun mottaBarnehageliste(
         formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
         request: HttpServletRequest,
@@ -32,10 +32,10 @@ class DefaultBarnehagelisterController(
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
 
-        val barnehagelister =
-            barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr)
+        val barnehageliste =
+            barnehagelisteService.mottaBarnehageliste(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr)
 
-        return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
+        return barnehageliste.tilKindergartenlistResponse().toResponseEntity()
     }
 
     override fun status(
@@ -44,20 +44,20 @@ class DefaultBarnehagelisterController(
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
-        val barnehagelister = barnehagelisteService.hentBarnehagelister(id)
+        val barnehageliste = barnehagelisteService.hentBarnehageliste(id)
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
         val kommunenummer = request.hentConsumerId() ?: error("No municipality in request.")
 
         return when {
-            barnehagelister != null && barnehagelister.leverandorOrgNr != leverandørOrgNr ->
+            barnehageliste != null && barnehageliste.leverandorOrgNr != leverandørOrgNr ->
                 throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
 
-            barnehagelister != null && kommunenummer != barnehagelister.rawJson.listeopplysninger.kommunenummer ->
+            barnehageliste != null && kommunenummer != barnehageliste.rawJson.listeopplysninger.kommunenummer ->
                 throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by municipality $kommunenummer")
 
             else ->
-                barnehagelister
+                barnehageliste
                     ?.tilKindergartenlistResponse()
                     ?.toResponseEntity()
                     ?: ResponseEntity.notFound().build()

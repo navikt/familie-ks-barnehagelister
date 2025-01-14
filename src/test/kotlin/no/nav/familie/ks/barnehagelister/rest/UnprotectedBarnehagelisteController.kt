@@ -19,9 +19,9 @@ import java.util.UUID
 @RestController
 class UnprotectedBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
-) : BarnehagelisterController {
+) : BarnehagelisteController {
     @Unprotected
-    override fun mottaBarnehagelister(
+    override fun mottaBarnehageliste(
         formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
         request: HttpServletRequest,
@@ -29,7 +29,7 @@ class UnprotectedBarnehagelisteController(
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
         val barnehagelister =
-            barnehagelisteService.mottaBarnehagelister(
+            barnehagelisteService.mottaBarnehageliste(
                 formV1RequestDto.mapTilSkjemaV1(),
                 "testleverandørOrgNr",
             )
@@ -43,7 +43,7 @@ class UnprotectedBarnehagelisteController(
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> =
         barnehagelisteService
-            .hentBarnehagelister(id)
+            .hentBarnehageliste(id)
             ?.tilKindergartenlistResponse()
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()

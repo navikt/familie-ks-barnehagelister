@@ -25,7 +25,7 @@ import java.util.UUID
     claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"],
 )
 @RequestMapping("/api/kindergartenlists")
-interface BarnehagelisterController {
+interface BarnehagelisteController {
     @Operation(summary = "Send in kindergarten list", operationId = "receiveKindergartenList")
     @ApiResponses(
         value = [
@@ -86,7 +86,7 @@ interface BarnehagelisterController {
         produces = ["application/json;charset=UTF-8"],
         consumes = ["application/json;charset=UTF-8"],
     )
-    fun mottaBarnehagelister(
+    fun mottaBarnehageliste(
         @Valid @RequestBody formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
         request: HttpServletRequest,

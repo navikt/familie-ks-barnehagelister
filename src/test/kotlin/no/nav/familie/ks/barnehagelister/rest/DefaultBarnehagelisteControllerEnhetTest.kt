@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import jakarta.servlet.http.HttpServletRequest
+import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
-import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -17,12 +17,12 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
 import java.util.UUID
 
-class DefaultBarnehagelisterControllerEnhetTest {
+class DefaultBarnehagelisteControllerEnhetTest {
     private val mockBarnehagelisteService = mockk<BarnehagelisteService>()
     private val mockGodkjenteLeverandør = mockk<GodkjenteLeverandører>()
 
     private val barnehagelisterController =
-        DefaultBarnehagelisterController(mockBarnehagelisteService, mockGodkjenteLeverandør)
+        DefaultBarnehagelisteController(mockBarnehagelisteService, mockGodkjenteLeverandør)
 
     @Nested
     inner class StatusTest {
@@ -33,7 +33,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -55,7 +55,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -80,15 +80,15 @@ class DefaultBarnehagelisterControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentConsumerId)
         mockkStatic(HttpServletRequest::hentSupplierId)
 
-        val lagetBarnehagelister =
-            Barnehagelister(
+        val lagetBarnehageliste =
+            Barnehageliste(
                 id = UUID.randomUUID(),
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
             )
 
-        every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
+        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
         every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -112,15 +112,15 @@ class DefaultBarnehagelisterControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentConsumerId)
         mockkStatic(HttpServletRequest::hentSupplierId)
 
-        val lagetBarnehagelister =
-            Barnehagelister(
+        val lagetBarnehageliste =
+            Barnehageliste(
                 id = UUID.randomUUID(),
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
             )
 
-        every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
+        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
         every { any<HttpServletRequest>().hentConsumerId() } returns "12345"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -145,15 +145,15 @@ class DefaultBarnehagelisterControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentSupplierId)
 
         val uuid = UUID.randomUUID()
-        val lagetBarnehagelister =
-            Barnehagelister(
+        val lagetBarnehageliste =
+            Barnehageliste(
                 id = uuid,
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
             )
 
-        every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
+        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
         every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
