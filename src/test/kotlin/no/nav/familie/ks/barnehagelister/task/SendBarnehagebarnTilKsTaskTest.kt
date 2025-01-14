@@ -6,8 +6,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
+import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
-import no.nav.familie.ks.barnehagelister.domene.Barnehagelister
 import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -42,8 +42,8 @@ class SendBarnehagebarnTilKsTaskTest {
     @Test
     fun `Skal legge barnehagebarn på kø`() {
         // Arrange
-        val mockBarnehagelister =
-            Barnehagelister(
+        val mockBarnehageliste =
+            Barnehageliste(
                 id = barnehagelisteId,
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
@@ -53,7 +53,7 @@ class SendBarnehagebarnTilKsTaskTest {
             SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
 
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
-        every { barnehagelisteService.hentBarnehagelister(barnehagelisteId) } returns mockBarnehagelister
+        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
 
         val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
 
@@ -67,8 +67,8 @@ class SendBarnehagebarnTilKsTaskTest {
     @Test
     fun `Skal kaste feil hvis barnehagelisten ikke er ferdig`() {
         // Arrange
-        val mockBarnehagelister =
-            Barnehagelister(
+        val mockBarnehageliste =
+            Barnehageliste(
                 id = barnehagelisteId,
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.MOTTATT,
@@ -77,7 +77,7 @@ class SendBarnehagebarnTilKsTaskTest {
         val mockBarnehagebarn =
             SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
 
-        every { barnehagelisteService.hentBarnehagelister(barnehagelisteId) } returns mockBarnehagelister
+        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
 
         val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)

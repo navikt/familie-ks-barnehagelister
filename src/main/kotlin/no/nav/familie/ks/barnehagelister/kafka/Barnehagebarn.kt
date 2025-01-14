@@ -14,7 +14,7 @@ data class Barnehagebarn(
     val antallTimerIBarnehage: Double,
     val kommuneNavn: String,
     val kommuneNr: String,
-    @Column("fk_barnehagelister_id")
+    @Column("fk_barnehageliste_id")
     val barnehagelisteId: UUID,
     val organisasjonsnummer: String,
 )

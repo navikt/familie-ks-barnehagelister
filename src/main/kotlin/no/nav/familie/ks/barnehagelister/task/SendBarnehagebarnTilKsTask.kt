@@ -33,7 +33,7 @@ class SendBarnehagebarnTilKsTask(
                 ?: error("Barnehagebarn med id $barnehagebarnId eksisterer ikke")
 
         val barnehageliste =
-            barnehagelisteService.hentBarnehagelister(barnehagebarn.barnehagelisteId)
+            barnehagelisteService.hentBarnehageliste(barnehagebarn.barnehagelisteId)
                 ?: error("Fant ikke barnehageliste med id ${barnehagebarn.barnehagelisteId}")
 
         check(

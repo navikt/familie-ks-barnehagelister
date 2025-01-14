@@ -1,3 +1,5 @@
+ALTER TABLE barnehagelister RENAME TO barnehageliste;
+
 CREATE TABLE barnehagebarn
 (
     id                       UUID PRIMARY KEY,
@@ -7,7 +9,7 @@ CREATE TABLE barnehagebarn
     antall_timer_i_barnehage NUMERIC,
     kommune_navn             VARCHAR                                      NOT NULL,
     kommune_nr               VARCHAR                                      NOT NULL,
-    fk_barnehagelister_id    UUID references barnehagelister (id)         NOT NULL,
+    fk_barnehageliste_id    UUID references barnehageliste (id)         NOT NULL,
     organisasjonsnummer      VARCHAR                                      NOT NULL,
     -- Base entitet felter
     versjon                  BIGINT       DEFAULT 0                       NOT NULL,

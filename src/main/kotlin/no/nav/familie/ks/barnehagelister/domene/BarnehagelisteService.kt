@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.task.LesBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService
@@ -12,25 +12,25 @@ import java.util.UUID
 
 @Service
 class BarnehagelisteService(
-    private val barnehagelisterRepository: BarnehagelisterRepository,
+    private val barnehagelisteRepository: BarnehagelisteRepository,
     private val taskService: TaskService,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
-    fun mottaBarnehagelister(
+    fun mottaBarnehageliste(
         skjemaV1: SkjemaV1,
         leverandørOrgNr: String,
-    ): Barnehagelister {
-        val eksisterendeBarnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
+    ): Barnehageliste {
+        val eksisterendeBarnehageliste = barnehagelisteRepository.findByIdOrNull(skjemaV1.id)
         if (eksisterendeBarnehageliste != null) {
             logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
             return eksisterendeBarnehageliste
         }
 
         val lagretBarnehageliste =
-            barnehagelisterRepository
+            barnehagelisteRepository
                 .insert(
-                    Barnehagelister(
+                    Barnehageliste(
                         id = skjemaV1.id,
                         rawJson = skjemaV1,
                         status = BarnehagelisteStatus.MOTTATT,
@@ -44,14 +44,14 @@ class BarnehagelisteService(
         return lagretBarnehageliste
     }
 
-    fun hentBarnehagelister(barnehagelisterId: UUID): Barnehagelister? {
+    fun hentBarnehageliste(barnehagelisterId: UUID): Barnehageliste? {
         logger.info("Henter barnehagelister m/ id $barnehagelisterId")
 
-        return barnehagelisterRepository.findByIdOrNull(barnehagelisterId)
+        return barnehagelisteRepository.findByIdOrNull(barnehagelisterId)
     }
 
-    fun settTilFerdig(barnehageliste: Barnehagelister) {
-        barnehagelisterRepository.update(
+    fun settBarnehagelisteStatusTilFerdig(barnehageliste: Barnehageliste) {
+        barnehagelisteRepository.update(
             barnehageliste
                 .copy(
                     status = BarnehagelisteStatus.FERDIG,

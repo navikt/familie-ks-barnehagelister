@@ -31,7 +31,7 @@ class LesBarnehagelisteTask(
         val barnehagelisteId = UUID.fromString(task.payload)
 
         val barnehageliste =
-            barnehagelisteService.hentBarnehagelister(barnehagelisteId) ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
+            barnehagelisteService.hentBarnehageliste(barnehagelisteId) ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
 
         if (barnehageliste.status == BarnehagelisteStatus.FERDIG) {
             return
@@ -45,7 +45,7 @@ class LesBarnehagelisteTask(
             taskService.save(SendBarnehagebarnTilKsTask.opprettTask(barn.id))
         }
 
-        barnehagelisteService.settTilFerdig(barnehageliste)
+        barnehagelisteService.settBarnehagelisteStatusTilFerdig(barnehageliste)
     }
 
     companion object {
