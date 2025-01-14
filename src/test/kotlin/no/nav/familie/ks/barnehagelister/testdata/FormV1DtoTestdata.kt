@@ -29,7 +29,7 @@ class FormV1DtoTestdata {
 
         fun lagKindergartenRequestDto() =
             KindergartenRequestDto(
-                organizationNumber = "123456789",
+                organizationNumber = "310028142",
                 name = "Eksempel Barnehage",
                 address =
                     AddressRequestDto(

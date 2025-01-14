@@ -151,7 +151,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(5)
+            .hasSize(4)
             .contains(
                 ValideringsfeilInfo("kindergartens[0].name", "must not be blank"),
                 ValideringsfeilInfo("kindergartens[0].organizationNumber", "must not be blank"),
@@ -290,13 +290,31 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
 
         assertBadRequest(problemDetail)
         assertThat(problemDetail.errors)
-            .hasSize(2)
+            .hasSize(1)
             .contains(
-                ValideringsfeilInfo(
-                    "kindergartens[0].organizationNumber",
-                    "Organization number must be a numeric field",
-                ),
-                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Organization number must have 9 digits"),
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 03Z1245689"),
+            )
+    }
+
+    @Test
+    fun `POST barnehageliste - valider at organisasjonsnummer ikke er et gyldig orginasjonsnummer`() {
+        val invalidBarnehageliste =
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
+                kindergartens =
+                    listOf(
+                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "123456789"),
+                    ),
+            )
+
+        val response = sendInvalidBarnehageliste(invalidBarnehageliste)
+
+        val problemDetail = hentProblemDetail(response)
+
+        assertBadRequest(problemDetail)
+        assertThat(problemDetail.errors)
+            .hasSize(1)
+            .contains(
+                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 123456789"),
             )
     }
 

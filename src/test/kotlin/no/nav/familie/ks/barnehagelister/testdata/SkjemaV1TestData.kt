@@ -31,7 +31,7 @@ class SkjemaV1TestData {
         fun lagBarnehage() =
             Barnehage(
                 navn = "Gullklumpen Barnehage AS",
-                organisasjonsnummer = "123456789",
+                organisasjonsnummer = "310028142",
                 adresse = null,
                 barnInfolinjer =
                     listOf(
