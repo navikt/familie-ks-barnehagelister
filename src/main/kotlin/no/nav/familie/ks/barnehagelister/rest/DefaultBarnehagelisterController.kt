@@ -31,9 +31,10 @@ class DefaultBarnehagelisterController(
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
+        val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
         val barnehagelister =
-            barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr)
+            barnehagelisteService.mottaBarnehagelister(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr, kommuneOrgNr)
 
         return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
     }
@@ -47,14 +48,16 @@ class DefaultBarnehagelisterController(
         val barnehagelister = barnehagelisteService.hentBarnehagelister(id)
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
-        val kommunenummer = request.hentConsumerId() ?: error("No municipality in request.")
+        val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
         return when {
             barnehagelister != null && barnehagelister.leverandorOrgNr != leverandørOrgNr ->
                 throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
 
-            barnehagelister != null && kommunenummer != barnehagelister.rawJson.listeopplysninger.kommunenummer ->
-                throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by municipality $kommunenummer")
+            barnehagelister != null && barnehagelister.kommuneOrgNr != kommuneOrgNr ->
+                throw UgyldigKommuneEllerLeverandørFeil(
+                    "The requested kindergarten list were not sent in by municipality with org id $kommuneOrgNr",
+                )
 
             else ->
                 barnehagelister

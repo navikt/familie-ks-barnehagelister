@@ -86,10 +86,11 @@ class DefaultBarnehagelisterControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
-        every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
@@ -118,6 +119,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
@@ -134,7 +136,7 @@ class DefaultBarnehagelisterControllerEnhetTest {
                 barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
             }
 
-        assertThat(exception.message).isEqualTo("The requested kindergarten list were not sent in by municipality 12345")
+        assertThat(exception.message).isEqualTo("The requested kindergarten list were not sent in by municipality with org id 12345")
     }
 
     @Test
@@ -151,10 +153,11 @@ class DefaultBarnehagelisterControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehagelister(any()) } returns lagetBarnehagelister
-        every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(

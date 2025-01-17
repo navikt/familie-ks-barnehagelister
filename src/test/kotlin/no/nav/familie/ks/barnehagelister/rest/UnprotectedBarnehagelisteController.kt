@@ -31,7 +31,8 @@ class UnprotectedBarnehagelisteController(
         val barnehagelister =
             barnehagelisteService.mottaBarnehagelister(
                 formV1RequestDto.mapTilSkjemaV1(),
-                "testleverandørOrgNr",
+                "testLeverandørOrgNr",
+                "testKommuneOrgNr",
             )
 
         return barnehagelister.tilKindergartenlistResponse().toResponseEntity()

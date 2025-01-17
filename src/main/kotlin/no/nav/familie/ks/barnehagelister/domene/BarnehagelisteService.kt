@@ -19,6 +19,7 @@ class BarnehagelisteService(
     fun mottaBarnehagelister(
         skjemaV1: SkjemaV1,
         leverandørOrgNr: String,
+        kommuneOrgNr: String,
     ): Barnehagelister {
         val eksisterendeBarnehageliste = barnehagelisterRepository.findByIdOrNull(skjemaV1.id)
         if (eksisterendeBarnehageliste != null) {
@@ -34,6 +35,7 @@ class BarnehagelisteService(
                         rawJson = skjemaV1,
                         status = BarnehagelisteStatus.MOTTATT,
                         leverandorOrgNr = leverandørOrgNr,
+                        kommuneOrgNr = kommuneOrgNr,
                     ),
                 )
 
