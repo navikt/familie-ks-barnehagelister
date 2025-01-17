@@ -5,7 +5,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehage
 import no.nav.familie.ks.barnehagelister.domene.Listeopplysninger
 import no.nav.familie.ks.barnehagelister.domene.Person
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
-import no.nav.familie.ks.barnehagelister.kafka.BarnehageBarnKS
+import no.nav.familie.ks.barnehagelister.kafka.Barnehagebarn
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
@@ -57,15 +57,16 @@ class SkjemaV1TestData {
             )
 
         // BarnehageBarnKs som samsvarer med lagSkjemaV1()
-        fun lagTilhørendeBarnehageBarnKs() =
-            BarnehageBarnKS(
+        fun lagTilhørendeBarnehageBarnKs(barnehagelisteId: UUID = skjemaV1Id) =
+            Barnehagebarn(
                 ident = lagBarn().fodselsnummer,
                 fom = lagBarnInfolinje().startdato,
                 tom = lagBarnInfolinje().sluttdato,
                 antallTimerIBarnehage = lagBarnInfolinje().avtaltOppholdstidTimer,
                 kommuneNavn = lagListeOpplysninger().kommunenavn,
                 kommuneNr = lagListeOpplysninger().kommunenummer,
-                arkivReferanse = skjemaV1Id.toString(),
+                barnehagelisteId = barnehagelisteId,
+                organisasjonsnummer = lagBarnehage().organisasjonsnummer,
             )
     }
 }

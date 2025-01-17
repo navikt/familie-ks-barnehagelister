@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class Barnehagelister(
+data class Barnehageliste(
     @Id
     val id: UUID,
     val rawJson: SkjemaV1,
@@ -18,7 +18,7 @@ data class Barnehagelister(
     val kommuneOrgNr: String? = null,
 )
 
-fun Barnehagelister.tilKindergartenlistResponse() =
+fun Barnehageliste.tilKindergartenlistResponse() =
     KindergartenlistResponse(
         id = rawJson.id,
         status = BarnehagelisteStatus.MOTTATT.engelsk,

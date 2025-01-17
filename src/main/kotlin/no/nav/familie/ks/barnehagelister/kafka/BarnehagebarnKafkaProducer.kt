@@ -9,7 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 
 interface IBarnehagebarnKafkaProducer {
-    fun sendBarnehageBarn(barnehageBarn: BarnehageBarnKS)
+    fun sendBarnehageBarn(barnehageBarn: Barnehagebarn)
 }
 
 @Service
@@ -19,7 +19,7 @@ class BarnehagebarnKafkaProducer(
 ) : IBarnehagebarnKafkaProducer {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun sendBarnehageBarn(barnehageBarn: BarnehageBarnKS) {
+    override fun sendBarnehageBarn(barnehageBarn: Barnehagebarn) {
         val melding = objectMapper.writeValueAsString(barnehageBarn)
 
         val logMeldingMetadata =
@@ -38,7 +38,7 @@ class BarnehagebarnKafkaProducer(
 class DummyBarnehagebarnKafkaProducer : IBarnehagebarnKafkaProducer {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun sendBarnehageBarn(barnehageBarn: BarnehageBarnKS) {
+    override fun sendBarnehageBarn(barnehageBarn: Barnehagebarn) {
         logger.info("Ikke enablet kafka. Barnehagebarn som ville blitt lagt på kø: " + barnehageBarn.toString())
     }
 }

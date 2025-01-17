@@ -3,7 +3,7 @@ package no.nav.familie.ks.barnehagelister.domene
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.familie.ks.barnehagelister.repository.BarnehagelisterRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.prosessering.internal.TaskService
 import org.assertj.core.api.Assertions.assertThat
@@ -13,17 +13,17 @@ import org.springframework.data.repository.findByIdOrNull
 import java.util.UUID
 
 class BarnehagelisteServiceTest {
-    private val mockBarnehagelisterRepository = mockk<BarnehagelisterRepository>()
+    private val mockBarnehagelisteRepository = mockk<BarnehagelisteRepository>()
     private val mockTaskService = mockk<TaskService>()
 
     private val barnehagelisteService =
         BarnehagelisteService(
-            barnehagelisterRepository = mockBarnehagelisterRepository,
+            barnehagelisteRepository = mockBarnehagelisteRepository,
             taskService = mockTaskService,
         )
 
     @Nested
-    inner class MottaBarnehagelisterTest {
+    inner class MottaBarnehagelisteTest {
         @Test
         fun `Skal returnere allerede eksisterende barnehageliste hvis det er lagret fra før`() {
             // Arrange
@@ -36,20 +36,20 @@ class BarnehagelisteServiceTest {
                     listeopplysninger = mockk(),
                 )
 
-            val lagretBarnehageliste = mockk<Barnehagelister>()
+            val lagretBarnehageliste = mockk<Barnehageliste>()
 
-            every { mockBarnehagelisterRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
+            every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
 
             // Act
             val barnehageliste =
-                barnehagelisteService.mottaBarnehagelister(
+                barnehagelisteService.mottaBarnehageliste(
                     eksisterendeSkjemaV1,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )
 
             // Assert
-            verify(exactly = 1) { mockBarnehagelisterRepository.findByIdOrNull(uuid) }
+            verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
             assertThat(barnehageliste).isEqualTo(lagretBarnehageliste)
         }
 
@@ -65,21 +65,21 @@ class BarnehagelisteServiceTest {
                     listeopplysninger = mockk(),
                 )
 
-            every { mockBarnehagelisterRepository.findByIdOrNull(uuid) } returns null
-            every { mockBarnehagelisterRepository.insert(any()) } returnsArgument 0
+            every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null
+            every { mockBarnehagelisteRepository.insert(any()) } returnsArgument 0
             every { mockTaskService.save(any()) } returnsArgument 0
 
             // Act
             val barnehageliste =
-                barnehagelisteService.mottaBarnehagelister(
+                barnehagelisteService.mottaBarnehageliste(
                     ikkeEksisterendeSkjemaV1,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )
 
             // Assert
-            verify(exactly = 1) { mockBarnehagelisterRepository.findByIdOrNull(uuid) }
-            verify { mockBarnehagelisterRepository.insert(barnehageliste) }
+            verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
+            verify { mockBarnehagelisteRepository.insert(barnehageliste) }
             verify(exactly = 1) { mockTaskService.save(any()) }
 
             assertThat(barnehageliste.id).isEqualTo(uuid)
@@ -88,21 +88,21 @@ class BarnehagelisteServiceTest {
     }
 
     @Nested
-    inner class HentBarnehagelisterTest {
+    inner class HentBarnehagelisteTest {
         @Test
         fun `Skal returnere barnehagelister hvis det er lagret`() {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            val lagretBarnehageliste = mockk<Barnehagelister>()
+            val lagretBarnehageliste = mockk<Barnehageliste>()
 
-            every { mockBarnehagelisterRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
+            every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
 
             // Act
-            val barnehageliste = barnehagelisteService.hentBarnehagelister(uuid)
+            val barnehageliste = barnehagelisteService.hentBarnehageliste(uuid)
 
             // Assert
-            verify(exactly = 1) { mockBarnehagelisterRepository.findByIdOrNull(uuid) }
+            verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
             assertThat(barnehageliste).isEqualTo(lagretBarnehageliste)
         }
 
@@ -111,13 +111,13 @@ class BarnehagelisteServiceTest {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            every { mockBarnehagelisterRepository.findByIdOrNull(uuid) } returns null
+            every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null
 
             // Act
-            val barnehageliste = barnehagelisteService.hentBarnehagelister(uuid)
+            val barnehageliste = barnehagelisteService.hentBarnehageliste(uuid)
 
             // Assert
-            verify(exactly = 1) { mockBarnehagelisterRepository.findByIdOrNull(uuid) }
+            verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
             assertThat(barnehageliste).isNull()
         }
     }
