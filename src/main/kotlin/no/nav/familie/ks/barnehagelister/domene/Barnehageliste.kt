@@ -15,6 +15,7 @@ data class Barnehageliste(
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
     val ferdigTid: LocalDateTime? = null,
     val leverandorOrgNr: String? = null,
+    val kommuneOrgNr: String? = null,
 )
 
 fun Barnehageliste.tilKindergartenlistResponse() =

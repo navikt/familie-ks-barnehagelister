@@ -41,7 +41,12 @@ class BarnehagelisteServiceTest {
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
 
             // Act
-            val barnehageliste = barnehagelisteService.mottaBarnehageliste(eksisterendeSkjemaV1, "testleverandørOrgNr")
+            val barnehageliste =
+                barnehagelisteService.mottaBarnehageliste(
+                    eksisterendeSkjemaV1,
+                    "testLeverandørOrgNr",
+                    "testKommuneOrgNr",
+                )
 
             // Assert
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
@@ -65,7 +70,12 @@ class BarnehagelisteServiceTest {
             every { mockTaskService.save(any()) } returnsArgument 0
 
             // Act
-            val barnehageliste = barnehagelisteService.mottaBarnehageliste(ikkeEksisterendeSkjemaV1, "testleverandørOrgNr")
+            val barnehageliste =
+                barnehagelisteService.mottaBarnehageliste(
+                    ikkeEksisterendeSkjemaV1,
+                    "testLeverandørOrgNr",
+                    "testKommuneOrgNr",
+                )
 
             // Assert
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }

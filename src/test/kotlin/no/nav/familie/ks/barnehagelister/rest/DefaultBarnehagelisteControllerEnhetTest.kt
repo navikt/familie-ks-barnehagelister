@@ -21,7 +21,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
     private val mockBarnehagelisteService = mockk<BarnehagelisteService>()
     private val mockGodkjenteLeverandør = mockk<GodkjenteLeverandører>()
 
-    private val barnehagelisterController =
+    private val barnehagelisteController =
         DefaultBarnehagelisteController(mockBarnehagelisteService, mockGodkjenteLeverandør)
 
     @Nested
@@ -42,7 +42,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 )
 
             // Act
-            val responseEntity = barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
+            val responseEntity = barnehagelisteController.status(UUID.randomUUID(), mocketRequest)
 
             // Assert
             assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
@@ -66,7 +66,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
             // Act && Assert
             val exception =
                 assertThrows<UgyldigKommuneEllerLeverandørFeil> {
-                    barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
+                    barnehagelisteController.status(UUID.randomUUID(), mocketRequest)
                 }
 
             assertThat(exception.message).isEqualTo("Supplier with orgno testLeverandørOrgNr2 is not a known supplier.")
@@ -74,7 +74,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
     }
 
     @Test
-    fun `Skal kaste feil dersom det ikke er samme leverandør som forsøker å hente status på innsendt barnehagelister`() {
+    fun `Skal kaste feil dersom det ikke er samme leverandør som forsøker å hente status på innsendt barnehageliste`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
         mockkStatic(HttpServletRequest::hentConsumerId)
@@ -86,10 +86,11 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
-        every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
@@ -99,14 +100,14 @@ class DefaultBarnehagelisteControllerEnhetTest {
         // Act && Assert
         val exception =
             assertThrows<UgyldigKommuneEllerLeverandørFeil> {
-                barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
+                barnehagelisteController.status(UUID.randomUUID(), mocketRequest)
             }
 
         assertThat(exception.message).isEqualTo("The requested kindergarten list were not sent in by supplier testLeverandørOrgNr2")
     }
 
     @Test
-    fun `Skal kaste feil dersom det ikke er samme kommune som forsøker å hente status på innsendt barnehagelister`() {
+    fun `Skal kaste feil dersom det ikke er samme kommune som forsøker å hente status på innsendt barnehageliste`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
         mockkStatic(HttpServletRequest::hentConsumerId)
@@ -118,6 +119,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
@@ -131,14 +133,14 @@ class DefaultBarnehagelisteControllerEnhetTest {
         // Act & Assert
         val exception =
             assertThrows<UgyldigKommuneEllerLeverandørFeil> {
-                barnehagelisterController.status(UUID.randomUUID(), mocketRequest)
+                barnehagelisteController.status(UUID.randomUUID(), mocketRequest)
             }
 
-        assertThat(exception.message).isEqualTo("The requested kindergarten list were not sent in by municipality 12345")
+        assertThat(exception.message).isEqualTo("The requested kindergarten list were not sent in by municipality with org id 12345")
     }
 
     @Test
-    fun `Skal returnere status dersom barnehagelister forsøkes hent av samme kommune og leverandør`() {
+    fun `Skal returnere status dersom barnehageliste forsøkes hent av samme kommune og leverandør`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
         mockkStatic(HttpServletRequest::hentConsumerId)
@@ -151,10 +153,11 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
+                kommuneOrgNr = "testKommuneOrgNr",
             )
 
         every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
-        every { any<HttpServletRequest>().hentConsumerId() } returns "1234"
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
@@ -162,7 +165,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
             )
 
         // Act
-        val responseEntity = barnehagelisterController.status(uuid, mocketRequest)
+        val responseEntity = barnehagelisteController.status(uuid, mocketRequest)
 
         // Assert
         assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.MOTTATT.engelsk)
