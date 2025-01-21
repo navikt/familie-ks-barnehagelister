@@ -5,7 +5,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehage
 import no.nav.familie.ks.barnehagelister.domene.Listeopplysninger
 import no.nav.familie.ks.barnehagelister.domene.Person
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
-import no.nav.familie.ks.barnehagelister.kafka.Barnehagebarn
+import no.nav.familie.ks.barnehagelister.domene.Barnehagebarn
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID

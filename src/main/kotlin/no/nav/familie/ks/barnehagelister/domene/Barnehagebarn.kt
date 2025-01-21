@@ -1,5 +1,6 @@
-package no.nav.familie.ks.barnehagelister.kafka
+package no.nav.familie.ks.barnehagelister.domene
 
+import no.nav.familie.ks.barnehagelister.kafka.BarnehagebarnKS
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import java.time.LocalDate
@@ -18,3 +19,16 @@ data class Barnehagebarn(
     val barnehagelisteId: UUID,
     val organisasjonsnummer: String,
 )
+
+fun Barnehagebarn.tilBarnehagebarnKS(): BarnehagebarnKS {
+    return BarnehagebarnKS(
+        id = this.id,
+        ident = this.ident,
+        fom = this.fom,
+        tom = this.tom,
+        antallTimerIBarnehage = this.antallTimerIBarnehage,
+        kommuneNavn = this.kommuneNavn,
+        kommuneNr = this.kommuneNr,
+        barnehagelisteId = this.barnehagelisteId,
+    )
+}
