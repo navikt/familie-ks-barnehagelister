@@ -1,6 +1,5 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.kafka.Barnehagebarn
 import java.util.UUID
 
 // TODO sanitize JSON input according to OWASP

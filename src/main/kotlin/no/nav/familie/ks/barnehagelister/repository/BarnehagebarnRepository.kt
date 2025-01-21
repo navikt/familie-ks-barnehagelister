@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister.repository
 
-import no.nav.familie.ks.barnehagelister.kafka.Barnehagebarn
+import no.nav.familie.ks.barnehagelister.domene.Barnehagebarn
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID

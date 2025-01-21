@@ -2,6 +2,8 @@ package no.nav.familie.ks.barnehagelister.kafka
 
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.config.KafkaConfig.Companion.BARNEHAGELISTE_TOPIC
+import no.nav.familie.ks.barnehagelister.domene.Barnehagebarn
+import no.nav.familie.ks.barnehagelister.domene.tilBarnehagebarnDto
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Profile
@@ -20,14 +22,15 @@ class BarnehagebarnKafkaProducer(
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     override fun sendBarnehageBarn(barnehageBarn: Barnehagebarn) {
-        val melding = objectMapper.writeValueAsString(barnehageBarn)
+        val barnehagebarnDto = barnehageBarn.tilBarnehagebarnDto()
+        val melding = objectMapper.writeValueAsString(barnehagebarnDto)
 
         val logMeldingMetadata =
             "Topicnavn: ${BARNEHAGELISTE_TOPIC} \n" +
-                "Nøkkel: ${barnehageBarn.id} \n"
+                "Nøkkel: ${barnehagebarnDto.id} \n"
 
         kafkaTemplate
-            .send(BARNEHAGELISTE_TOPIC, barnehageBarn.id.toString(), melding)
+            .send(BARNEHAGELISTE_TOPIC, barnehagebarnDto.id.toString(), melding)
             .thenAccept { logger.info("Melding sendt på kafka. \n" + "Offset: ${it?.recordMetadata?.offset()} \n" + logMeldingMetadata) }
             .exceptionally { throw Exception("Kafkamelding kan ikke sendes. \n" + logMeldingMetadata + "Feilmelding: \"${it.message}\"") }
     }
