@@ -46,17 +46,13 @@ class OrganisasjonsnummerValidator : ConstraintValidator<Organisasjonsnummer, St
                 .toString()
                 .toInt()
 
-    private fun erOrganisasjonsnummerKunTall(organisasjonsnummer: String) = organisasjonsnummer.all { it.isDigit() }
-
     private fun harOrganisasjonsnummerRiktigLengde(organisasjonsnummer: String) = (organisasjonsnummer.trim().length == 9)
 
     private fun getKontrollSifferOrganisasjonsnummer(number: String): Int {
-        val lastIndex = number.length - 1
-        var sum = 0
-
-        for (i in 0 until lastIndex) {
-            sum += Character.getNumericValue(number[i]) * getVektTallOrganisasjonsnummer(i)
-        }
+        val sum =
+            (0 until number.lastIndex).sumOf {
+                number[it].digitToInt() * getVektTallOrganisasjonsnummer(it)
+            }
 
         val rest = sum % 11
 
@@ -68,10 +64,5 @@ class OrganisasjonsnummerValidator : ConstraintValidator<Organisasjonsnummer, St
         return vekttall[i]
     }
 
-    private fun getKontrollSifferOrganisasjonsnummerFraRest(rest: Int): Int {
-        if (rest == 0) {
-            return 0
-        }
-        return 11 - rest
-    }
+    private fun getKontrollSifferOrganisasjonsnummerFraRest(rest: Int): Int = if (rest == 0) 0 else 11 - rest
 }
