@@ -479,6 +479,42 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             )
     }
 
+    @Test
+    fun `POST barnehageliste - duplikate felt skal kaste valideringsfeil`() {
+        val invalidBarnehageliste =
+            FormV1DtoTestdata.gyldigBarnehageliste().copy(
+                listInformation =
+                    FormV1DtoTestdata
+                        .gyldigBarnehageliste()
+                        .listInformation
+                        .copy(municipalityNumber = " ", municipalityName = " "),
+            )
+
+        val response =
+            this.mockMvc
+                .perform(
+                    post("/api/kindergartenlists/v1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Correlation-Id", "callIdValue")
+                        .content(
+                            """ {
+                        |"id": "123e4567-e89b-12d3-a456-426614174000",
+                        |"id": "123e4567-e89b-12d3-a456-426614174000"
+                        |}
+                            """.trimMargin(),
+                        ),
+                ).andExpect(status().isBadRequest)
+                .andExpect(content().contentType("application/problem+json"))
+                .andReturn()
+
+        val problemDetail = hentProblemDetail(response)
+        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.title).isEqualTo("Bad Request")
+        assertThat(problemDetail.status).isEqualTo(400)
+        assertThat(problemDetail.detail).isEqualTo("JSON parse error: Duplicate field 'id'")
+        assertThat(problemDetail.callId).isEqualTo("callIdValue")
+    }
+
     private fun assertBadRequest(problemDetail: ProblemDetailMedCallIdOgErrors) {
         assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
