@@ -29,7 +29,7 @@ class FormV1DtoTestdata {
 
         fun lagKindergartenRequestDto() =
             KindergartenRequestDto(
-                organizationNumber = "123456789",
+                organizationNumber = "310028142",
                 name = "Eksempel Barnehage",
                 address =
                     AddressRequestDto(
@@ -52,7 +52,7 @@ class FormV1DtoTestdata {
                 endDate = null,
                 child =
                     PersonRequestDto(
-                        socialSecurityNumber = "12345678910",
+                        socialSecurityNumber = "30438227985",
                         firstName = "Ola",
                         lastName = "Nordmann",
                         address =
@@ -67,7 +67,7 @@ class FormV1DtoTestdata {
                 guardians =
                     listOf(
                         PersonRequestDto(
-                            socialSecurityNumber = "10987654321",
+                            socialSecurityNumber = "30438227985",
                             firstName = "Kari",
                             lastName = "Nordmann",
                             address =

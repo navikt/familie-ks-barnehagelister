@@ -3,9 +3,9 @@ package no.nav.familie.ks.barnehagelister.rest.dto
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Barnehage
+import no.nav.familie.ks.barnehagelister.validering.Organisasjonsnummer
 
 @Schema(name = "Kindergarten")
 data class KindergartenRequestDto(
@@ -14,8 +14,7 @@ data class KindergartenRequestDto(
     @field:Size(min = 1, max = 200)
     val name: String,
     @Schema(description = "Kindergarten's organization number")
-    @field:Size(min = 9, max = 9, message = "Organization number must have 9 digits")
-    @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Organization number must be a numeric field")
+    @field:Organisasjonsnummer
     @field:NotBlank
     val organizationNumber: String,
     @Schema(description = "Kindergarten's address")

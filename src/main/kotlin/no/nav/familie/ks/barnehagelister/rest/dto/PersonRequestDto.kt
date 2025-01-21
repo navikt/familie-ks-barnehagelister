@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 import no.nav.familie.ks.barnehagelister.domene.Person
+import no.nav.familie.ks.barnehagelister.validering.Fødselsnummer
 
 @Schema(name = "Person")
 data class PersonRequestDto(
@@ -18,7 +18,7 @@ data class PersonRequestDto(
     )
     @field:NotBlank
     @field:Size(min = 11, max = 11, message = "Social Security Number must have 11 digits")
-    @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Social Security Number must be a numeric field")
+    @field:Fødselsnummer
     val socialSecurityNumber: String,
     @Schema(
         description = "First name",
