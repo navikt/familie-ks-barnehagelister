@@ -1,5 +1,7 @@
 package no.nav.familie.ks.barnehagelister.config
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
@@ -15,6 +17,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootConfiguration
@@ -30,6 +33,10 @@ class ApplicationConfig {
         serverFactory.port = 8096
         return serverFactory
     }
+
+    @Bean
+    fun objectMapper(jackson2ObjectMapperBuilder: Jackson2ObjectMapperBuilder): ObjectMapper =
+        jackson2ObjectMapperBuilder.featuresToEnable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION).build()
 
     @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {

@@ -13,7 +13,7 @@ data class PersonRequestDto(
     @Schema(
         description = "Identifier for the person, i.e., SSN or D-number",
         type = "String",
-        example = "12345678910",
+        example = "30438227985",
         requiredMode = REQUIRED,
     )
     @field:NotBlank

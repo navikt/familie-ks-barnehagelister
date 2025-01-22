@@ -13,7 +13,10 @@ data class KindergartenRequestDto(
     @field:NotBlank
     @field:Size(min = 1, max = 200)
     val name: String,
-    @Schema(description = "Kindergarten's organization number")
+    @Schema(
+        description = "Kindergarten's organization number",
+        example = "310028142",
+    )
     @field:Organisasjonsnummer
     @field:NotBlank
     val organizationNumber: String,
