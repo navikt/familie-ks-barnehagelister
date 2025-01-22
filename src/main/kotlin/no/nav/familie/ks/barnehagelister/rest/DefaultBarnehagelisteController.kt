@@ -1,7 +1,6 @@
 package no.nav.familie.ks.barnehagelister.rest
 
 import jakarta.servlet.http.HttpServletRequest
-import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.domene.tilKindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
@@ -9,6 +8,7 @@ import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.mapTilSkjemaV1
 import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
+import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
