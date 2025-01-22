@@ -1,5 +1,7 @@
-package no.nav.familie.ks.barnehagelister.domene
+package no.nav.familie.ks.barnehagelister.service
 
+import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
+import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.task.LesBarnehagelisteTask

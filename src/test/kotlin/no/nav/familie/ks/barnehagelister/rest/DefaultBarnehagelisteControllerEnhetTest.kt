@@ -5,10 +5,10 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
-import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
