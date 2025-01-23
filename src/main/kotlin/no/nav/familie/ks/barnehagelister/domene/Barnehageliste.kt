@@ -23,7 +23,7 @@ data class Barnehageliste(
 
 fun Barnehageliste.tilKindergartenlistResponse() =
     KindergartenlistResponse(
-        id = rawJson.id,
+        id = this.id,
         status = BarnehagelisteStatus.MOTTATT.engelsk,
         receivedTime = opprettetTid,
         finishedTime = ferdigTid,

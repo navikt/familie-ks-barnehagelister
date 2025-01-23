@@ -44,7 +44,8 @@ class UnprotectedBarnehagelisteController(
         request: HttpServletRequest,
     ): ResponseEntity<KindergartenlistResponse> =
         barnehagelisteService
-            .hentBarnehageliste(id)
+            .hentBarnehagelisteMedValideringsfeil(id)
+            .barnehageliste
             ?.tilKindergartenlistResponse()
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()

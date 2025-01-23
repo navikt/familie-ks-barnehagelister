@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.prosessering.internal.TaskService
@@ -15,12 +16,14 @@ import java.util.UUID
 
 class BarnehagelisteServiceTest {
     private val mockBarnehagelisteRepository = mockk<BarnehagelisteRepository>()
+    private val mockBarnehagelisteValideringsfeilRepository = mockk<BarnehagelisteValideringsfeilRepository>()
     private val mockTaskService = mockk<TaskService>()
 
     private val barnehagelisteService =
         BarnehagelisteService(
             barnehagelisteRepository = mockBarnehagelisteRepository,
             taskService = mockTaskService,
+            barnehagelisteValideringsfeilRepository = mockBarnehagelisteValideringsfeilRepository,
         )
 
     @Nested

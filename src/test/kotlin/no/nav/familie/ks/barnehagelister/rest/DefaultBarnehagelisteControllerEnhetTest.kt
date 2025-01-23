@@ -8,6 +8,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfeil
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
 import org.assertj.core.api.Assertions.assertThat
@@ -33,7 +34,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+                BarnehagelisteMedValideringsfeil(null, emptyList())
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -55,7 +57,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+                BarnehagelisteMedValideringsfeil(null, emptyList())
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -89,7 +92,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagetBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -122,7 +126,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagetBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "12345"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -156,7 +161,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagetBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns

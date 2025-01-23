@@ -1,8 +1,10 @@
 package no.nav.familie.ks.barnehagelister.service
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.task.ValiderBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService
@@ -16,6 +18,7 @@ import java.util.UUID
 class BarnehagelisteService(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val taskService: TaskService,
+    private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
@@ -48,10 +51,16 @@ class BarnehagelisteService(
         return lagretBarnehageliste
     }
 
-    fun hentBarnehageliste(barnehagelisterId: UUID): Barnehageliste? {
-        logger.info("Henter barnehagelister m/ id $barnehagelisterId")
+    fun hentBarnehageliste(barnehagelisteId: UUID): Barnehageliste? {
+        logger.info("Henter barnehagelister m/ id $barnehagelisteId")
 
-        return barnehagelisteRepository.findByIdOrNull(barnehagelisterId)
+        return barnehagelisteRepository.findByIdOrNull(barnehagelisteId)
+    }
+
+    fun hentBarnehagelisteMedValideringsfeil(barnehagelisterId: UUID): BarnehagelisteMedValideringsfeil {
+        val barnehageliste = hentBarnehageliste(barnehagelisterId)
+        val valideringsfeil = barnehagelisteValideringsfeilRepository.findByBarnehagelisteId(barnehagelisterId)
+        return BarnehagelisteMedValideringsfeil(barnehageliste, valideringsfeil)
     }
 
     fun settBarnehagelisteStatusTilFerdig(barnehageliste: Barnehageliste) {
@@ -64,3 +73,8 @@ class BarnehagelisteService(
         )
     }
 }
+
+data class BarnehagelisteMedValideringsfeil(
+    val barnehageliste: Barnehageliste?,
+    val valideringsfeil: List<BarnehagelisteValideringsfeil>,
+)

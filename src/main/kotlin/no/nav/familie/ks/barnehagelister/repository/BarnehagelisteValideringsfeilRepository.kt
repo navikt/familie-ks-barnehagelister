@@ -11,4 +11,6 @@ interface BarnehagelisteValideringsfeilRepository :
     RepositoryInterface<BarnehagelisteValideringsfeil, UUID>,
     InsertUpdateRepository<BarnehagelisteValideringsfeil> {
     // language=PostgreSQL
+
+    fun findByBarnehagelisteId(barnehagelisteId: UUID): List<BarnehagelisteValideringsfeil>
 }
