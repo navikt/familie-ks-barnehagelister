@@ -4,7 +4,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
-import no.nav.familie.ks.barnehagelister.task.LesBarnehagelisteTask
+import no.nav.familie.ks.barnehagelister.task.ValiderBarnehagelisteTask
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -42,7 +42,7 @@ class BarnehagelisteService(
                     ),
                 )
 
-        val opprettetTask = LesBarnehagelisteTask.opprettTask(skjemaV1.id)
+        val opprettetTask = ValiderBarnehagelisteTask.opprettTask(skjemaV1.id.toString())
         taskService.save(opprettetTask)
 
         return lagretBarnehageliste

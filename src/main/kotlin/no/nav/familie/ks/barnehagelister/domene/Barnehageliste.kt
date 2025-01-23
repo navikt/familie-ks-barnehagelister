@@ -16,7 +16,10 @@ data class Barnehageliste(
     val ferdigTid: LocalDateTime? = null,
     val leverandorOrgNr: String? = null,
     val kommuneOrgNr: String? = null,
-)
+) {
+    override fun toString(): String =
+        "Barnehageliste(id=$id, status=$status, opprettetTid=$opprettetTid, ferdigTid=$ferdigTid, leverandorOrgNr=$leverandorOrgNr, kommuneOrgNr=$kommuneOrgNr)"
+}
 
 fun Barnehageliste.tilKindergartenlistResponse() =
     KindergartenlistResponse(

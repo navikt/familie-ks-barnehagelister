@@ -1,8 +1,10 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
@@ -24,7 +26,10 @@ import java.util.UUID
 class ValiderBarnehagelisteTask(
     private val barnehagebarnRepository: BarnehagebarnRepository,
     private val barnehagelisteRepository: BarnehagelisteRepository,
+    private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
 ) : AsyncTaskStep {
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
     override fun doTask(task: Task) {
         val barnehagelisteId = UUID.fromString(task.payload)
         val barnehageliste =
@@ -34,9 +39,22 @@ class ValiderBarnehagelisteTask(
 
         val listaGruppertPåBarn = json.mapTilBarnehagebarn().groupBy { barn -> barn.ident }
 
-        listaGruppertPåBarn.forEach { barn, listeMedBarnehagebarn ->
-            listeMedBarnehagebarn.validerIngenOverlapp()
-        }
+        val alleValideringsfeil =
+            listaGruppertPåBarn.mapNotNull { (barn, listeMedBarnehagebarn) ->
+                try {
+                    listeMedBarnehagebarn.validerIngenOverlapp()
+                    null
+                } catch (e: Exception) {
+                    BarnehagelisteValideringsfeil(
+                        id = UUID.randomUUID(),
+                        barnehagelisteId = barnehagelisteId,
+                        feilinfo = "Overlappende periode innenfor samme liste for barn",
+                        ident = barn,
+                    )
+                }
+            }
+
+        barnehagelisteValideringsfeilRepository.insertAll(alleValideringsfeil)
     }
 
     override fun onCompletion(task: Task) {
@@ -45,7 +63,6 @@ class ValiderBarnehagelisteTask(
 
     companion object {
         const val TASK_STEP_TYPE = "validerBarnehagelisteTask"
-        private val logger: Logger = LoggerFactory.getLogger(ValiderBarnehagelisteTask::class.java)
 
         fun opprettTask(barnehagelisteId: String): Task =
             Task(
