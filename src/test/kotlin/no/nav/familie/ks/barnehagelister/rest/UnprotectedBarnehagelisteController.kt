@@ -42,13 +42,15 @@ class UnprotectedBarnehagelisteController(
     override fun status(
         id: UUID,
         request: HttpServletRequest,
-    ): ResponseEntity<KindergartenlistResponse> =
-        barnehagelisteService
+    ): ResponseEntity<KindergartenlistResponse> {
+        val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
+        return barnehagelisteService
             .hentBarnehagelisteMedValideringsfeil(id)
             .barnehageliste
-            ?.tilKindergartenlistResponse()
+            ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()
+    }
 
     @Unprotected
     override fun ping(): String = "\"OK\""

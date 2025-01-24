@@ -9,6 +9,7 @@ import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
 import no.nav.familie.prosessering.domene.Task
+import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -27,6 +28,7 @@ class ValiderBarnehagelisteTask(
     private val barnehagebarnRepository: BarnehagebarnRepository,
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
+    private val taskService: TaskService,
 ) : AsyncTaskStep {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -48,7 +50,8 @@ class ValiderBarnehagelisteTask(
                     BarnehagelisteValideringsfeil(
                         id = UUID.randomUUID(),
                         barnehagelisteId = barnehagelisteId,
-                        feilinfo = "Overlappende periode innenfor samme liste for barn",
+                        type = "OVERLAPPING_PERIOD_WITHIN_SAME_LIST",
+                        feilinfo = "Overlapping period within the same list for children.",
                         ident = barn,
                     )
                 }
@@ -58,7 +61,7 @@ class ValiderBarnehagelisteTask(
     }
 
     override fun onCompletion(task: Task) {
-        LesBarnehagelisteTask.opprettTask(UUID.fromString(task.payload))
+        LesBarnehagelisteTask.opprettTask(UUID.fromString(task.payload)).also { taskService.save(it) }
     }
 
     companion object {

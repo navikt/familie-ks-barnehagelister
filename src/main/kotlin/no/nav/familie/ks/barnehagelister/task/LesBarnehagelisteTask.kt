@@ -49,7 +49,7 @@ class LesBarnehagelisteTask(
     }
 
     companion object {
-        const val TASK_STEP_TYPE = "mottattBarnehagelisteTask"
+        const val TASK_STEP_TYPE = "lesBarnehagelisteTask"
         private val logger: Logger = LoggerFactory.getLogger(LesBarnehagelisteTask::class.java)
 
         fun opprettTask(barnehagelisteId: UUID): Task =

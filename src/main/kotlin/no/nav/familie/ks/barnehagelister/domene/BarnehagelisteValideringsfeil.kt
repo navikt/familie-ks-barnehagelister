@@ -10,10 +10,11 @@ data class BarnehagelisteValideringsfeil(
     val id: UUID,
     @Column("fk_barnehageliste_id")
     val barnehagelisteId: UUID,
+    val type: String,
     val feilinfo: String,
     val ident: String,
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
 ) {
     override fun toString(): String =
-        "BarnehagelisteValideringsfeil(id=$id, barnehagelisteId=$barnehagelisteId, feilinfo='$feilinfo', opprettetTid=$opprettetTid)"
+        "BarnehagelisteValideringsfeil(id=$id, barnehagelisteId=$barnehagelisteId, type='$type' feilinfo='$feilinfo', opprettetTid=$opprettetTid)"
 }

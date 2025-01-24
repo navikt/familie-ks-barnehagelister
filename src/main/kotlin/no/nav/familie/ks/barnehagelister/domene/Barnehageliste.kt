@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.domene
 
+import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilInfo
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
@@ -21,14 +22,15 @@ data class Barnehageliste(
         "Barnehageliste(id=$id, status=$status, opprettetTid=$opprettetTid, ferdigTid=$ferdigTid, leverandorOrgNr=$leverandorOrgNr, kommuneOrgNr=$kommuneOrgNr)"
 }
 
-fun Barnehageliste.tilKindergartenlistResponse() =
+fun Barnehageliste.tilKindergartenlistResponse(valideringsfeil: List<BarnehagelisteValideringsfeil> = emptyList()) =
     KindergartenlistResponse(
-        id = this.id,
-        status = BarnehagelisteStatus.MOTTATT.engelsk,
+        id = id,
+        status = status.engelsk,
         receivedTime = opprettetTid,
         finishedTime = ferdigTid,
         links =
             ResponseLinksResponseDto(
                 status = "/api/kindergartenlists/status/${rawJson.id}",
+                errors = valideringsfeil.map { ValideringsfeilInfo(it.type, "${it.feilinfo} children=${it.ident}") },
             ),
     )

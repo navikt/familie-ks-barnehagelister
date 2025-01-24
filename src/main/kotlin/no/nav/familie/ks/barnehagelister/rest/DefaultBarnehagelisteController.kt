@@ -45,7 +45,8 @@ class DefaultBarnehagelisteController(
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
-        val barnehageliste = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id).barnehageliste
+        val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
+        val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
@@ -61,7 +62,7 @@ class DefaultBarnehagelisteController(
 
             else ->
                 barnehageliste
-                    ?.tilKindergartenlistResponse()
+                    ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
                     ?.toResponseEntity()
                     ?: ResponseEntity.notFound().build()
         }
