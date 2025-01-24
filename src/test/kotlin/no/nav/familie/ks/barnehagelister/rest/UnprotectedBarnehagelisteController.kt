@@ -64,11 +64,11 @@ private fun BindingResult.kastValideringsfeilHvisValideringFeiler() {
         val feil =
             allErrors.map {
                 if (it is FieldError) {
-                    ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                    JsonValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
                 } else {
-                    ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                    JsonValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
                 }
             }
-        throw ValideringsfeilException(feil)
+        throw JsonValideringsfeilException(feil)
     }
 }

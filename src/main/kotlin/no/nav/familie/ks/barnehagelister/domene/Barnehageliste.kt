@@ -1,7 +1,8 @@
 package no.nav.familie.ks.barnehagelister.domene
 
-import no.nav.familie.ks.barnehagelister.rest.ValideringsfeilInfo
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
 import org.springframework.data.annotation.Id
@@ -22,7 +23,7 @@ data class Barnehageliste(
         "Barnehageliste(id=$id, status=$status, opprettetTid=$opprettetTid, ferdigTid=$ferdigTid, leverandorOrgNr=$leverandorOrgNr, kommuneOrgNr=$kommuneOrgNr)"
 }
 
-fun Barnehageliste.tilKindergartenlistResponse(valideringsfeil: List<BarnehagelisteValideringsfeil> = emptyList()) =
+fun Barnehageliste.tilKindergartenlistResponse(barnehagelisteValideringsfeil: List<BarnehagelisteValideringsfeil> = emptyList()) =
     KindergartenlistResponse(
         id = id,
         status = status.engelsk,
@@ -30,7 +31,13 @@ fun Barnehageliste.tilKindergartenlistResponse(valideringsfeil: List<Barnehageli
         finishedTime = ferdigTid,
         links =
             ResponseLinksResponseDto(
-                status = "/api/kindergartenlists/status/${rawJson.id}",
-                errors = valideringsfeil.map { ValideringsfeilInfo(it.type, "${it.feilinfo} children=${it.ident}") },
+                status = "/api/kindergartenlists/status/$id",
+                warnings =
+                    barnehagelisteValideringsfeil.map {
+                        EtterprosesseringfeilInfo(
+                            EtterprosesseringfeilType.valueOf(it.type),
+                            "${it.feilinfo} child=${it.ident}",
+                        )
+                    },
             ),
     )

@@ -2,7 +2,6 @@ package no.nav.familie.ks.barnehagelister.task
 
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
-import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
@@ -19,13 +18,12 @@ import java.util.UUID
 
 @Service
 @TaskStepBeskrivelse(
-    taskStepType = ValiderBarnehagelisteTask.TASK_STEP_TYPE,
+    taskStepType = PeriodeOverlappValideringTask.TASK_STEP_TYPE,
     beskrivelse = "Valider barnehageliste og send til videre håndtering.",
     maxAntallFeil = 3,
     triggerTidVedFeilISekunder = 5,
 )
-class ValiderBarnehagelisteTask(
-    private val barnehagebarnRepository: BarnehagebarnRepository,
+class PeriodeOverlappValideringTask(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
     private val taskService: TaskService,
@@ -47,6 +45,8 @@ class ValiderBarnehagelisteTask(
                     listeMedBarnehagebarn.validerIngenOverlapp()
                     null
                 } catch (e: Exception) {
+                    logger.info("Overlappende perioder på barnehageliste $barnehagelisteId")
+
                     BarnehagelisteValideringsfeil(
                         id = UUID.randomUUID(),
                         barnehagelisteId = barnehagelisteId,
@@ -65,7 +65,7 @@ class ValiderBarnehagelisteTask(
     }
 
     companion object {
-        const val TASK_STEP_TYPE = "validerBarnehagelisteTask"
+        const val TASK_STEP_TYPE = "periodeOverlappValideringTask"
 
         fun opprettTask(barnehagelisteId: String): Task =
             Task(

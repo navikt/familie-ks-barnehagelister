@@ -6,7 +6,7 @@ import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
-import no.nav.familie.ks.barnehagelister.task.ValiderBarnehagelisteTask
+import no.nav.familie.ks.barnehagelister.task.PeriodeOverlappValideringTask
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -54,7 +54,7 @@ class BarnehagelisteService(
                     ),
                 )
 
-        val opprettetTask = ValiderBarnehagelisteTask.opprettTask(skjemaV1.id.toString())
+        val opprettetTask = PeriodeOverlappValideringTask.opprettTask(skjemaV1.id.toString())
         taskService.save(opprettetTask)
 
         return BarnehagelisteMedValideringsfeil(

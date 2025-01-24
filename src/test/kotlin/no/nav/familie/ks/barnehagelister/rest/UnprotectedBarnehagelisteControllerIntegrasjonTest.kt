@@ -102,8 +102,8 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
-                ValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
+                JsonValideringsfeilInfo("listInformation.municipalityName", "must not be blank"),
+                JsonValideringsfeilInfo("listInformation.municipalityNumber", "must not be blank"),
             )
     }
 
@@ -126,11 +126,11 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "listInformation.municipalityNumber",
                     "Municipality number must have 4 digits",
                 ),
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "listInformation.municipalityNumber",
                     "Municipality number must be a numeric field",
                 ),
@@ -153,8 +153,8 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(4)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].name", "must not be blank"),
-                ValideringsfeilInfo("kindergartens[0].organizationNumber", "must not be blank"),
+                JsonValideringsfeilInfo("kindergartens[0].name", "must not be blank"),
+                JsonValideringsfeilInfo("kindergartens[0].organizationNumber", "must not be blank"),
             )
     }
 
@@ -185,7 +185,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "kindergartens[0].address.mandatoryFieldsSet",
                     "Mandatory fields zipCode and/or postalTown are not set",
                 ),
@@ -223,12 +223,12 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(5)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.lastName", "must not be blank"),
+                JsonValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
                     "must not be blank",
                 ),
-                ValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.firstName", "must not be blank"),
+                JsonValideringsfeilInfo("kindergartens[0].childrenInformation[0].child.firstName", "must not be blank"),
             )
     }
 
@@ -263,11 +263,11 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
                     "Social Security Number is not valid",
                 ),
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.socialSecurityNumber",
                     "Social Security Number must have 11 digits",
                 ),
@@ -292,7 +292,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 03Z1245689"),
+                JsonValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 03Z1245689"),
             )
     }
 
@@ -314,7 +314,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 123456789"),
+                JsonValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 123456789"),
             )
     }
 
@@ -345,8 +345,8 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must be a numeric field"),
-                ValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must have 4 digits"),
+                JsonValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must be a numeric field"),
+                JsonValideringsfeilInfo("kindergartens[0].address.zipCode", "Zip code must have 4 digits"),
             )
     }
 
@@ -406,8 +406,8 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(2)
             .contains(
-                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "H, L, U, or K followed by 4 digits"),
-                ValideringsfeilInfo("kindergartens[0].address.unitNumber", "Unit number must have 5 characters"),
+                JsonValideringsfeilInfo("kindergartens[0].address.unitNumber", "H, L, U, or K followed by 4 digits"),
+                JsonValideringsfeilInfo("kindergartens[0].address.unitNumber", "Unit number must have 5 characters"),
             )
     }
 
@@ -430,7 +430,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
+                JsonValideringsfeilInfo("listInformation.municipalityName", "size must be between 1 and 200"),
             )
     }
 
@@ -472,7 +472,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                ValideringsfeilInfo(
+                JsonValideringsfeilInfo(
                     "kindergartens[0].childrenInformation[0].child.address.addressOrConfidentialAddress",
                     "A confidential address may not have any address fields set",
                 ),
