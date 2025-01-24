@@ -4,6 +4,7 @@ import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
@@ -50,14 +51,15 @@ class PeriodeOverlappValideringTask(
                     BarnehagelisteValideringsfeil(
                         id = UUID.randomUUID(),
                         barnehagelisteId = barnehagelisteId,
-                        type = "OVERLAPPING_PERIOD_WITHIN_SAME_LIST",
+                        type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name,
                         feilinfo = "Overlapping period within the same list for children.",
                         ident = barn,
                     )
                 }
             }
-
-        barnehagelisteValideringsfeilRepository.insertAll(alleValideringsfeil)
+        if (alleValideringsfeil.isNotEmpty()) {
+            barnehagelisteValideringsfeilRepository.insertAll(alleValideringsfeil)
+        }
     }
 
     override fun onCompletion(task: Task) {
