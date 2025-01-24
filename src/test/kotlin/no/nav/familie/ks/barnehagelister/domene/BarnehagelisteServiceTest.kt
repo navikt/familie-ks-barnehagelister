@@ -40,9 +40,15 @@ class BarnehagelisteServiceTest {
                     listeopplysninger = mockk(),
                 )
 
-            val lagretBarnehageliste = mockk<Barnehageliste>()
+            val lagretBarnehageliste =
+                Barnehageliste(
+                    id = uuid,
+                    rawJson = eksisterendeSkjemaV1,
+                    status = BarnehagelisteStatus.MOTTATT,
+                )
 
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
+            every { mockBarnehagelisteValideringsfeilRepository.findByBarnehagelisteId(uuid) } returns emptyList()
 
             // Act
             val barnehageliste =
@@ -54,7 +60,7 @@ class BarnehagelisteServiceTest {
 
             // Assert
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
-            assertThat(barnehageliste).isEqualTo(lagretBarnehageliste)
+            assertThat(barnehageliste.barnehageliste).isEqualTo(lagretBarnehageliste)
         }
 
         @Test
@@ -72,9 +78,10 @@ class BarnehagelisteServiceTest {
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null
             every { mockBarnehagelisteRepository.insert(any()) } returnsArgument 0
             every { mockTaskService.save(any()) } returnsArgument 0
+            every { mockBarnehagelisteValideringsfeilRepository.findByBarnehagelisteId(uuid) } returns emptyList()
 
             // Act
-            val barnehageliste =
+            val barnehagelisteMedValideringsfeil =
                 barnehagelisteService.mottaBarnehageliste(
                     ikkeEksisterendeSkjemaV1,
                     "testLeverandørOrgNr",
@@ -82,6 +89,7 @@ class BarnehagelisteServiceTest {
                 )
 
             // Assert
+            val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste!!
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
             verify { mockBarnehagelisteRepository.insert(barnehageliste) }
             verify(exactly = 1) { mockTaskService.save(any()) }

@@ -28,14 +28,17 @@ class UnprotectedBarnehagelisteController(
     ): ResponseEntity<KindergartenlistResponse> {
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        val barnehagelister =
+        val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(
                 formV1RequestDto.mapTilSkjemaV1(),
                 "testLeverandørOrgNr",
                 "testKommuneOrgNr",
             )
 
-        return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
+        return barnehagelisteMedValideringsfeil.barnehageliste!!
+            .tilKindergartenlistResponse(
+                barnehagelisteMedValideringsfeil.valideringsfeil,
+            ).toResponseEntity()
     }
 
     @Unprotected

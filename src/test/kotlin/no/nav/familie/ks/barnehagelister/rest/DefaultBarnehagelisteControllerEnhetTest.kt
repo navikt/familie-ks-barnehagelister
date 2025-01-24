@@ -174,6 +174,6 @@ class DefaultBarnehagelisteControllerEnhetTest {
         val responseEntity = barnehagelisteController.status(uuid, mocketRequest)
 
         // Assert
-        assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.MOTTATT.engelsk)
+        assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.FERDIG.engelsk)
     }
 }

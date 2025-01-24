@@ -26,11 +26,20 @@ class BarnehagelisteService(
         skjemaV1: SkjemaV1,
         leverandørOrgNr: String,
         kommuneOrgNr: String,
-    ): Barnehageliste {
-        val eksisterendeBarnehageliste = barnehagelisteRepository.findByIdOrNull(skjemaV1.id)
+    ): BarnehagelisteMedValideringsfeil {
+        val eksisterendeBarnehagelisteMedValideringsfeil = hentBarnehagelisteMedValideringsfeil(skjemaV1.id)
+        val eksisterendeBarnehageliste = eksisterendeBarnehagelisteMedValideringsfeil.barnehageliste
         if (eksisterendeBarnehageliste != null) {
             logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
-            return eksisterendeBarnehageliste
+            return BarnehagelisteMedValideringsfeil(
+                barnehageliste = eksisterendeBarnehageliste,
+                valideringsfeil =
+                    if (eksisterendeBarnehageliste.status == BarnehagelisteStatus.FERDIG) {
+                        eksisterendeBarnehagelisteMedValideringsfeil.valideringsfeil
+                    } else {
+                        emptyList()
+                    },
+            )
         }
 
         val lagretBarnehageliste =
@@ -48,7 +57,10 @@ class BarnehagelisteService(
         val opprettetTask = ValiderBarnehagelisteTask.opprettTask(skjemaV1.id.toString())
         taskService.save(opprettetTask)
 
-        return lagretBarnehageliste
+        return BarnehagelisteMedValideringsfeil(
+            barnehageliste = lagretBarnehageliste,
+            valideringsfeil = emptyList(),
+        )
     }
 
     fun hentBarnehageliste(barnehagelisteId: UUID): Barnehageliste? {

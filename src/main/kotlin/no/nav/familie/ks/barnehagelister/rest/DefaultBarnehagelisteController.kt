@@ -33,10 +33,13 @@ class DefaultBarnehagelisteController(
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
-        val barnehageliste =
+        val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr, kommuneOrgNr)
 
-        return barnehageliste.tilKindergartenlistResponse().toResponseEntity()
+        return barnehagelisteMedValideringsfeil.barnehageliste!!
+            .tilKindergartenlistResponse(
+                barnehagelisteMedValideringsfeil.valideringsfeil,
+            ).toResponseEntity()
     }
 
     override fun status(
