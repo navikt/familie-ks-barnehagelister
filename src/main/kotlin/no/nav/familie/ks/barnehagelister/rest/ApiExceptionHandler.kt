@@ -64,7 +64,7 @@ class ApiExceptionHandler {
     @ExceptionHandler(
         value = [
             HttpMessageNotReadableException::class,
-            ValideringsfeilException::class,
+            JsonValideringsfeilException::class,
         ],
     )
     fun onValideringsFeil(
@@ -97,7 +97,7 @@ class ApiExceptionHandler {
                             )
                     }
 
-                    is ValideringsfeilException -> {
+                    is JsonValideringsfeilException -> {
                         properties =
                             mapOf(
                                 "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),

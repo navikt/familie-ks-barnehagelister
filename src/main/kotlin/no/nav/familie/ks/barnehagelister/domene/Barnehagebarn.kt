@@ -18,7 +18,18 @@ data class Barnehagebarn(
     @Column("fk_barnehageliste_id")
     val barnehagelisteId: UUID,
     val organisasjonsnummer: String,
-)
+) {
+    override fun toString(): String =
+        "Barnehagebarn(" +
+            "id=$id, " +
+            "fom=$fom, " +
+            "tom=$tom, " +
+            "antallTimerIBarnehage=$antallTimerIBarnehage, " +
+            "kommuneNavn='$kommuneNavn', " +
+            "kommuneNr='$kommuneNr', " +
+            "barnehagelisteId=$barnehagelisteId, " +
+            "organisasjonsnummer='$organisasjonsnummer')"
+}
 
 fun Barnehagebarn.tilBarnehagebarnDto(): BarnehagebarnDto =
     BarnehagebarnDto(

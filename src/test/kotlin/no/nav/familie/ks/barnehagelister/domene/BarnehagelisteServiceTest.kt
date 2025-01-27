@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.prosessering.internal.TaskService
@@ -15,12 +16,14 @@ import java.util.UUID
 
 class BarnehagelisteServiceTest {
     private val mockBarnehagelisteRepository = mockk<BarnehagelisteRepository>()
+    private val mockBarnehagelisteValideringsfeilRepository = mockk<BarnehagelisteValideringsfeilRepository>()
     private val mockTaskService = mockk<TaskService>()
 
     private val barnehagelisteService =
         BarnehagelisteService(
             barnehagelisteRepository = mockBarnehagelisteRepository,
             taskService = mockTaskService,
+            barnehagelisteValideringsfeilRepository = mockBarnehagelisteValideringsfeilRepository,
         )
 
     @Nested
@@ -37,9 +40,15 @@ class BarnehagelisteServiceTest {
                     listeopplysninger = mockk(),
                 )
 
-            val lagretBarnehageliste = mockk<Barnehageliste>()
+            val lagretBarnehageliste =
+                Barnehageliste(
+                    id = uuid,
+                    rawJson = eksisterendeSkjemaV1,
+                    status = BarnehagelisteStatus.MOTTATT,
+                )
 
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste
+            every { mockBarnehagelisteValideringsfeilRepository.findByBarnehagelisteId(uuid) } returns emptyList()
 
             // Act
             val barnehageliste =
@@ -51,7 +60,7 @@ class BarnehagelisteServiceTest {
 
             // Assert
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
-            assertThat(barnehageliste).isEqualTo(lagretBarnehageliste)
+            assertThat(barnehageliste.barnehageliste).isEqualTo(lagretBarnehageliste)
         }
 
         @Test
@@ -69,9 +78,10 @@ class BarnehagelisteServiceTest {
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null
             every { mockBarnehagelisteRepository.insert(any()) } returnsArgument 0
             every { mockTaskService.save(any()) } returnsArgument 0
+            every { mockBarnehagelisteValideringsfeilRepository.findByBarnehagelisteId(uuid) } returns emptyList()
 
             // Act
-            val barnehageliste =
+            val barnehagelisteMedValideringsfeil =
                 barnehagelisteService.mottaBarnehageliste(
                     ikkeEksisterendeSkjemaV1,
                     "testLeverandørOrgNr",
@@ -79,6 +89,7 @@ class BarnehagelisteServiceTest {
                 )
 
             // Assert
+            val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste!!
             verify(exactly = 1) { mockBarnehagelisteRepository.findByIdOrNull(uuid) }
             verify { mockBarnehagelisteRepository.insert(barnehageliste) }
             verify(exactly = 1) { mockTaskService.save(any()) }

@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.2</version>
     </parent>
 
     <properties>
@@ -27,6 +27,18 @@
         <token-validation-spring.version>5.0.14</token-validation-spring.version>
         <springdoc.version>2.8.3</springdoc.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>no.nav.familie.felles</groupId>
+                <artifactId>felles</artifactId>
+                <version>${felles.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Kotlin -->
@@ -113,12 +125,10 @@
         <dependency>
             <groupId>no.nav.familie.felles</groupId>
             <artifactId>log</artifactId>
-            <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.familie.felles</groupId>
             <artifactId>http-client</artifactId>
-            <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.familie.kontrakter</groupId>

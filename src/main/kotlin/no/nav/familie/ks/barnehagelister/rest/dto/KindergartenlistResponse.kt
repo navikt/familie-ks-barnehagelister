@@ -16,7 +16,23 @@ data class KindergartenlistResponse(
 @Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list", name = "ResponseLinks")
 data class ResponseLinksResponseDto(
     val status: String,
+    val warnings: List<EtterprosesseringfeilInfo> = emptyList(),
 )
+
+@Schema(name = "ValidationWarnings")
+data class EtterprosesseringfeilInfo(
+    @Schema()
+    val type: EtterprosesseringfeilType,
+    @Schema(
+        description = "Details about the validation error. If no more information is available, the field is set to missing",
+        example = "Overlapping period within the same list for children. child=12345678901",
+    )
+    val detail: String,
+)
+
+enum class EtterprosesseringfeilType {
+    OVERLAPPING_PERIOD_WITHIN_SAME_LIST,
+}
 
 enum class BarnehagelisteStatus(
     val engelsk: BarnehagelisteStatusEngelsk,

@@ -1,6 +1,8 @@
 package no.nav.familie.ks.barnehagelister.domene
 
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
 import org.springframework.data.annotation.Id
@@ -16,16 +18,26 @@ data class Barnehageliste(
     val ferdigTid: LocalDateTime? = null,
     val leverandorOrgNr: String? = null,
     val kommuneOrgNr: String? = null,
-)
+) {
+    override fun toString(): String =
+        "Barnehageliste(id=$id, status=$status, opprettetTid=$opprettetTid, ferdigTid=$ferdigTid, leverandorOrgNr=$leverandorOrgNr, kommuneOrgNr=$kommuneOrgNr)"
+}
 
-fun Barnehageliste.tilKindergartenlistResponse() =
+fun Barnehageliste.tilKindergartenlistResponse(barnehagelisteValideringsfeil: List<BarnehagelisteValideringsfeil> = emptyList()) =
     KindergartenlistResponse(
-        id = rawJson.id,
-        status = BarnehagelisteStatus.MOTTATT.engelsk,
+        id = id,
+        status = status.engelsk,
         receivedTime = opprettetTid,
         finishedTime = ferdigTid,
         links =
             ResponseLinksResponseDto(
-                status = "/api/kindergartenlists/status/${rawJson.id}",
+                status = "/api/kindergartenlists/status/$id",
+                warnings =
+                    barnehagelisteValideringsfeil.map {
+                        EtterprosesseringfeilInfo(
+                            EtterprosesseringfeilType.valueOf(it.type),
+                            "${it.feilinfo} child=${it.ident}",
+                        )
+                    },
             ),
     )

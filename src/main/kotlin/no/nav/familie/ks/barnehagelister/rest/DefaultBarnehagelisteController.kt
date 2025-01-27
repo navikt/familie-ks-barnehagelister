@@ -33,10 +33,13 @@ class DefaultBarnehagelisteController(
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
-        val barnehageliste =
+        val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr, kommuneOrgNr)
 
-        return barnehageliste.tilKindergartenlistResponse().toResponseEntity()
+        return barnehagelisteMedValideringsfeil.barnehageliste!!
+            .tilKindergartenlistResponse(
+                barnehagelisteMedValideringsfeil.valideringsfeil,
+            ).toResponseEntity()
     }
 
     override fun status(
@@ -45,7 +48,8 @@ class DefaultBarnehagelisteController(
     ): ResponseEntity<KindergartenlistResponse> {
         validerGodkjentLeverandør(request)
 
-        val barnehageliste = barnehagelisteService.hentBarnehageliste(id)
+        val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
+        val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste
 
         val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
@@ -61,7 +65,7 @@ class DefaultBarnehagelisteController(
 
             else ->
                 barnehageliste
-                    ?.tilKindergartenlistResponse()
+                    ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
                     ?.toResponseEntity()
                     ?: ResponseEntity.notFound().build()
         }
@@ -82,12 +86,12 @@ class DefaultBarnehagelisteController(
             val feil =
                 allErrors.map {
                     if (it is FieldError) {
-                        ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                        JsonValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
                     } else {
-                        ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                        JsonValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
                     }
                 }
-            throw ValideringsfeilException(feil)
+            throw JsonValideringsfeilException(feil)
         }
     }
 }

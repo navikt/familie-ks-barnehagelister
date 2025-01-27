@@ -5,9 +5,13 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
+import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
+import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfeil
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +19,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
+import java.time.LocalDateTime.now
 import java.util.UUID
 
 class DefaultBarnehagelisteControllerEnhetTest {
@@ -33,7 +38,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+                BarnehagelisteMedValideringsfeil(null, emptyList())
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -55,7 +61,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
             mockkStatic(HttpServletRequest::hentConsumerId)
             mockkStatic(HttpServletRequest::hentSupplierId)
 
-            every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns null
+            every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+                BarnehagelisteMedValideringsfeil(null, emptyList())
             every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
             every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
             every { mockGodkjenteLeverandør.leverandorer } returns
@@ -74,13 +81,75 @@ class DefaultBarnehagelisteControllerEnhetTest {
     }
 
     @Test
+    fun `Skal returnere 200 OK med liste med warnings hvis det er BarnehagelisteValideringsfeil`() {
+        // Arrange
+        val mocketRequest = mockk<HttpServletRequest>()
+        mockkStatic(HttpServletRequest::hentConsumerId)
+        mockkStatic(HttpServletRequest::hentSupplierId)
+
+        val skjema = SkjemaV1TestData.lagSkjemaV1()
+        val lagretBarnehageliste =
+            Barnehageliste(
+                id = skjema.id,
+                rawJson = skjema,
+                status = BarnehagelisteStatus.FERDIG,
+                leverandorOrgNr = "testLeverandørOrgNr",
+                kommuneOrgNr = "testKommuneOrgNr",
+                ferdigTid = now(),
+                opprettetTid = now(),
+            )
+
+        val lagretBarnehagelisteValideringsfeil =
+            BarnehagelisteValideringsfeil(
+                type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name,
+                feilinfo = "feilinfo",
+                ident = "12345678901",
+                id = UUID.randomUUID(),
+                barnehagelisteId = lagretBarnehageliste.id,
+                opprettetTid = now(),
+            )
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(
+                lagretBarnehageliste,
+                listOf(
+                    lagretBarnehagelisteValideringsfeil,
+                ),
+            )
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
+        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
+        every { mockGodkjenteLeverandør.leverandorer } returns
+            listOf(
+                Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
+            )
+
+        // Act
+        val responseEntity = barnehagelisteController.status(lagretBarnehageliste.id, mocketRequest)
+
+        // Assert
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.FERDIG.engelsk)
+        assertThat(responseEntity.body?.finishedTime).isEqualTo(lagretBarnehageliste.ferdigTid)
+        assertThat(responseEntity.body?.receivedTime).isEqualTo(lagretBarnehageliste.opprettetTid)
+        assertThat(responseEntity.body?.id).isEqualTo(lagretBarnehageliste.id)
+        assertThat(responseEntity.body?.links?.status).isEqualTo("/api/kindergartenlists/status/${lagretBarnehageliste.id}")
+        assertThat(responseEntity.body?.links?.warnings)
+            .hasSize(1)
+            .contains(
+                EtterprosesseringfeilInfo(
+                    type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST,
+                    detail = lagretBarnehagelisteValideringsfeil.feilinfo + " child=" + lagretBarnehagelisteValideringsfeil.ident,
+                ),
+            )
+    }
+
+    @Test
     fun `Skal kaste feil dersom det ikke er samme leverandør som forsøker å hente status på innsendt barnehageliste`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
         mockkStatic(HttpServletRequest::hentConsumerId)
         mockkStatic(HttpServletRequest::hentSupplierId)
 
-        val lagetBarnehageliste =
+        val lagretBarnehageliste =
             Barnehageliste(
                 id = UUID.randomUUID(),
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
@@ -89,7 +158,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -113,7 +183,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentConsumerId)
         mockkStatic(HttpServletRequest::hentSupplierId)
 
-        val lagetBarnehageliste =
+        val lagretBarnehageliste =
             Barnehageliste(
                 id = UUID.randomUUID(),
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
@@ -122,7 +192,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "12345"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -147,7 +218,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentSupplierId)
 
         val uuid = UUID.randomUUID()
-        val lagetBarnehageliste =
+        val lagretBarnehageliste =
             Barnehageliste(
                 id = uuid,
                 rawJson = SkjemaV1TestData.lagSkjemaV1(),
@@ -156,7 +227,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                 kommuneOrgNr = "testKommuneOrgNr",
             )
 
-        every { mockBarnehagelisteService.hentBarnehageliste(any()) } returns lagetBarnehageliste
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
         every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
         every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
@@ -168,6 +240,29 @@ class DefaultBarnehagelisteControllerEnhetTest {
         val responseEntity = barnehagelisteController.status(uuid, mocketRequest)
 
         // Assert
-        assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.MOTTATT.engelsk)
+        assertThat(responseEntity.body?.status).isEqualTo(BarnehagelisteStatus.FERDIG.engelsk)
+    }
+
+    @Test
+    fun `Skal returnere valideringfeil hvis det finnes valideringsfeil i databasen`() {
+        // Arrange
+        val mocketRequest = mockk<HttpServletRequest>()
+        mockkStatic(HttpServletRequest::hentConsumerId)
+        mockkStatic(HttpServletRequest::hentSupplierId)
+
+        every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
+            BarnehagelisteMedValideringsfeil(null, emptyList())
+        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
+        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
+        every { mockGodkjenteLeverandør.leverandorer } returns
+            listOf(
+                Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
+            )
+
+        // Act
+        val responseEntity = barnehagelisteController.status(UUID.randomUUID(), mocketRequest)
+
+        // Assert
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
     }
 }
