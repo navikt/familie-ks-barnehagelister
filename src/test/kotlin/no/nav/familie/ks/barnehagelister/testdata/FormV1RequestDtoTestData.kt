@@ -10,13 +10,13 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
 
-class SkjemaV1TestData {
+class FormV1RequestDtoTestData {
     companion object {
-        private val skjemaV1Id = UUID.randomUUID()
+        private val id = UUID.randomUUID()
 
-        fun lagSkjemaV1() =
+        fun lagRequest() =
             FormV1RequestDto(
-                id = skjemaV1Id,
+                id = id,
                 kindergartens = listOf(lagBarnehage()),
                 listInformation = lagListeOpplysninger(),
             )
@@ -56,8 +56,7 @@ class SkjemaV1TestData {
                 address = null,
             )
 
-        // BarnehageBarnKs som samsvarer med lagSkjemaV1()
-        fun lagTilhørendeBarnehageBarnKs(barnehagelisteId: UUID = skjemaV1Id) =
+        fun lagTilhørendeBarnehagebarn(barnehagelisteId: UUID = id) =
             Barnehagebarn(
                 ident = lagBarn().socialSecurityNumber,
                 fom = lagBarnInfolinje().startDate,

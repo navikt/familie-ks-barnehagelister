@@ -34,7 +34,7 @@ class BarnehagelisteServiceTest {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            val eksisterendeSkjemaV1 =
+            val eksisterendeRequest =
                 FormV1RequestDto(
                     id = uuid,
                     kindergartens = mockk(),
@@ -44,7 +44,7 @@ class BarnehagelisteServiceTest {
             val lagretBarnehageliste =
                 Barnehageliste(
                     id = uuid,
-                    rawJson = eksisterendeSkjemaV1,
+                    rawJson = eksisterendeRequest,
                     status = BarnehagelisteStatus.MOTTATT,
                 )
 
@@ -54,7 +54,7 @@ class BarnehagelisteServiceTest {
             // Act
             val barnehageliste =
                 barnehagelisteService.mottaBarnehageliste(
-                    eksisterendeSkjemaV1,
+                    eksisterendeRequest,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )
@@ -69,7 +69,7 @@ class BarnehagelisteServiceTest {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            val ikkeEksisterendeSkjemaV1 =
+            val ikkeEksisterendeRequest =
                 FormV1RequestDto(
                     id = uuid,
                     kindergartens = mockk(),
@@ -84,7 +84,7 @@ class BarnehagelisteServiceTest {
             // Act
             val barnehagelisteMedValideringsfeil =
                 barnehagelisteService.mottaBarnehageliste(
-                    ikkeEksisterendeSkjemaV1,
+                    ikkeEksisterendeRequest,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )

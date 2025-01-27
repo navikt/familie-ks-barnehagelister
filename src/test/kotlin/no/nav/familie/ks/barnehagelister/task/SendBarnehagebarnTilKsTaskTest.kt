@@ -11,7 +11,7 @@ import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,12 +45,12 @@ class SendBarnehagebarnTilKsTaskTest {
         val mockBarnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
             )
 
         val mockBarnehagebarn =
-            SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
+            FormV1RequestDtoTestData.lagTilhørendeBarnehagebarn(barnehagelisteId)
 
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
         every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
@@ -70,12 +70,12 @@ class SendBarnehagebarnTilKsTaskTest {
         val mockBarnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
             )
 
         val mockBarnehagebarn =
-            SkjemaV1TestData.lagTilhørendeBarnehageBarnKs(barnehagelisteId)
+            FormV1RequestDtoTestData.lagTilhørendeBarnehagebarn(barnehagelisteId)
 
         every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn

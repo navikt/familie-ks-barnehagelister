@@ -1,21 +1,21 @@
 package no.nav.familie.ks.barnehagelister.domene
 
 import no.nav.familie.ks.barnehagelister.rest.dto.mapTilBarnehagebarn
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class SkjemaV1Test {
+class FormV1RequestDtoTest {
     @Test
     fun `mapper til BarnehageBarnKS hvis alle felter er utfylt`() {
         // Arrange
-        val gyldigSkjemaV1 = SkjemaV1TestData.lagSkjemaV1()
+        val gyldigRequest = FormV1RequestDtoTestData.lagRequest()
 
         // Act
-        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehagebarn()!!.first()
+        val barnehageBarnKS = gyldigRequest.mapTilBarnehagebarn()!!.first()
 
         // Assert
-        val forventetBarnehageBarnKS = SkjemaV1TestData.lagTilhørendeBarnehageBarnKs()
+        val forventetBarnehageBarnKS = FormV1RequestDtoTestData.lagTilhørendeBarnehagebarn()
 
         assertThat(forventetBarnehageBarnKS).usingRecursiveComparison().ignoringFields("id").isEqualTo(barnehageBarnKS)
     }
@@ -23,10 +23,10 @@ class SkjemaV1Test {
     @Test
     fun `mapper til tom liste hvis ingen barnehager`() {
         // Arrange
-        val gyldigSkjemaV1 = SkjemaV1TestData.lagSkjemaV1().copy(kindergartens = emptyList())
+        val gyldigRequest = FormV1RequestDtoTestData.lagRequest().copy(kindergartens = emptyList())
 
         // Act
-        val barnehageBarnKS = gyldigSkjemaV1.mapTilBarnehagebarn()
+        val barnehageBarnKS = gyldigRequest.mapTilBarnehagebarn()
 
         // Assert
         assertThat(barnehageBarnKS).isEqualTo(emptyList<Barnehagebarn>())

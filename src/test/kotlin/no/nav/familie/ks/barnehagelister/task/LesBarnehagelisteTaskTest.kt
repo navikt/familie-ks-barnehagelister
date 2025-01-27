@@ -10,7 +10,7 @@ import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import no.nav.familie.prosessering.domene.Task
 import no.nav.familie.prosessering.internal.TaskService
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +42,7 @@ class LesBarnehagelisteTaskTest {
         val mockBarnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
             )
         val mockTask = Task("", "")
@@ -68,7 +68,7 @@ class LesBarnehagelisteTaskTest {
         val mockBarnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
             )
 

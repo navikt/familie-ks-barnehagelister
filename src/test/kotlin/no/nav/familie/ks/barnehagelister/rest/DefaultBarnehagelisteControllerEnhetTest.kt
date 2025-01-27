@@ -13,7 +13,7 @@ import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfeil
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -87,7 +87,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         mockkStatic(HttpServletRequest::hentConsumerId)
         mockkStatic(HttpServletRequest::hentSupplierId)
 
-        val skjema = SkjemaV1TestData.lagSkjemaV1()
+        val skjema = FormV1RequestDtoTestData.lagRequest()
         val lagretBarnehageliste =
             Barnehageliste(
                 id = skjema.id,
@@ -152,7 +152,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         val lagretBarnehageliste =
             Barnehageliste(
                 id = UUID.randomUUID(),
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
                 kommuneOrgNr = "testKommuneOrgNr",
@@ -186,7 +186,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         val lagretBarnehageliste =
             Barnehageliste(
                 id = UUID.randomUUID(),
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
                 kommuneOrgNr = "testKommuneOrgNr",
@@ -221,7 +221,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
         val lagretBarnehageliste =
             Barnehageliste(
                 id = uuid,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
                 leverandorOrgNr = "testLeverandørOrgNr3",
                 kommuneOrgNr = "testKommuneOrgNr",
