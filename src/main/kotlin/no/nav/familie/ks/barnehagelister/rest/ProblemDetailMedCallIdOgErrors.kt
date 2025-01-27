@@ -37,5 +37,5 @@ class ProblemDetailMedCallIdOgErrors(
         example = "57cf57cf06d84cc5883fc0a0a8804a7f",
     )
     val callId: String,
-    val errors: List<ValideringsfeilInfo>?,
+    val errors: List<JsonValideringsfeilInfo>?,
 )

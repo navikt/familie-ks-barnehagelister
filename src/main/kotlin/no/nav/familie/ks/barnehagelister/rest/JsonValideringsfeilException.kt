@@ -2,16 +2,15 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(name = "ValidationError")
-class ValideringsfeilException(
-    val errors: List<ValideringsfeilInfo>,
+class JsonValideringsfeilException(
+    val errors: List<JsonValideringsfeilInfo>,
 ) : RuntimeException("Validation error")
 
 @Schema(
-    name = "ValidationErrorInformation",
-    description = "Information about validation errors",
+    name = "JsonValidationErrorInformation",
+    description = "Information about JSON validation errors",
 )
-data class ValideringsfeilInfo(
+data class JsonValideringsfeilInfo(
     @Schema(
         description = "Which field has validation errors. If the info is unknown, then the field is set to missing",
         example = "kindergartens[0].navn",

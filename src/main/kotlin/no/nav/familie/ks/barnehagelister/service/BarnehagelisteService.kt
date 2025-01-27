@@ -1,10 +1,12 @@
 package no.nav.familie.ks.barnehagelister.service
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
+import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
 import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
+import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
-import no.nav.familie.ks.barnehagelister.task.LesBarnehagelisteTask
+import no.nav.familie.ks.barnehagelister.task.PeriodeOverlappValideringTask
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
@@ -16,6 +18,7 @@ import java.util.UUID
 class BarnehagelisteService(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val taskService: TaskService,
+    private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
@@ -23,11 +26,20 @@ class BarnehagelisteService(
         skjemaV1: SkjemaV1,
         leverandørOrgNr: String,
         kommuneOrgNr: String,
-    ): Barnehageliste {
-        val eksisterendeBarnehageliste = barnehagelisteRepository.findByIdOrNull(skjemaV1.id)
+    ): BarnehagelisteMedValideringsfeil {
+        val eksisterendeBarnehagelisteMedValideringsfeil = hentBarnehagelisteMedValideringsfeil(skjemaV1.id)
+        val eksisterendeBarnehageliste = eksisterendeBarnehagelisteMedValideringsfeil.barnehageliste
         if (eksisterendeBarnehageliste != null) {
             logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
-            return eksisterendeBarnehageliste
+            return BarnehagelisteMedValideringsfeil(
+                barnehageliste = eksisterendeBarnehageliste,
+                valideringsfeil =
+                    if (eksisterendeBarnehageliste.status == BarnehagelisteStatus.FERDIG) {
+                        eksisterendeBarnehagelisteMedValideringsfeil.valideringsfeil
+                    } else {
+                        emptyList()
+                    },
+            )
         }
 
         val lagretBarnehageliste =
@@ -42,16 +54,25 @@ class BarnehagelisteService(
                     ),
                 )
 
-        val opprettetTask = LesBarnehagelisteTask.opprettTask(skjemaV1.id)
+        val opprettetTask = PeriodeOverlappValideringTask.opprettTask(skjemaV1.id.toString())
         taskService.save(opprettetTask)
 
-        return lagretBarnehageliste
+        return BarnehagelisteMedValideringsfeil(
+            barnehageliste = lagretBarnehageliste,
+            valideringsfeil = emptyList(),
+        )
     }
 
-    fun hentBarnehageliste(barnehagelisterId: UUID): Barnehageliste? {
-        logger.info("Henter barnehagelister m/ id $barnehagelisterId")
+    fun hentBarnehageliste(barnehagelisteId: UUID): Barnehageliste? {
+        logger.info("Henter barnehagelister m/ id $barnehagelisteId")
 
-        return barnehagelisteRepository.findByIdOrNull(barnehagelisterId)
+        return barnehagelisteRepository.findByIdOrNull(barnehagelisteId)
+    }
+
+    fun hentBarnehagelisteMedValideringsfeil(barnehagelisterId: UUID): BarnehagelisteMedValideringsfeil {
+        val barnehageliste = hentBarnehageliste(barnehagelisterId)
+        val valideringsfeil = barnehagelisteValideringsfeilRepository.findByBarnehagelisteId(barnehagelisterId)
+        return BarnehagelisteMedValideringsfeil(barnehageliste, valideringsfeil)
     }
 
     fun settBarnehagelisteStatusTilFerdig(barnehageliste: Barnehageliste) {
@@ -64,3 +85,8 @@ class BarnehagelisteService(
         )
     }
 }
+
+data class BarnehagelisteMedValideringsfeil(
+    val barnehageliste: Barnehageliste?,
+    val valideringsfeil: List<BarnehagelisteValideringsfeil>,
+)

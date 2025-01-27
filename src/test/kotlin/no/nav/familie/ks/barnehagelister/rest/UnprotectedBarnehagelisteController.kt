@@ -28,26 +28,32 @@ class UnprotectedBarnehagelisteController(
     ): ResponseEntity<KindergartenlistResponse> {
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        val barnehagelister =
+        val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(
                 formV1RequestDto.mapTilSkjemaV1(),
                 "testLeverandørOrgNr",
                 "testKommuneOrgNr",
             )
 
-        return barnehagelister.tilKindergartenlistResponse().toResponseEntity()
+        return barnehagelisteMedValideringsfeil.barnehageliste!!
+            .tilKindergartenlistResponse(
+                barnehagelisteMedValideringsfeil.valideringsfeil,
+            ).toResponseEntity()
     }
 
     @Unprotected
     override fun status(
         id: UUID,
         request: HttpServletRequest,
-    ): ResponseEntity<KindergartenlistResponse> =
-        barnehagelisteService
-            .hentBarnehageliste(id)
-            ?.tilKindergartenlistResponse()
+    ): ResponseEntity<KindergartenlistResponse> {
+        val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
+        return barnehagelisteService
+            .hentBarnehagelisteMedValideringsfeil(id)
+            .barnehageliste
+            ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
             ?.toResponseEntity()
             ?: ResponseEntity.notFound().build()
+    }
 
     @Unprotected
     override fun ping(): String = "\"OK\""
@@ -58,11 +64,11 @@ private fun BindingResult.kastValideringsfeilHvisValideringFeiler() {
         val feil =
             allErrors.map {
                 if (it is FieldError) {
-                    ValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                    JsonValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
                 } else {
-                    ValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                    JsonValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
                 }
             }
-        throw ValideringsfeilException(feil)
+        throw JsonValideringsfeilException(feil)
     }
 }
