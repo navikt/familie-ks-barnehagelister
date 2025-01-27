@@ -55,18 +55,18 @@ class PeriodeOverlappValideringTaskTest {
         // Arrange
         val skjema =
             SkjemaV1TestData.lagSkjemaV1().copy(
-                barnehager =
+                kindergartens =
                     listOf(
                         SkjemaV1TestData.lagBarnehage().copy(
-                            barnInfolinjer =
+                            childrenInformation =
                                 listOf(
                                     SkjemaV1TestData.lagBarnInfolinje().copy(
-                                        startdato = LocalDate.of(2025, 1, 1),
-                                        sluttdato = LocalDate.of(2025, 7, 31),
+                                        startDate = LocalDate.of(2025, 1, 1),
+                                        endDate = LocalDate.of(2025, 7, 31),
                                     ),
                                     SkjemaV1TestData.lagBarnInfolinje().copy(
-                                        startdato = LocalDate.of(2025, 6, 1),
-                                        sluttdato = LocalDate.of(2025, 10, 31),
+                                        startDate = LocalDate.of(2025, 6, 1),
+                                        endDate = LocalDate.of(2025, 10, 31),
                                     ),
                                 ),
                         ),
@@ -90,7 +90,7 @@ class PeriodeOverlappValideringTaskTest {
         // Assert
         verify(exactly = 1) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
         assertThat(slot.captured).hasSize(1)
-        assertThat(slot.captured.first().ident).isEqualTo(lagBarn().fodselsnummer)
+        assertThat(slot.captured.first().ident).isEqualTo(lagBarn().socialSecurityNumber)
         assertThat(slot.captured.first().type).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name)
         assertThat(slot.captured.first().feilinfo).isEqualTo("Overlapping period within the same list for children.")
     }

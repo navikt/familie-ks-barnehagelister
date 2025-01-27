@@ -6,7 +6,6 @@ import no.nav.familie.ks.barnehagelister.interceptor.hentConsumerId
 import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
-import no.nav.familie.ks.barnehagelister.rest.dto.mapTilSkjemaV1
 import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import org.springframework.context.annotation.Profile
@@ -34,7 +33,7 @@ class DefaultBarnehagelisteController(
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
         val barnehagelisteMedValideringsfeil =
-            barnehagelisteService.mottaBarnehageliste(formV1RequestDto.mapTilSkjemaV1(), leverandørOrgNr, kommuneOrgNr)
+            barnehagelisteService.mottaBarnehageliste(formV1RequestDto, leverandørOrgNr, kommuneOrgNr)
 
         return barnehagelisteMedValideringsfeil.barnehageliste!!
             .tilKindergartenlistResponse(

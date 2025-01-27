@@ -6,6 +6,7 @@ import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.prosessering.internal.TaskService
 import org.assertj.core.api.Assertions.assertThat
@@ -34,10 +35,10 @@ class BarnehagelisteServiceTest {
             val uuid = UUID.randomUUID()
 
             val eksisterendeSkjemaV1 =
-                SkjemaV1(
+                FormV1RequestDto(
                     id = uuid,
-                    barnehager = mockk(),
-                    listeopplysninger = mockk(),
+                    kindergartens = mockk(),
+                    listInformation = mockk(),
                 )
 
             val lagretBarnehageliste =
@@ -69,10 +70,10 @@ class BarnehagelisteServiceTest {
             val uuid = UUID.randomUUID()
 
             val ikkeEksisterendeSkjemaV1 =
-                SkjemaV1(
+                FormV1RequestDto(
                     id = uuid,
-                    barnehager = mockk(),
-                    listeopplysninger = mockk(),
+                    kindergartens = mockk(),
+                    listInformation = mockk(),
                 )
 
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null

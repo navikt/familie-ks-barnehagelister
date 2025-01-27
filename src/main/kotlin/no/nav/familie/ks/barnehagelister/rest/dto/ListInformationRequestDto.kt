@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import no.nav.familie.ks.barnehagelister.domene.Listeopplysninger
 import java.time.YearMonth
 
 @Schema(name = "ListInformation", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -19,10 +18,3 @@ data class ListInformationRequestDto(
     @Schema(type = "string", format = "yearmonth", example = "2024-09")
     val submissionForYearMonth: YearMonth,
 )
-
-fun ListInformationRequestDto.mapTilListeopplysninger(): Listeopplysninger =
-    Listeopplysninger(
-        kommunenavn = this.municipalityName,
-        kommunenummer = this.municipalityNumber,
-        innsendingGjelderArManed = this.submissionForYearMonth,
-    )

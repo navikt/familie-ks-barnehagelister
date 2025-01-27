@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import no.nav.familie.ks.barnehagelister.domene.Barnehage
 import no.nav.familie.ks.barnehagelister.validering.Organisasjonsnummer
 
 @Schema(name = "Kindergarten")
@@ -29,11 +28,3 @@ data class KindergartenRequestDto(
     @field:Valid
     val childrenInformation: List<ChildInformationRequestDto>,
 )
-
-fun KindergartenRequestDto.mapTilBarnehage(): Barnehage =
-    Barnehage(
-        navn = this.name,
-        organisasjonsnummer = this.organizationNumber,
-        adresse = this.address?.mapTilAdresse(),
-        barnInfolinjer = this.childrenInformation.map { it.mapTilBarnInfolinje() },
-    )

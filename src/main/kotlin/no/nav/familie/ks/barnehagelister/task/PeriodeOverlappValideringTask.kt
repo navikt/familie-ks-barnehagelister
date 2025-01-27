@@ -1,10 +1,10 @@
 package no.nav.familie.ks.barnehagelister.task
 
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
-import no.nav.familie.ks.barnehagelister.domene.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
+import no.nav.familie.ks.barnehagelister.rest.dto.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
 import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse

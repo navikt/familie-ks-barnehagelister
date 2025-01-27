@@ -1,11 +1,11 @@
 package no.nav.familie.ks.barnehagelister.testdata
 
-import no.nav.familie.ks.barnehagelister.domene.BarnInfolinje
-import no.nav.familie.ks.barnehagelister.domene.Barnehage
 import no.nav.familie.ks.barnehagelister.domene.Barnehagebarn
-import no.nav.familie.ks.barnehagelister.domene.Listeopplysninger
-import no.nav.familie.ks.barnehagelister.domene.Person
-import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
+import no.nav.familie.ks.barnehagelister.rest.dto.ChildInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.ListInformationRequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.UUID
@@ -15,58 +15,58 @@ class SkjemaV1TestData {
         private val skjemaV1Id = UUID.randomUUID()
 
         fun lagSkjemaV1() =
-            SkjemaV1(
+            FormV1RequestDto(
                 id = skjemaV1Id,
-                barnehager = listOf(lagBarnehage()),
-                listeopplysninger = lagListeOpplysninger(),
+                kindergartens = listOf(lagBarnehage()),
+                listInformation = lagListeOpplysninger(),
             )
 
         fun lagListeOpplysninger() =
-            Listeopplysninger(
-                kommunenavn = "Kommune 1",
-                kommunenummer = "1234",
-                innsendingGjelderArManed = YearMonth.now(),
+            ListInformationRequestDto(
+                municipalityName = "Kommune 1",
+                municipalityNumber = "1234",
+                submissionForYearMonth = YearMonth.now(),
             )
 
         fun lagBarnehage() =
-            Barnehage(
-                navn = "Gullklumpen Barnehage AS",
-                organisasjonsnummer = "310028142",
-                adresse = null,
-                barnInfolinjer =
+            KindergartenRequestDto(
+                name = "Gullklumpen Barnehage AS",
+                organizationNumber = "310028142",
+                address = null,
+                childrenInformation =
                     listOf(
                         lagBarnInfolinje(),
                     ),
             )
 
         fun lagBarnInfolinje() =
-            BarnInfolinje(
-                barn = lagBarn(),
-                avtaltOppholdstidTimer = 40.0,
-                startdato = LocalDate.now(),
-                sluttdato = LocalDate.now().plusMonths(5),
-                foresatte = null,
+            ChildInformationRequestDto(
+                child = lagBarn(),
+                agreedHoursInKindergarten = 40.0,
+                startDate = LocalDate.now(),
+                endDate = LocalDate.now().plusMonths(5),
+                guardians = null,
             )
 
         fun lagBarn() =
-            Person(
-                fodselsnummer = "12345678901",
-                fornavn = "navn",
-                etternavn = "navnesen",
-                adresse = null,
+            PersonRequestDto(
+                socialSecurityNumber = "12345678901",
+                firstName = "navn",
+                lastName = "navnesen",
+                address = null,
             )
 
         // BarnehageBarnKs som samsvarer med lagSkjemaV1()
         fun lagTilhørendeBarnehageBarnKs(barnehagelisteId: UUID = skjemaV1Id) =
             Barnehagebarn(
-                ident = lagBarn().fodselsnummer,
-                fom = lagBarnInfolinje().startdato,
-                tom = lagBarnInfolinje().sluttdato,
-                antallTimerIBarnehage = lagBarnInfolinje().avtaltOppholdstidTimer,
-                kommuneNavn = lagListeOpplysninger().kommunenavn,
-                kommuneNr = lagListeOpplysninger().kommunenummer,
+                ident = lagBarn().socialSecurityNumber,
+                fom = lagBarnInfolinje().startDate,
+                tom = lagBarnInfolinje().endDate,
+                antallTimerIBarnehage = lagBarnInfolinje().agreedHoursInKindergarten,
+                kommuneNavn = lagListeOpplysninger().municipalityName,
+                kommuneNr = lagListeOpplysninger().municipalityNumber,
                 barnehagelisteId = barnehagelisteId,
-                organisasjonsnummer = lagBarnehage().organisasjonsnummer,
+                organisasjonsnummer = lagBarnehage().organizationNumber,
             )
     }
 }

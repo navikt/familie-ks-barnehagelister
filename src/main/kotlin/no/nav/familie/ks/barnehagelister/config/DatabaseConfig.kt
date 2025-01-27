@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.config
 
 import no.nav.familie.kontrakter.felles.objectMapper
-import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.prosessering.PropertiesWrapperTilStringConverter
 import no.nav.familie.prosessering.StringTilPropertiesWrapperConverter
 import org.postgresql.util.PGobject
@@ -31,19 +31,19 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
             listOf(
                 PropertiesWrapperTilStringConverter(),
                 StringTilPropertiesWrapperConverter(),
-                SkjemaPGObjectLesConverter(),
-                SkjemaPGOBjectSkrivConverter(),
+                FormV1RequestDtoPGObjectLesConverter(),
+                FormV1RequestDtoPGOBjectSkrivConverter(),
             ),
         )
 
     @ReadingConverter
-    class SkjemaPGObjectLesConverter : Converter<PGobject, SkjemaV1> {
-        override fun convert(pgObject: PGobject): SkjemaV1 = objectMapper.readValue(pgObject.value, SkjemaV1::class.java)
+    class FormV1RequestDtoPGObjectLesConverter : Converter<PGobject, FormV1RequestDto> {
+        override fun convert(pgObject: PGobject): FormV1RequestDto = objectMapper.readValue(pgObject.value, FormV1RequestDto::class.java)
     }
 
     @WritingConverter
-    class SkjemaPGOBjectSkrivConverter : Converter<SkjemaV1, PGobject> {
-        override fun convert(skjemaV1: SkjemaV1): PGobject {
+    class FormV1RequestDtoPGOBjectSkrivConverter : Converter<FormV1RequestDto, PGobject> {
+        override fun convert(skjemaV1: FormV1RequestDto): PGobject {
             val pgJsonObject = PGobject()
             pgJsonObject.type = "json"
             pgJsonObject.value = objectMapper.writeValueAsString(skjemaV1)
