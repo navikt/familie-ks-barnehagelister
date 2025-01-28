@@ -39,6 +39,8 @@ spec:
     - https://familie-ks-barnehagelister.intern.dev.nav.no
     - https://familie-ks-barnehagelister.ekstern.dev.nav.no/api/kindergartenlist
     - https://familie-ks-barnehagelister.ekstern.dev.nav.no/swagger-ui/
+    - https://familie-ks-barnehagelister.ekstern.dev.nav.no/swagger-ui.html
+    - https://familie-ks-barnehagelister.ekstern.dev.nav.no/v3/
   maskinporten:
     enabled: true
     scopes:
