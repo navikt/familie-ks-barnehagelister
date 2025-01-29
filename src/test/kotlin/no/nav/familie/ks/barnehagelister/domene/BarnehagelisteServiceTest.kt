@@ -6,6 +6,7 @@ import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.prosessering.internal.TaskService
 import org.assertj.core.api.Assertions.assertThat
@@ -33,17 +34,17 @@ class BarnehagelisteServiceTest {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            val eksisterendeSkjemaV1 =
-                SkjemaV1(
+            val eksisterendeRequest =
+                FormV1RequestDto(
                     id = uuid,
-                    barnehager = mockk(),
-                    listeopplysninger = mockk(),
+                    kindergartens = mockk(),
+                    listInformation = mockk(),
                 )
 
             val lagretBarnehageliste =
                 Barnehageliste(
                     id = uuid,
-                    rawJson = eksisterendeSkjemaV1,
+                    rawJson = eksisterendeRequest,
                     status = BarnehagelisteStatus.MOTTATT,
                 )
 
@@ -53,7 +54,7 @@ class BarnehagelisteServiceTest {
             // Act
             val barnehageliste =
                 barnehagelisteService.mottaBarnehageliste(
-                    eksisterendeSkjemaV1,
+                    eksisterendeRequest,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )
@@ -68,11 +69,11 @@ class BarnehagelisteServiceTest {
             // Arrange
             val uuid = UUID.randomUUID()
 
-            val ikkeEksisterendeSkjemaV1 =
-                SkjemaV1(
+            val ikkeEksisterendeRequest =
+                FormV1RequestDto(
                     id = uuid,
-                    barnehager = mockk(),
-                    listeopplysninger = mockk(),
+                    kindergartens = mockk(),
+                    listInformation = mockk(),
                 )
 
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns null
@@ -83,7 +84,7 @@ class BarnehagelisteServiceTest {
             // Act
             val barnehagelisteMedValideringsfeil =
                 barnehagelisteService.mottaBarnehageliste(
-                    ikkeEksisterendeSkjemaV1,
+                    ikkeEksisterendeRequest,
                     "testLeverandørOrgNr",
                     "testKommuneOrgNr",
                 )

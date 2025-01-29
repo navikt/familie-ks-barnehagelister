@@ -2,10 +2,10 @@ package no.nav.familie.ks.barnehagelister.service
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
-import no.nav.familie.ks.barnehagelister.domene.SkjemaV1
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.task.PeriodeOverlappValideringTask
 import no.nav.familie.prosessering.internal.TaskService
 import org.slf4j.LoggerFactory
@@ -23,7 +23,7 @@ class BarnehagelisteService(
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
     fun mottaBarnehageliste(
-        skjemaV1: SkjemaV1,
+        skjemaV1: FormV1RequestDto,
         leverandørOrgNr: String,
         kommuneOrgNr: String,
     ): BarnehagelisteMedValideringsfeil {

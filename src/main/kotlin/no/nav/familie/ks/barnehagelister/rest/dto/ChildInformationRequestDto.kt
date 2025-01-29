@@ -2,7 +2,6 @@ package no.nav.familie.ks.barnehagelister.rest.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
-import no.nav.familie.ks.barnehagelister.domene.BarnInfolinje
 import java.time.LocalDate
 
 @Schema(name = "ChildInformation")
@@ -31,12 +30,3 @@ data class ChildInformationRequestDto(
     @field:Valid
     val guardians: List<PersonRequestDto>?,
 )
-
-fun ChildInformationRequestDto.mapTilBarnInfolinje(): BarnInfolinje =
-    BarnInfolinje(
-        barn = child.mapTilPerson(),
-        avtaltOppholdstidTimer = this.agreedHoursInKindergarten,
-        startdato = this.startDate,
-        sluttdato = this.endDate,
-        foresatte = this.guardians?.map { it.mapTilPerson() },
-    )

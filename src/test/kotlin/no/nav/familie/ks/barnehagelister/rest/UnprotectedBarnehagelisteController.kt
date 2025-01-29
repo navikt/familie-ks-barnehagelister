@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.tilKindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
-import no.nav.familie.ks.barnehagelister.rest.dto.mapTilSkjemaV1
 import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.security.token.support.core.api.Unprotected
@@ -30,7 +29,7 @@ class UnprotectedBarnehagelisteController(
 
         val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(
-                formV1RequestDto.mapTilSkjemaV1(),
+                formV1RequestDto,
                 "testLeverandørOrgNr",
                 "testKommuneOrgNr",
             )

@@ -10,8 +10,8 @@ import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData
-import no.nav.familie.ks.barnehagelister.testdata.SkjemaV1TestData.Companion.lagBarn
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
+import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData.Companion.lagBarn
 import no.nav.familie.prosessering.internal.TaskService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,7 +39,7 @@ class PeriodeOverlappValideringTaskTest {
         val barnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
-                rawJson = SkjemaV1TestData.lagSkjemaV1(),
+                rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
             )
         every { mockBarnehagelisteRepository.findByIdOrNull(barnehagelisteId) } returns barnehageliste
@@ -54,19 +54,19 @@ class PeriodeOverlappValideringTaskTest {
     fun `Task skal lagre ned valideringsfeil hvis det er en perioder som overlapper`() {
         // Arrange
         val skjema =
-            SkjemaV1TestData.lagSkjemaV1().copy(
-                barnehager =
+            FormV1RequestDtoTestData.lagRequest().copy(
+                kindergartens =
                     listOf(
-                        SkjemaV1TestData.lagBarnehage().copy(
-                            barnInfolinjer =
+                        FormV1RequestDtoTestData.lagBarnehage().copy(
+                            childrenInformation =
                                 listOf(
-                                    SkjemaV1TestData.lagBarnInfolinje().copy(
-                                        startdato = LocalDate.of(2025, 1, 1),
-                                        sluttdato = LocalDate.of(2025, 7, 31),
+                                    FormV1RequestDtoTestData.lagBarnInfolinje().copy(
+                                        startDate = LocalDate.of(2025, 1, 1),
+                                        endDate = LocalDate.of(2025, 7, 31),
                                     ),
-                                    SkjemaV1TestData.lagBarnInfolinje().copy(
-                                        startdato = LocalDate.of(2025, 6, 1),
-                                        sluttdato = LocalDate.of(2025, 10, 31),
+                                    FormV1RequestDtoTestData.lagBarnInfolinje().copy(
+                                        startDate = LocalDate.of(2025, 6, 1),
+                                        endDate = LocalDate.of(2025, 10, 31),
                                     ),
                                 ),
                         ),
@@ -90,7 +90,7 @@ class PeriodeOverlappValideringTaskTest {
         // Assert
         verify(exactly = 1) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
         assertThat(slot.captured).hasSize(1)
-        assertThat(slot.captured.first().ident).isEqualTo(lagBarn().fodselsnummer)
+        assertThat(slot.captured.first().ident).isEqualTo(lagBarn().socialSecurityNumber)
         assertThat(slot.captured.first().type).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name)
         assertThat(slot.captured.first().feilinfo).isEqualTo("Overlapping period within the same list for children.")
     }

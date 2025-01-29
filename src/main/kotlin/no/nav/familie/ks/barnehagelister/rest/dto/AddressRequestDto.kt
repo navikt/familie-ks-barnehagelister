@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.AssertTrue
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import no.nav.familie.ks.barnehagelister.domene.Adresse
 
 @Schema(name = "Address")
 data class AddressRequestDto(
@@ -68,24 +67,3 @@ data class AddressRequestDto(
             zipCode == null &&
             postalTown == null
 }
-
-fun AddressRequestDto.mapTilAdresse(): Adresse =
-    if (this.confidentialAddress) {
-        Adresse(
-            null,
-            null,
-            null,
-            null,
-            null,
-            hemmeligAdresse = true,
-        )
-    } else {
-        Adresse(
-            bruksenhetsnummer = this.unitNumber,
-            adresselinje1 = this.addressLine1,
-            adresselinje2 = this.addressLine2,
-            postnummer = this.zipCode,
-            poststed = this.postalTown,
-            hemmeligAdresse = false,
-        )
-    }

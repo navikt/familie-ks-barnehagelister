@@ -3,6 +3,7 @@ package no.nav.familie.ks.barnehagelister.domene
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
 import org.springframework.data.annotation.Id
@@ -12,7 +13,7 @@ import java.util.UUID
 data class Barnehageliste(
     @Id
     val id: UUID,
-    val rawJson: SkjemaV1,
+    val rawJson: FormV1RequestDto,
     val status: BarnehagelisteStatus,
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
     val ferdigTid: LocalDateTime? = null,
