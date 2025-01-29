@@ -12,6 +12,6 @@ interface BarnehagelisteRepository :
     RepositoryInterface<Barnehageliste, UUID>,
     InsertUpdateRepository<Barnehageliste> {
     // language=PostgreSQL
-    @Query(value = "SELECT b FROM Barnehageliste WHERE b.id = :id")
+    @Query(value = "SELECT * FROM barnehageliste b WHERE b.id = :id")
     fun finnById(id: UUID): Barnehageliste
 }
