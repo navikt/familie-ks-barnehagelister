@@ -37,7 +37,10 @@ spec:
     enabled: true
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-ks-barnehagelister.intern.nav.no
-  #    - https://familie-ks-barnehagelister.nav.no
+    - https://familie-ks-barnehagelister.nav.no/api/kindergartenlists
+    - https://familie-ks-barnehagelister.nav.no/swagger-ui/
+    - https://familie-ks-barnehagelister.nav.no/swagger-ui.html
+    - https://familie-ks-barnehagelister.nav.no/v3/
   maskinporten:
     enabled: true
     scopes:
