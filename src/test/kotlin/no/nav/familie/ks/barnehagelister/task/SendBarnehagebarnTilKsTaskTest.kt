@@ -47,6 +47,8 @@ class SendBarnehagebarnTilKsTaskTest {
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
 
         val mockBarnehagebarn =
@@ -55,7 +57,11 @@ class SendBarnehagebarnTilKsTaskTest {
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
         every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
 
-        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
+        val sendBarnehagelisteTask =
+            SendBarnehagebarnTilKsTask.opprettTask(
+                barnehagebarnId = mockBarnehagebarn.id.toString(),
+                barnehagelisteId = barnehagelisteId.toString(),
+            )
 
         // Act
         sendBarnehagebarnTilKsTask.doTask(sendBarnehagelisteTask)
@@ -72,6 +78,8 @@ class SendBarnehagebarnTilKsTaskTest {
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
 
         val mockBarnehagebarn =
@@ -80,7 +88,11 @@ class SendBarnehagebarnTilKsTaskTest {
         every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
         every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
 
-        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
+        val sendBarnehagelisteTask =
+            SendBarnehagebarnTilKsTask.opprettTask(
+                barnehagebarnId = mockBarnehagebarn.id.toString(),
+                barnehagelisteId = barnehagelisteId.toString(),
+            )
 
         // Act && Assert
         val exception =

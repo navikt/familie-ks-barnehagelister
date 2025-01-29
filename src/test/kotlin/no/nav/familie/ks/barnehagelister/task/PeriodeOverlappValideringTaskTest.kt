@@ -41,10 +41,18 @@ class PeriodeOverlappValideringTaskTest {
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
         every { mockBarnehagelisteRepository.findByIdOrNull(barnehagelisteId) } returns barnehageliste
         // Act
-        periodeOverlappValideringTask.doTask(PeriodeOverlappValideringTask.opprettTask(barnehagelisteId.toString()))
+        periodeOverlappValideringTask.doTask(
+            PeriodeOverlappValideringTask.opprettTask(
+                barnehagelisteId.toString(),
+                leverandørOrgNr = "leverandør",
+                kommuneOrgNr = "Kommune",
+            ),
+        )
 
         // Assert
         verify(exactly = 0) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
@@ -78,6 +86,8 @@ class PeriodeOverlappValideringTaskTest {
                 id = barnehagelisteId,
                 rawJson = skjema,
                 status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
         every { mockBarnehagelisteRepository.findByIdOrNull(barnehagelisteId) } returns barnehageliste
 
@@ -85,7 +95,13 @@ class PeriodeOverlappValideringTaskTest {
         every { mockBarnehagelisteValideringsfeilRepository.insertAll(capture(slot)) } answers { slot.captured }
 
         // Act
-        periodeOverlappValideringTask.doTask(PeriodeOverlappValideringTask.opprettTask(barnehagelisteId.toString()))
+        periodeOverlappValideringTask.doTask(
+            PeriodeOverlappValideringTask.opprettTask(
+                barnehagelisteId.toString(),
+                leverandørOrgNr = "leverandør",
+                kommuneOrgNr = "Kommune",
+            ),
+        )
 
         // Assert
         verify(exactly = 1) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
