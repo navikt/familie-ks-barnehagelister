@@ -51,7 +51,7 @@ class PeriodeOverlappValideringTask(
                     BarnehagelisteValideringsfeil(
                         id = UUID.randomUUID(),
                         barnehagelisteId = barnehagelisteId,
-                        type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name,
+                        etterprosesseringfeiltype = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST,
                         feilinfo = "Overlapping period within the same list for children.",
                         ident = barn,
                     )

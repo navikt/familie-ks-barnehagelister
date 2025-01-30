@@ -91,7 +91,7 @@ class PeriodeOverlappValideringTaskTest {
         verify(exactly = 1) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
         assertThat(slot.captured).hasSize(1)
         assertThat(slot.captured.first().ident).isEqualTo(lagBarn().socialSecurityNumber)
-        assertThat(slot.captured.first().type).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name)
+        assertThat(slot.captured.first().etterprosesseringfeiltype).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST)
         assertThat(slot.captured.first().feilinfo).isEqualTo("Overlapping period within the same list for children.")
     }
 }

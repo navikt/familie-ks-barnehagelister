@@ -101,7 +101,7 @@ class DefaultBarnehagelisteControllerEnhetTest {
 
         val lagretBarnehagelisteValideringsfeil =
             BarnehagelisteValideringsfeil(
-                type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name,
+                etterprosesseringfeiltype = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST,
                 feilinfo = "feilinfo",
                 ident = "12345678901",
                 id = UUID.randomUUID(),
