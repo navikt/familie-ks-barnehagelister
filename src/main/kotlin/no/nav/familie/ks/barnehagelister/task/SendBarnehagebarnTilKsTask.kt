@@ -11,6 +11,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.util.Properties
 import java.util.UUID
 
 @Service
@@ -47,10 +48,19 @@ class SendBarnehagebarnTilKsTask(
         const val TASK_STEP_TYPE = "sendBarnehagebarnTask"
         private val logger: Logger = LoggerFactory.getLogger(SendBarnehagebarnTilKsTask::class.java)
 
-        fun opprettTask(barnehagebarnId: UUID): Task =
+        fun opprettTask(
+            barnehagebarnId: String,
+            barnehagelisteId: String,
+        ): Task =
             Task(
                 type = TASK_STEP_TYPE,
-                payload = barnehagebarnId.toString(),
+                payload = barnehagebarnId,
+                properties =
+                    Properties().apply {
+                        this["barnehagebarnId"] = barnehagebarnId
+                        this["barnehagelistId"] = barnehagelisteId
+                        this["arkivReferanseId"] = barnehagelisteId
+                    },
             )
     }
 }

@@ -14,10 +14,10 @@ data class Barnehageliste(
     val id: UUID,
     val rawJson: FormV1RequestDto,
     val status: BarnehagelisteStatus,
+    val leverandorOrgNr: String,
+    val kommuneOrgNr: String,
     val opprettetTid: LocalDateTime = LocalDateTime.now(),
     val ferdigTid: LocalDateTime? = null,
-    val leverandorOrgNr: String? = null,
-    val kommuneOrgNr: String? = null,
 ) {
     override fun toString(): String =
         "Barnehageliste(id=$id, status=$status, opprettetTid=$opprettetTid, ferdigTid=$ferdigTid, leverandorOrgNr=$leverandorOrgNr, kommuneOrgNr=$kommuneOrgNr)"

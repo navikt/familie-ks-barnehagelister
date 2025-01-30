@@ -63,19 +63,29 @@ class PeriodeOverlappValideringTask(
     }
 
     override fun onCompletion(task: Task) {
-        LesBarnehagelisteTask.opprettTask(UUID.fromString(task.payload)).also { taskService.save(it) }
+        val barnehagelisteId = UUID.fromString(task.payload)
+        val barnehageliste = barnehagelisteRepository.finnById(barnehagelisteId)
+        LesBarnehagelisteTask.opprettTask(UUID.fromString(task.payload), barnehageliste.leverandorOrgNr, barnehageliste.kommuneOrgNr).also {
+            taskService.save(it)
+        }
     }
 
     companion object {
         const val TASK_STEP_TYPE = "periodeOverlappValideringTask"
 
-        fun opprettTask(barnehagelisteId: String): Task =
+        fun opprettTask(
+            barnehagelisteId: String,
+            leverandørOrgNr: String,
+            kommuneOrgNr: String,
+        ): Task =
             Task(
                 type = TASK_STEP_TYPE,
                 payload = barnehagelisteId,
                 properties =
                     Properties().apply {
                         this["barnehagelisteId"] = barnehagelisteId
+                        this["kommuneOrgNr"] = kommuneOrgNr
+                        this["leverandørOrgNr"] = leverandørOrgNr
                     },
             )
     }

@@ -46,6 +46,8 @@ class BarnehagelisteServiceTest {
                     id = uuid,
                     rawJson = eksisterendeRequest,
                     status = BarnehagelisteStatus.MOTTATT,
+                    leverandorOrgNr = "123456789",
+                    kommuneOrgNr = "123456789",
                 )
 
             every { mockBarnehagelisteRepository.findByIdOrNull(uuid) } returns lagretBarnehageliste

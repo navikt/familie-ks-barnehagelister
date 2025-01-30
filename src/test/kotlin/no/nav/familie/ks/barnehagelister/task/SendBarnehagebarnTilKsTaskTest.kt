@@ -42,45 +42,57 @@ class SendBarnehagebarnTilKsTaskTest {
     @Test
     fun `Skal legge barnehagebarn på kø`() {
         // Arrange
-        val mockBarnehageliste =
+        val barnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
 
-        val mockBarnehagebarn =
+        val barnehagebarn =
             FormV1RequestDtoTestData.lagTilhørendeBarnehagebarn(barnehagelisteId)
 
-        every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
-        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
+        every { barnehagebarnRepository.findByIdOrNull(barnehagebarn.id) } returns barnehagebarn
+        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns barnehageliste
 
-        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
+        val sendBarnehagelisteTask =
+            SendBarnehagebarnTilKsTask.opprettTask(
+                barnehagebarnId = barnehagebarn.id.toString(),
+                barnehagelisteId = barnehagelisteId.toString(),
+            )
 
         // Act
         sendBarnehagebarnTilKsTask.doTask(sendBarnehagelisteTask)
 
         // Assert
-        verify(exactly = 1) { barnehagebarnKafkaProducer.sendBarnehageBarn(mockBarnehagebarn) }
+        verify(exactly = 1) { barnehagebarnKafkaProducer.sendBarnehageBarn(barnehagebarn) }
     }
 
     @Test
     fun `Skal kaste feil hvis barnehagelisten ikke er ferdig`() {
         // Arrange
-        val mockBarnehageliste =
+        val barnehageliste =
             Barnehageliste(
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
 
-        val mockBarnehagebarn =
+        val barnehagebarn =
             FormV1RequestDtoTestData.lagTilhørendeBarnehagebarn(barnehagelisteId)
 
-        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
-        every { barnehagebarnRepository.findByIdOrNull(barnehagelisteId) } returns mockBarnehagebarn
+        every { barnehagebarnRepository.findByIdOrNull(barnehagebarn.id) } returns barnehagebarn
+        every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns barnehageliste
 
-        val sendBarnehagelisteTask = SendBarnehagebarnTilKsTask.opprettTask(barnehagelisteId)
+        val sendBarnehagelisteTask =
+            SendBarnehagebarnTilKsTask.opprettTask(
+                barnehagebarnId = barnehagebarn.id.toString(),
+                barnehagelisteId = barnehagelisteId.toString(),
+            )
 
         // Act && Assert
         val exception =
