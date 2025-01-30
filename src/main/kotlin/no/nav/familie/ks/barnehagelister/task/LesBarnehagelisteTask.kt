@@ -42,7 +42,7 @@ class LesBarnehagelisteTask(
         barnehagebarnRepository.insertAll(barnehagebarn)
 
         barnehagebarn.forEach { barn ->
-            taskService.save(SendBarnehagebarnTilKsTask.opprettTask(barn.id))
+            taskService.save(SendBarnehagebarnTilKsTask.opprettTask(barn.id.toString(), barn.barnehagelisteId.toString()))
         }
 
         barnehagelisteService.settBarnehagelisteStatusTilFerdig(barnehageliste)
@@ -52,13 +52,19 @@ class LesBarnehagelisteTask(
         const val TASK_STEP_TYPE = "lesBarnehagelisteTask"
         private val logger: Logger = LoggerFactory.getLogger(LesBarnehagelisteTask::class.java)
 
-        fun opprettTask(barnehagelisteId: UUID): Task =
+        fun opprettTask(
+            barnehagelisteId: UUID,
+            leverandørOrgNr: String,
+            kommuneOrgNr: String,
+        ): Task =
             Task(
                 type = TASK_STEP_TYPE,
                 payload = barnehagelisteId.toString(),
                 properties =
                     Properties().apply {
                         this["barnehagelisteId"] = barnehagelisteId.toString()
+                        this["leverandørOrgNr"] = leverandørOrgNr
+                        this["kommuneOrgNr"] = kommuneOrgNr
                     },
             )
     }

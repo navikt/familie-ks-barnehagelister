@@ -44,6 +44,8 @@ class LesBarnehagelisteTaskTest {
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
         val mockTask = Task("", "")
 
@@ -51,7 +53,7 @@ class LesBarnehagelisteTaskTest {
         every { barnehagelisteService.settBarnehagelisteStatusTilFerdig(mockBarnehageliste) } just runs
         every { taskService.save(any()) } returns mockTask
 
-        val task = LesBarnehagelisteTask.opprettTask(barnehagelisteId)
+        val task = LesBarnehagelisteTask.opprettTask(barnehagelisteId, "leverandørOrgNr", "kommuneOrgNr")
 
         // Act
         lesBarnehagelisteTask.doTask(task)
@@ -70,11 +72,13 @@ class LesBarnehagelisteTaskTest {
                 id = barnehagelisteId,
                 rawJson = FormV1RequestDtoTestData.lagRequest(),
                 status = BarnehagelisteStatus.FERDIG,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
             )
 
         every { barnehagelisteService.hentBarnehageliste(barnehagelisteId) } returns mockBarnehageliste
 
-        val task = LesBarnehagelisteTask.opprettTask(barnehagelisteId)
+        val task = LesBarnehagelisteTask.opprettTask(barnehagelisteId, "leverandørOrgNr", "kommuneOrgNr")
 
         // Act
         lesBarnehagelisteTask.doTask(task)

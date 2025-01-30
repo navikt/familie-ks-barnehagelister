@@ -54,7 +54,12 @@ class BarnehagelisteService(
                     ),
                 )
 
-        val opprettetTask = PeriodeOverlappValideringTask.opprettTask(skjemaV1.id.toString())
+        val opprettetTask =
+            PeriodeOverlappValideringTask.opprettTask(
+                barnehagelisteId = skjemaV1.id.toString(),
+                leverandørOrgNr = leverandørOrgNr,
+                kommuneOrgNr = kommuneOrgNr,
+            )
         taskService.save(opprettetTask)
 
         return BarnehagelisteMedValideringsfeil(
