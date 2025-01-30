@@ -15,6 +15,7 @@ import org.springframework.http.ProblemDetail
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.NoHandlerFoundException
 import java.net.URI
 
 @RestControllerAdvice
@@ -40,6 +41,24 @@ class ApiExceptionHandler {
                 secureLogger.error("Ukjent server feil for ${this.properties}", e)
             }
 
+    @ExceptionHandler(NoHandlerFoundException::class)
+    fun skjulNoHandlerFound(
+        e: Exception,
+        request: HttpServletRequest,
+    ): ProblemDetail =
+        ProblemDetail
+            .forStatusAndDetail(HttpStatus.NOT_FOUND, e.message ?: "Not found")
+            .apply {
+                type =
+                    URI.create(
+                        "https://problems-registry.smartbear.com/not-found/",
+                    )
+
+                properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
+            }.apply {
+                logger.info("Not-found ${request.method} ${request.requestURI} ${this.properties}")
+            }
+
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
     fun onJwtTokenException(
         e: RuntimeException,
@@ -57,8 +76,8 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.info("Unauthorized for ${this.properties}")
-                secureLogger.error("Unauthorized for ${this.properties}", e)
+                logger.warn("Unauthorized for ${this.properties}")
+                secureLogger.warn("Unauthorized for ${this.properties}", e)
             }
 
     @ExceptionHandler(
@@ -107,7 +126,7 @@ class ApiExceptionHandler {
                 }
             }.apply {
                 logger.info("ValidationError for ${this.properties}")
-                secureLogger.error("ValidationError for ${this.properties}", e)
+                secureLogger.info("ValidationError for ${this.properties}", e)
             }
     }
 
@@ -128,7 +147,7 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.info("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
-                secureLogger.error("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
+                logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
+                secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
             }
 }
