@@ -2,7 +2,6 @@ package no.nav.familie.ks.barnehagelister.domene
 
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilInfo
-import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
@@ -36,7 +35,7 @@ fun Barnehageliste.tilKindergartenlistResponse(barnehagelisteValideringsfeil: Li
                 warnings =
                     barnehagelisteValideringsfeil.map {
                         EtterprosesseringfeilInfo(
-                            EtterprosesseringfeilType.valueOf(it.type),
+                            it.etterprosesseringfeiltype,
                             "${it.feilinfo} child=${it.ident}",
                         )
                     },
