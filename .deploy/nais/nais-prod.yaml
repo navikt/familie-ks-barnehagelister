@@ -38,24 +38,23 @@ spec:
     enabled: true
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-ks-barnehagelister.intern.nav.no
-  #    - https://familie-ks-barnehagelister.nav.no
+    - https://familie-ks-barnehagelister.nav.no/api/kindergartenlists
+    - https://familie-ks-barnehagelister.nav.no/swagger-ui/
+    - https://familie-ks-barnehagelister.nav.no/swagger-ui.html
+    - https://familie-ks-barnehagelister.nav.no/v3/
   maskinporten:
     enabled: true
     scopes:
       exposes:
         - name: "v1/kontantstotte/barnehagelister"
+          separator: "/"
+          delegationSource: altinn
           enabled: true
           product: "familie"
           allowedIntegrations:
             - maskinporten
           atMaxAge: 680
-          consumers:
-            - name: "NAV"
-              orgno: "889640782"
-            - name: "Visma Flyt AS"
-              orgno: "933287335"
-            - name: "Visma Enterprise AS"
-              orgno: "982410339"
+          accessibleForAll: true
       consumes:
         - name: "nav:familie/v1/kontantstotte/barnehagelister"
   accessPolicy:
@@ -87,6 +86,8 @@ spec:
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
+  kafka:
+    pool: nav-prod
   
   azure:
     application:

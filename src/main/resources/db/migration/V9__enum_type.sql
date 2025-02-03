@@ -1,0 +1,1 @@
+ALTER TABLE barnehageliste_valideringsfeil RENAME type TO etterprosesseringfeiltype ;

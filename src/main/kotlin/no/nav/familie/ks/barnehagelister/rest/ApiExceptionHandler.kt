@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
@@ -14,6 +15,7 @@ import org.springframework.http.ProblemDetail
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.NoHandlerFoundException
 import java.net.URI
 
 @RestControllerAdvice
@@ -26,7 +28,7 @@ class ApiExceptionHandler {
         request: HttpServletRequest,
     ): ProblemDetail =
         ProblemDetail
-            .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Ukjent feil")
+            .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Unknown error")
             .apply {
                 type =
                     URI.create(
@@ -35,8 +37,26 @@ class ApiExceptionHandler {
 
                 properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
             }.apply {
-                logger.error("Ukjent server feil for ${this.properties }")
-                secureLogger.error("Ukjent server feil for ${this.properties }", e)
+                logger.error("Ukjent server feil for ${this.properties}")
+                secureLogger.error("Ukjent server feil for ${this.properties}", e)
+            }
+
+    @ExceptionHandler(NoHandlerFoundException::class)
+    fun skjulNoHandlerFound(
+        e: Exception,
+        request: HttpServletRequest,
+    ): ProblemDetail =
+        ProblemDetail
+            .forStatusAndDetail(HttpStatus.NOT_FOUND, e.message ?: "Not found")
+            .apply {
+                type =
+                    URI.create(
+                        "https://problems-registry.smartbear.com/not-found/",
+                    )
+
+                properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
+            }.apply {
+                logger.info("Not-found ${request.method} ${request.requestURI} ${this.properties}")
             }
 
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
@@ -56,22 +76,32 @@ class ApiExceptionHandler {
                         "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                     )
             }.apply {
-                logger.info("Unauthorized for ${this.properties }")
-                secureLogger.error("Unauthorized for ${this.properties }", e)
+                logger.warn("Unauthorized for ${this.properties}")
+                secureLogger.warn("Unauthorized for ${this.properties}", e)
             }
 
     @ExceptionHandler(
         value = [
             HttpMessageNotReadableException::class,
-            ValideringsfeilException::class,
+            JsonValideringsfeilException::class,
         ],
     )
     fun onValideringsFeil(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail =
-        ProblemDetail
-            .forStatusAndDetail(HttpStatus.BAD_REQUEST, e.message ?: "Bad Request")
+    ): ProblemDetail {
+        val message =
+            if (e.cause is MissingKotlinParameterException) {
+                val cause = e.cause as MissingKotlinParameterException
+                val missingParameter = cause.parameter
+
+                "Couldn't parse request due to missing or null parameter: ${missingParameter.name}"
+            } else {
+                e.message ?: "Bad request"
+            }
+
+        return ProblemDetail
+            .forStatusAndDetail(HttpStatus.BAD_REQUEST, message)
             .apply {
                 type =
                     URI.create(
@@ -85,7 +115,8 @@ class ApiExceptionHandler {
                                 "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
                             )
                     }
-                    is ValideringsfeilException -> {
+
+                    is JsonValideringsfeilException -> {
                         properties =
                             mapOf(
                                 "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
@@ -94,7 +125,29 @@ class ApiExceptionHandler {
                     }
                 }
             }.apply {
-                logger.info("ValidationError for ${this.properties }")
-                secureLogger.error("ValidationError for ${this.properties }", e)
+                logger.info("ValidationError for ${this.properties}")
+                secureLogger.info("ValidationError for ${this.properties}", e)
+            }
+    }
+
+    @ExceptionHandler(value = [UgyldigKommuneEllerLeverandørFeil::class])
+    fun onUgyldigKommuneEllerLeverandørFeil(
+        e: Exception,
+        request: HttpServletRequest,
+    ): ProblemDetail =
+        ProblemDetail
+            .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
+            .apply {
+                type =
+                    URI.create(
+                        "https://problems-registry.smartbear.com/forbidden/",
+                    )
+                properties =
+                    mapOf(
+                        "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
+                    )
+            }.apply {
+                logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
+                secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
             }
 }

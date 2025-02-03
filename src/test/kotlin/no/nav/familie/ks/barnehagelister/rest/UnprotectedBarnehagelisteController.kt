@@ -1,10 +1,16 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.ks.barnehagelister.kontrakt.SkjemaV1
+import jakarta.servlet.http.HttpServletRequest
+import no.nav.familie.ks.barnehagelister.domene.tilKindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
+import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
+import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
+import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -12,16 +18,56 @@ import java.util.UUID
 @RestController
 class UnprotectedBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
-) : BarnehagelisterController {
+) : BarnehagelisteController {
     @Unprotected
-    override fun mottaBarnehagelister(
-        skjemaV1: SkjemaV1,
+    override fun mottaBarnehageliste(
+        formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
-    ): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.mottaBarnehagelister(skjemaV1, bindingResult)
+        request: HttpServletRequest,
+    ): ResponseEntity<KindergartenlistResponse> {
+        bindingResult.kastValideringsfeilHvisValideringFeiler()
+
+        val barnehagelisteMedValideringsfeil =
+            barnehagelisteService.mottaBarnehageliste(
+                formV1RequestDto,
+                "testLeverandørOrgNr",
+                "testKommuneOrgNr",
+            )
+
+        return barnehagelisteMedValideringsfeil.barnehageliste!!
+            .tilKindergartenlistResponse(
+                barnehagelisteMedValideringsfeil.valideringsfeil,
+            ).toResponseEntity()
+    }
 
     @Unprotected
-    override fun status(transaksjonsId: UUID): ResponseEntity<BarnehagelisteResponse> = barnehagelisteService.status(transaksjonsId)
+    override fun status(
+        id: UUID,
+        request: HttpServletRequest,
+    ): ResponseEntity<KindergartenlistResponse> {
+        val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
+        return barnehagelisteService
+            .hentBarnehagelisteMedValideringsfeil(id)
+            .barnehageliste
+            ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
+            ?.toResponseEntity()
+            ?: ResponseEntity.notFound().build()
+    }
 
     @Unprotected
-    override fun ping(): String = barnehagelisteService.ping()
+    override fun ping(): String = "\"OK\""
+}
+
+private fun BindingResult.kastValideringsfeilHvisValideringFeiler() {
+    if (hasErrors()) {
+        val feil =
+            allErrors.map {
+                if (it is FieldError) {
+                    JsonValideringsfeilInfo(it.field, it.defaultMessage ?: "mangler")
+                } else {
+                    JsonValideringsfeilInfo("mangler", it.defaultMessage ?: "mangler")
+                }
+            }
+        throw JsonValideringsfeilException(feil)
+    }
 }

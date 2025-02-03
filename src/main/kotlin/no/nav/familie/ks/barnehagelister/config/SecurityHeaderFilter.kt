@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.config
 import jakarta.servlet.FilterChain
 import jakarta.servlet.FilterConfig
 import jakarta.servlet.ServletException
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpFilter
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -24,9 +23,6 @@ class SecurityHeaderFilter : HttpFilter() {
 
         filterChain.doFilter(httpServletRequest, httpServletResponse)
     }
-
-    private fun resolveUserId(httpServletRequest: HttpServletRequest): Cookie =
-        httpServletRequest.cookies?.firstOrNull { it -> "RUIDC" == it.name }!!
 
     override fun init(filterConfig: FilterConfig) {
         // NOP

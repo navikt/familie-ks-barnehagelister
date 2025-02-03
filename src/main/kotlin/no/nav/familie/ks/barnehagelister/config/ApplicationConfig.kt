@@ -1,6 +1,9 @@
 package no.nav.familie.ks.barnehagelister.config
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
+import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
@@ -15,6 +18,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootConfiguration
@@ -32,10 +36,14 @@ class ApplicationConfig {
     }
 
     @Bean
+    fun objectMapper(jackson2ObjectMapperBuilder: Jackson2ObjectMapperBuilder): ObjectMapper =
+        jackson2ObjectMapperBuilder.featuresToEnable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION).build()
+
+    @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {
         log.info("Registering LogFilter filter")
         val filterRegistration: FilterRegistrationBean<LogFilter> = FilterRegistrationBean()
-        filterRegistration.filter = LogFilter()
+        filterRegistration.filter = LogFilter(NavSystemtype.NAV_INTEGRASJON)
         filterRegistration.order = 1
         return filterRegistration
     }
@@ -68,7 +76,7 @@ class ApplicationConfig {
                 SpringTokenValidationContextHolder()
                     .getTokenValidationContext()
                     .getClaims("azuread")
-                    ?.get("groups") as List<String>? ?: emptyList()
+                    .get("groups") as List<String>? ?: emptyList()
             } catch (e: Exception) {
                 emptyList()
             }
