@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20250128112334_99d3496</prosessering.version>
+        <prosessering.version>2.20250205080941_29def62</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
