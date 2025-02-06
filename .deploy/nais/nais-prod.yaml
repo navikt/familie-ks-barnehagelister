@@ -62,6 +62,9 @@ spec:
       rules:
         - application: familie-prosessering
           cluster: prod-gcp
+    outbound:
+      external:
+        - host: www.maskinporten.no
   observability:
     logging:
       destinations:

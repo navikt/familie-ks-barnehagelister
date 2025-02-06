@@ -62,6 +62,9 @@ spec:
         - application: familie-prosessering-lokal
         - application: familie-prosessering
           cluster: dev-gcp
+    outbound:
+      external:
+        - host: test.maskinporten.no
   observability:
     logging:
       destinations:
