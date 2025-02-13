@@ -66,6 +66,17 @@ class SwaggerDocumentationConfig {
                         | --- | --- | 
                         | OVERLAPPING_PERIOD_WITHIN_SAME_LIST | There are overlapping periods for a child inside the input request |
                         
+                        ### Before going to production
+                        Before you can start using this api in production you need to test at least the following:
+                        
+                        POST data to https://familie-ks-barnehagelister.intern.dev.nav.no/swagger-ui/index.html#/default-barnehageliste-controller/receiveKindergartenList
+                        whith the example data from swagger and verify that you:
+                        - get a `202 Received and under processing` response.
+                        - get a `200 Done processing` response when you call the endpoint again with the same id.
+
+                        Run a GET against https://familie-ks-barnehagelister.intern.dev.nav.no/swagger-ui/index.html#/default-barnehageliste-controller/getKindergartenListStatus
+                        whith the `id` of the submitted kindergarten list and verify that you get a `200 Done processing`.
+                        
                         """.trimIndent(),
                     ),
             ).components(Components().addSecuritySchemes(bearer, bearerTokenSecurityScheme()))
