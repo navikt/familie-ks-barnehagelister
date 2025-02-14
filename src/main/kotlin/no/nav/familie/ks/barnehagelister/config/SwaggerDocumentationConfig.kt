@@ -66,6 +66,8 @@ class SwaggerDocumentationConfig {
                         | --- | --- | 
                         | OVERLAPPING_PERIOD_WITHIN_SAME_LIST | There are overlapping periods for a child inside the input request |
                         
+                        <div id="test-criteria">
+
                         ### Before going to production
                         Before you can start using this api in production you need to test at least the following:
                         
@@ -76,6 +78,8 @@ class SwaggerDocumentationConfig {
 
                         Run a GET against https://familie-ks-barnehagelister.intern.dev.nav.no/swagger-ui/index.html#/default-barnehageliste-controller/getKindergartenListStatus
                         whith the `id` of the submitted kindergarten list and verify that you get a `200 Done processing`.
+                        
+                        </div>
                         
                         """.trimIndent(),
                     ),
