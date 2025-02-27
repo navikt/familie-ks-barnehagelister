@@ -68,5 +68,5 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: .deploy/nais/app-dev.yaml
+          RESOURCE: .nais/app-dev.yaml
           IMAGE: ${{ steps.docker-push.outputs.image }}
