@@ -49,7 +49,7 @@ OBS: Pass på at du ikke kjører postgres lokalt på samme port (5432)
 ### Testing av tjeneste i preprod
 For å teste tjenesten i preprod, så trenger man å få opprettet en maskinportentoken. Se dokumentasjon 
 på [nav-eksterne-api-dok](https://github.com/navikt/nav-ekstern-api-dok/blob/main/api-dok/teste-api/teste-api.md) for å 
-lage en konsument og for å generere nytt token. Hvis man velger en ny konsument, så må orgnr legges til i nais-preprod.yaml.
+lage en konsument og for å generere nytt token. Hvis man velger en ny konsument, så må orgnr legges til i app-dev.yaml.
 
 
 ### Testing av tjenesten lokalt
