@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
 import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.convert.WritingConverter
-import org.springframework.data.jdbc.core.convert.JdbcCustomConversions
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
@@ -26,14 +25,12 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
     fun transactionManager(dataSource: DataSource): PlatformTransactionManager = DataSourceTransactionManager(dataSource)
 
     @Bean
-    override fun jdbcCustomConversions(): JdbcCustomConversions =
-        JdbcCustomConversions(
-            listOf(
-                PropertiesWrapperTilStringConverter(),
-                StringTilPropertiesWrapperConverter(),
-                FormV1RequestDtoPGObjectLesConverter(),
-                FormV1RequestDtoPGOBjectSkrivConverter(),
-            ),
+    override fun userConverters(): List<*> =
+        listOf(
+            PropertiesWrapperTilStringConverter(),
+            StringTilPropertiesWrapperConverter(),
+            FormV1RequestDtoPGObjectLesConverter(),
+            FormV1RequestDtoPGOBjectSkrivConverter(),
         )
 
     @ReadingConverter
