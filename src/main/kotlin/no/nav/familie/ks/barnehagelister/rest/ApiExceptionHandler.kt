@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
+import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
 import java.net.URI
 
@@ -150,4 +152,14 @@ class ApiExceptionHandler {
                 logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
                 secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
             }
+
+    /**
+     * AsyncRequestNotUsableException er en exception som blir kastet når en async request blir avbrutt. Velger
+     * å skjule denne exceptionen fra loggen da den ikke er interessant for oss.
+     */
+    @ExceptionHandler(AsyncRequestNotUsableException::class)
+    fun handlAsyncRequestNotUsableException(e: AsyncRequestNotUsableException): ResponseEntity<Any> {
+        logger.info("En AsyncRequestNotUsableException har oppstått, som skjer når en async request blir avbrutt", e)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+    }
 }
