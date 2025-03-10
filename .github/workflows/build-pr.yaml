@@ -41,8 +41,8 @@ jobs:
         run: |
           mvn antrun:run@ktlint
 
-  enhetstester:
-    name: Enhetstester
+  tester:
+    name: Tester
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
