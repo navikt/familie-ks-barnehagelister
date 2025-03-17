@@ -2,6 +2,7 @@ package no.nav.familie.ks.barnehagelister.rest.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.springframework.http.ResponseEntity
+import java.net.URI
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -10,16 +11,21 @@ data class KindergartenlistResponse(
     val status: BarnehagelisteStatusEngelsk,
     val receivedTime: LocalDateTime,
     val finishedTime: LocalDateTime?,
+    val warnings: List<EtterprosesseringfeilInfo> = emptyList(),
     val links: ResponseLinksResponseDto,
 )
 
 @Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list", name = "ResponseLinks")
 data class ResponseLinksResponseDto(
-    val status: String,
-    val warnings: List<EtterprosesseringfeilInfo> = emptyList(),
+    val status: URI,
 )
 
-@Schema(name = "ValidationWarnings")
+@Schema(
+    name = "ValidationWarnings",
+    description =
+        "Validation warnings on inconsistencies within the kindergarten list. " +
+            "Will be empty until status = DONE.",
+)
 data class EtterprosesseringfeilInfo(
     @Schema()
     val type: EtterprosesseringfeilType,

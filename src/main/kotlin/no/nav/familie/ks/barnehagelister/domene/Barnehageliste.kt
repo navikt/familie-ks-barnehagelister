@@ -6,6 +6,8 @@ import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.ResponseLinksResponseDto
 import org.springframework.data.annotation.Id
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.net.URI
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -31,7 +33,7 @@ fun Barnehageliste.tilKindergartenlistResponse(barnehagelisteValideringsfeil: Li
         finishedTime = ferdigTid,
         links =
             ResponseLinksResponseDto(
-                status = "/api/kindergartenlists/status/$id",
+                status = URI.create("${getBaseUrl()}/api/kindergartenlists/status/$id"),
                 warnings =
                     barnehagelisteValideringsfeil.map {
                         EtterprosesseringfeilInfo(
@@ -41,3 +43,5 @@ fun Barnehageliste.tilKindergartenlistResponse(barnehagelisteValideringsfeil: Li
                     },
             ),
     )
+
+private fun getBaseUrl() = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString()
