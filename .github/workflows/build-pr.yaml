@@ -3,6 +3,11 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   avslutt-andre-workflows-samme-branch:
     name: Avslutt andre workflows på samme branch
