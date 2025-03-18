@@ -26,6 +26,15 @@
         <felles.version>3.20250311182943_dac8027</felles.version>
         <token-validation-spring.version>5.0.19</token-validation-spring.version>
         <springdoc.version>2.8.5</springdoc.version>
+        <kover.version>0.9.1</kover.version>
+
+        <!-- Sonar -->
+        <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
+        <sonar.organization>navikt</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.sources>src/main</sonar.sources>
+        <sonar.tests>src/test</sonar.tests>
+        <sonar.projectKey>navikt_familie-ks-barnehagelister</sonar.projectKey>
     </properties>
 
     <dependencyManagement>
@@ -310,6 +319,54 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kover-maven-plugin</artifactId>
+                <version>${kover.version}</version>
+                <executions>
+                    <execution>
+                        <id>instr</id>
+                        <goals>
+                            <goal>instrumentation</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>kover-xml</id>
+                        <goals>
+                            <goal>report-xml</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>kover-log</id>
+                        <goals>
+                            <goal>log</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>kover-html</id>
+                        <goals>
+                            <goal>report-html</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>kover-verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>kover-ic</id>
+                        <goals>
+                            <goal>report-ic</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
