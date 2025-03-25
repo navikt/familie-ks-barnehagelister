@@ -66,7 +66,7 @@ class SwaggerDocumentationConfig {
                         | --- | --- | 
                         | OVERLAPPING_PERIOD_WITHIN_SAME_LIST | There are overlapping periods for a child inside the input request |
                         
-                        <div id="test-criteria">
+                        <div id="/test-criteria">
 
                         ### Before going to production
                         Before you can start using this api in production you need to test at least the following:
