@@ -41,8 +41,8 @@ jobs:
             tuf-repo-cdn.sigstore.dev:443
             storage.googleapis.com:443
 
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      - uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # ratchet:actions/setup-java@v4
         with:
           java-version: 21
           distribution: 'temurin'
@@ -54,7 +54,7 @@ jobs:
         run: |
           mvn -B --no-transfer-progress package --settings .m2/maven-settings.xml --file pom.xml
 
-      - uses: nais/docker-build-push@v0
+      - uses: nais/docker-build-push@791ebb6f74b82849c742a9bc9c97abe44c6c111f # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           pull: true # optional, default false
@@ -65,7 +65,7 @@ jobs:
           byosbom: target/classes/META-INF/sbom/application.cdx.json
 
       - name: Deploy til dev-gcp
-        uses: nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@0e5eb39ad70e2e094ef233af61a4fab5950e80d9 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
