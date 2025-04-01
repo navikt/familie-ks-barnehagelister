@@ -65,7 +65,7 @@ jobs:
           byosbom: target/classes/META-INF/sbom/application.cdx.json
 
       - name: Deploy til dev-gcp
-        uses: nais/deploy/actions/deploy@0e5eb39ad70e2e094ef233af61a4fab5950e80d9 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@70ac914d5785b492f1247df72e04b8420c1a6cb7 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
