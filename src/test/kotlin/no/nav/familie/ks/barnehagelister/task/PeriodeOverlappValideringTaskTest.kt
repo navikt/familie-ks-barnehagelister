@@ -110,4 +110,59 @@ class PeriodeOverlappValideringTaskTest {
         assertThat(slot.captured.first().etterprosesseringfeiltype).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST)
         assertThat(slot.captured.first().feilinfo).isEqualTo("Overlapping period within the same list for children.")
     }
+
+    @Test
+    fun `Task skal ikke lagre ned valideringsfeil hvis det kun er perioder som overlapper på tvers av barnehager`() {
+        // Arrange
+        val skjema =
+            FormV1RequestDtoTestData.lagRequest().copy(
+                kindergartens =
+                    listOf(
+                        FormV1RequestDtoTestData.lagBarnehage().copy(
+                            childrenInformation =
+                                listOf(
+                                    FormV1RequestDtoTestData.lagBarnInfolinje().copy(
+                                        startDate = LocalDate.of(2025, 6, 1),
+                                        endDate = LocalDate.of(2025, 10, 31),
+                                    ),
+                                ),
+                        ),
+                        FormV1RequestDtoTestData.lagBarnehage().copy(
+                            organizationNumber = "920782256",
+                            childrenInformation =
+                                listOf(
+                                    FormV1RequestDtoTestData.lagBarnInfolinje().copy(
+                                        startDate = LocalDate.of(2025, 1, 1),
+                                        endDate = LocalDate.of(2025, 7, 31),
+                                    ),
+                                ),
+                        ),
+                    ),
+            )
+
+        val barnehageliste =
+            Barnehageliste(
+                id = barnehagelisteId,
+                rawJson = skjema,
+                status = BarnehagelisteStatus.MOTTATT,
+                leverandorOrgNr = "123456789",
+                kommuneOrgNr = "123456789",
+            )
+        every { mockBarnehagelisteRepository.findByIdOrNull(barnehagelisteId) } returns barnehageliste
+
+        val slot = slot<List<BarnehagelisteValideringsfeil>>()
+        every { mockBarnehagelisteValideringsfeilRepository.insertAll(capture(slot)) } answers { slot.captured }
+
+        // Act
+        periodeOverlappValideringTask.doTask(
+            PeriodeOverlappValideringTask.opprettTask(
+                barnehagelisteId.toString(),
+                leverandørOrgNr = "leverandør",
+                kommuneOrgNr = "Kommune",
+            ),
+        )
+
+        // Assert
+        verify(exactly = 0) { mockBarnehagelisteValideringsfeilRepository.insertAll(any()) }
+    }
 }
