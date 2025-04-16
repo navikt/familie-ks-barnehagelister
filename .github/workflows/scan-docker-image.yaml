@@ -26,7 +26,7 @@ jobs:
           egress-policy: audit
           allowed-endpoints: "api.github.com:443\nauth.docker.io:443\ncollector-internet.external.prod-gcp.nav.cloud.nais.io:443\ndeploy.nav.cloud.nais.io:443\nd2glxqk2uabbnd.cloudfront.net:443\neurope-north1-docker.pkg.dev:443\nfulcio.sigstore.dev:443\ngcr.io:443\ngithub-registry-files.githubusercontent.com:443\ngithub.com:443\niamcredentials.googleapis.com:443\nlogin.microsoftonline.com:443\nmaven.pkg.github.com:443\nobjects.githubusercontent.com:443\nproduction.cloudflare.docker.com:443\npublic.ecr.aws:443\nregistry-1.docker.io:443  \nrekor.sigstore.dev:443\nrepo.maven.apache.org:443\nsts.googleapis.com:443\ntest.maskinporten.no:443\ntuf-repo-cdn.sigstore.dev:443\n"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
-      - uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # ratchet:actions/setup-java@v4
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # ratchet:actions/setup-java@v4
         with:
           java-version: 21
           distribution: 'temurin'
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload results to GitHub Security
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: github/codeql-action/upload-sarif@1b549b9259bda1cb5ddde3b41741a82a2d15a841 # ratchet:github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@45775bd8235c68ba998cffa5171334d58593da47 # ratchet:github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy.sarif'
 
