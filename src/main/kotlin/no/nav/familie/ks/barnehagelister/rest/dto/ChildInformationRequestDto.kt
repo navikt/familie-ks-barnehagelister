@@ -4,19 +4,24 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import java.time.LocalDate
 
-@Schema(name = "ChildInformation")
+@Schema(
+    name = "ChildInformation",
+    description =
+        "Information concerning a child during a given period of time. May be several within the same list for" +
+            " the same child if it changes f.eks. agreedHoursInkindergarten.",
+)
 data class ChildInformationRequestDto(
     @Schema(
-        description = "Number of hours per week it is agreed upon that the child will stay in the kindergarten",
+        description = "Number of hours per week it is agreed upon that the child will stay in the kindergarten during this period of time.",
         example = "37.5",
     )
     val agreedHoursInKindergarten: Double,
     @Schema(
-        description = "Start date in the kindergarten",
+        description = "Start date for this period in the kindergarten.",
     )
     val startDate: LocalDate,
     @Schema(
-        description = "Date when the child leaves the kindergarten, null if the end date is not set",
+        description = "End date for this period in the kindergarten, null if it is the current period/the end date is not known.",
     )
     val endDate: LocalDate?,
     @Schema(

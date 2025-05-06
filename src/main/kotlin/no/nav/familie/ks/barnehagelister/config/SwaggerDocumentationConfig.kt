@@ -61,7 +61,8 @@ class SwaggerDocumentationConfig {
                         | Mandatory fields zipCode and/or postalTown are not set | Zip Code and/or postalTown are mandatory for confidential address set to false | ``` {"parameter": "kindergartens[0].childrenInformation[0].child.address.mandatoryFieldsSet", "detail": "Mandatory fields zipCode and/or postalTown are not set"}``` |
                         
                         ### Warnings in the status response
-                        The API will return a 200 OK if the JSON is valid, but there might be other issues with the data. So the status endpoint might return a JSON body with a list of warnings.
+                        When posting the list the API will return a 200 OK if the JSON is valid, but there might be other issues with the data. In those cases the status endpoint will return a JSON body with a list of warnings. 
+                        
                         | Warning type | Description |
                         | --- | --- | 
                         | OVERLAPPING_PERIOD_WITHIN_SAME_LIST | There are overlapping periods for a child inside the input request |
