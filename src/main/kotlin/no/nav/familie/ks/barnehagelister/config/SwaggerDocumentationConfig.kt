@@ -26,7 +26,9 @@ class SwaggerDocumentationConfig {
                     ).description(
                         """
                         ### Description  
-                        The Familie KS Barnehagelister API is designed to process and receive kindergarten lists relevant to Kontantstøtte applications. The API provides a structured endpoint for submitting kindergarten lists in compliance with [Forskrift om føring av register til bruk i forbindelse med kontroll av beregning og utbetaling av kontantstøtte](https://lovdata.no/dokument/SF/forskrift/2005-12-16-1510?q=kontantst%C3%B8tte).  
+                        The Familie KS Barnehagelister API is designed to process and receive kindergarten lists relevant to Kontantstøtte applications. The API provides a structured endpoint for submitting kindergarten lists in compliance with [Forskrift om føring av register til bruk i forbindelse med kontroll av beregning og utbetaling av kontantstøtte](https://lovdata.no/dokument/SF/forskrift/2005-12-16-1510?q=kontantst%C3%B8tte). 
+                          
+                        Kindergarten lists should be submitted before the 1. of every month and must be submitted before the 10.
                         
                         ### Authentication  
                         Access to this API requires authentication via a **Maskinporten** token, utilizing the delegation API for Maskinporten. Municipalities must delegate access to their respective suppliers. New suppliers must contact **Nav** to obtain access to the API.  
@@ -61,7 +63,8 @@ class SwaggerDocumentationConfig {
                         | Mandatory fields zipCode and/or postalTown are not set | Zip Code and/or postalTown are mandatory for confidential address set to false | ``` {"parameter": "kindergartens[0].childrenInformation[0].child.address.mandatoryFieldsSet", "detail": "Mandatory fields zipCode and/or postalTown are not set"}``` |
                         
                         ### Warnings in the status response
-                        The API will return a 200 OK if the JSON is valid, but there might be other issues with the data. So the status endpoint might return a JSON body with a list of warnings.
+                        When posting the list the API will return a 200 OK if the JSON is valid, but there might be other issues with the data. In those cases the status endpoint will return a JSON body with a list of warnings. 
+                        
                         | Warning type | Description |
                         | --- | --- | 
                         | OVERLAPPING_PERIOD_WITHIN_SAME_LIST | There are overlapping periods for a child inside the input request |
