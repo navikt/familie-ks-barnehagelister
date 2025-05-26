@@ -8,7 +8,9 @@ import java.time.LocalDate
     name = "ChildInformation",
     description =
         "Information concerning a child during a given period of time. May be several within the same list for" +
-            " the same child if it changes f.eks. agreedHoursInkindergarten.",
+            " the same child if anything changes. F.eks. If a child has agreed to go 20 hours in kindergarten " +
+            "1. may - 15. may, 25 hours 16. may - 31. may and 30 hours from 1. june, then those should be sent as" +
+            " three different entries.",
 )
 data class ChildInformationRequestDto(
     @Schema(
