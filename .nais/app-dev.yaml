@@ -65,6 +65,9 @@ spec:
     outbound:
       external:
         - host: test.maskinporten.no
+      rules:
+        - application: logging
+          namespace: nais-system
   observability:
     logging:
       destinations:
