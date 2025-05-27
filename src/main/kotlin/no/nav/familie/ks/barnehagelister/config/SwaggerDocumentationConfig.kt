@@ -29,7 +29,7 @@ class SwaggerDocumentationConfig {
 The Familie KS Barnehagelister API is designed to process and receive kindergarten lists relevant to Kontantstøtte. The API provides a structured endpoint for submitting kindergarten lists in compliance with [Forskrift om føring av register til bruk i forbindelse med kontroll av beregning og utbetaling av kontantstøtte](https://lovdata.no/dokument/SF/forskrift/2005-12-16-1510?q=kontantst%C3%B8tte). 
 
 ### Submission frequency   
-Kindergarten lists should be submitted before the 1. of every month. A small period of time is allowed so it is possible to correct the data, the last date for submission for the current month is the 10. of said month.
+Kindergarten lists should be submitted before the 1. of every month. A small period of time is allowed so it is possible to correct the data, the last date for submission for the current month is the 10. of said month. A municipality may have several submissions within the same month to allow for corrections. 
 
 ### API Overview
 - An endpoint is available for submitting kindergarten lists, supporting multiple kindergartens per request. Each submission must include a unique identifier.

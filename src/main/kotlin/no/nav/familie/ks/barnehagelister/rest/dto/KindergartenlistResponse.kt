@@ -7,15 +7,27 @@ import java.util.UUID
 
 data class KindergartenlistResponse(
     val id: UUID,
+    @Schema(
+        description = "\"Received\" until further validations are done. \"Done\" when the list is processed, even if there are warnings.",
+    )
     val status: BarnehagelisteStatusEngelsk,
     val receivedTime: LocalDateTime,
     val finishedTime: LocalDateTime?,
     val links: ResponseLinksResponseDto,
 )
 
-@Schema(description = "A URI reference to endpoint to get the status for the submitted kindergarten list", name = "ResponseLinks")
+@Schema(
+    description = "A URI reference to endpoint to get the status for the submitted kindergarten list",
+    name = "ResponseLinks",
+)
 data class ResponseLinksResponseDto(
+    @Schema(example = "/api/kindergartenlists/status/19375e59-0f07-4c9b-a7bb-6f30fb43819b")
     val status: String,
+    @Schema(
+        description =
+            "Heavier validations that fail will be listed here. List is still processed if there are warnings," +
+                " but gives an indication of faulty data.",
+    )
     val warnings: List<EtterprosesseringfeilInfo> = emptyList(),
 )
 
