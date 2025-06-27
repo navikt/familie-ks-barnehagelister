@@ -73,9 +73,6 @@ spec:
       destinations:
         - id: loki
         - id: elastic
-    autoInstrumentation:
-      enabled: true
-      runtime: java
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: preprod
