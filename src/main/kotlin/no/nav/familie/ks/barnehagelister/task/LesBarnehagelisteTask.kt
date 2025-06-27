@@ -4,6 +4,7 @@ import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.rest.dto.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
+import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
 import no.nav.familie.prosessering.domene.Task
 import no.nav.familie.prosessering.internal.TaskService
@@ -24,7 +25,7 @@ class LesBarnehagelisteTask(
     private val barnehagebarnRepository: BarnehagebarnRepository,
     private val taskService: TaskService,
     private val barnehagelisteService: BarnehagelisteService,
-) : AbstractAsyncTaskStep() {
+) : AsyncTaskStep {
     override fun doTask(task: Task) {
         logger.info("Kjører task for mottak av ny barnehageliste.")
         val barnehagelisteId = UUID.fromString(task.payload)

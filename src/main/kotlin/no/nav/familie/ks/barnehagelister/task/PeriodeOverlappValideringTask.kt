@@ -6,6 +6,7 @@ import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfei
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
 import no.nav.familie.ks.barnehagelister.rest.dto.mapTilBarnehagebarn
 import no.nav.familie.ks.barnehagelister.validering.validerIngenOverlapp
+import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
 import no.nav.familie.prosessering.domene.Task
 import no.nav.familie.prosessering.internal.TaskService
@@ -27,7 +28,7 @@ class PeriodeOverlappValideringTask(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
     private val taskService: TaskService,
-) : AbstractAsyncTaskStep() {
+) : AsyncTaskStep {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     override fun doTask(task: Task) {
