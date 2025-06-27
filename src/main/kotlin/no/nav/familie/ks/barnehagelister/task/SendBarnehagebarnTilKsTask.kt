@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import io.opentelemetry.instrumentation.annotations.WithSpan
 import no.nav.familie.ks.barnehagelister.kafka.IBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -26,6 +27,7 @@ class SendBarnehagebarnTilKsTask(
     private val barnehagebarnKafkaProducer: IBarnehagebarnKafkaProducer,
     private val barnehagelisteService: BarnehagelisteService,
 ) : AsyncTaskStep {
+    @WithSpan(inheritContext = false)
     override fun doTask(task: Task) {
         val barnehagebarnId = UUID.fromString(task.payload)
         logger.info("Sender barnehagebarn med id $barnehagebarnId til KS-sak")
