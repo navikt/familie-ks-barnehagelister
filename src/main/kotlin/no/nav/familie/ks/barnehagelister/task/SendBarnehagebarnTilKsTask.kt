@@ -4,7 +4,6 @@ import no.nav.familie.ks.barnehagelister.kafka.IBarnehagebarnKafkaProducer
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import no.nav.familie.prosessering.AsyncTaskStep
 import no.nav.familie.prosessering.TaskStepBeskrivelse
 import no.nav.familie.prosessering.domene.Task
 import org.slf4j.Logger
@@ -25,7 +24,7 @@ class SendBarnehagebarnTilKsTask(
     private val barnehagebarnRepository: BarnehagebarnRepository,
     private val barnehagebarnKafkaProducer: IBarnehagebarnKafkaProducer,
     private val barnehagelisteService: BarnehagelisteService,
-) : AsyncTaskStep {
+) : AbstractAsyncTaskStep() {
     override fun doTask(task: Task) {
         val barnehagebarnId = UUID.fromString(task.payload)
         logger.info("Sender barnehagebarn med id $barnehagebarnId til KS-sak")
