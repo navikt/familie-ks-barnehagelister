@@ -15,7 +15,7 @@ jobs:
       id-token: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -65,14 +65,14 @@ jobs:
 
       - name: Deploy til dev-gcp
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: nais/deploy/actions/deploy@af6b60d6823a644020e6fdecd11b8d42c82c8515 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@2784252c436273b3a305df04a765a22ba6fb1d65 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
           IMAGE: ${{ steps.docker-push.outputs.image }}
 
       - name: Deploy til prod-gcp
-        uses: nais/deploy/actions/deploy@af6b60d6823a644020e6fdecd11b8d42c82c8515 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@2784252c436273b3a305df04a765a22ba6fb1d65 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/app-prod.yaml
