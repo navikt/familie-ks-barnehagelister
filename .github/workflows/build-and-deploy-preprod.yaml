@@ -14,7 +14,7 @@ jobs:
       id-token: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
           disable-sudo: true
           egress-policy: block
@@ -65,7 +65,7 @@ jobs:
           byosbom: target/classes/META-INF/sbom/application.cdx.json
 
       - name: Deploy til dev-gcp
-        uses: nais/deploy/actions/deploy@2784252c436273b3a305df04a765a22ba6fb1d65 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@e79279e20795c1a03a92e8ae0bad4b770fd4e6d4 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
