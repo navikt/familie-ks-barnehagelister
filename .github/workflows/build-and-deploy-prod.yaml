@@ -65,14 +65,14 @@ jobs:
 
       - name: Deploy til dev-gcp
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: nais/deploy/actions/deploy@5652af6ee2d906a70651b9282998926a390ff532 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@64b71e5a692448778e9cc27080604e68c8183391 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
           IMAGE: ${{ steps.docker-push.outputs.image }}
 
       - name: Deploy til prod-gcp
-        uses: nais/deploy/actions/deploy@5652af6ee2d906a70651b9282998926a390ff532 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@64b71e5a692448778e9cc27080604e68c8183391 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/app-prod.yaml
