@@ -40,6 +40,7 @@ jobs:
             test.maskinporten.no:443
             tuf-repo-cdn.sigstore.dev:443
             storage.googleapis.com:443
+            release-assets.githubusercontent.com:443
 
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v4
       - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # ratchet:actions/setup-java@v4
