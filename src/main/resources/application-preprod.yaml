@@ -1,6 +1,16 @@
 prosessering:
   rolle: "928636f4-fd0d-4149-978e-a6fb68bb19de" # 0000-GA-STDAPPS
 
+spring:
+  datasource:
+    hikari:
+      data-source-properties:
+        ssl: true
+        sslmode: ${DB_SSLMODE}
+        sslcert: ${DB_SSLCERT}
+        sslkey: ${DB_SSLKEY_PK8}
+        sslrootcert: ${DB_SSLROOTCERT}
+
 godkjente-leverandorer:
   leverandorer:
     - orgno: "310028142"

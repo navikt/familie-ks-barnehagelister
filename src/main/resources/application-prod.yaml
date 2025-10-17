@@ -8,3 +8,13 @@ godkjente-leverandorer:
       navn: "ASSEMBLE AS"
     - orgno: "970944443"
       navn: "IST AS"
+
+spring:
+  datasource:
+    hikari:
+      data-source-properties:
+        ssl: true
+        sslmode: ${DB_SSLMODE}
+        sslcert: ${DB_SSLCERT}
+        sslkey: ${DB_SSLKEY_PK8}
+        sslrootcert: ${DB_SSLROOTCERT}
