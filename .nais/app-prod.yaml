@@ -88,7 +88,7 @@ spec:
         name: familie-ks-barnehagelister
         autoBackupHour: 2
         diskAutoresize: true
-        highAvailability: true
+        highAvailability: false
         databases:
           - name: familie-ks-barnehagelister
             envVarPrefix: DB
