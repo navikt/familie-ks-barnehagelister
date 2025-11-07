@@ -21,6 +21,10 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
     ): Boolean {
         val infoFraToken = request.hentInfoFraToken()
 
+        if (request.requestURI.contains("/ping")) {
+            LOG.debug("[pre-handle] $infoFraToken - ping")
+            return super.preHandle(request, response, handler)
+        }
         LOG.info("[pre-handle] $infoFraToken - ${request.method}: ${request.requestURI}")
         return super.preHandle(request, response, handler)
     }
@@ -31,6 +35,11 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
         handler: Any,
         ex: Exception?,
     ) {
+        if (request.requestURI.contains("/ping")) {
+            // Unngå logging av ping kall for å redusere støy i loggene
+            return afterCompletion(request, response, handler, ex)
+        }
+
         val headers = request.hentHeaders()
         secureLogger.info("Request med ${request.requestURI} ${response.status} $headers")
 
