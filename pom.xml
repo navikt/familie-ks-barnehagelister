@@ -15,15 +15,15 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20251110093725_10552cd</prosessering.version>
+        <prosessering.version>2.20251127080553_2073bf2</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>24</java.version>
         <jvmTarget>24</jvmTarget>
         <kotlin.version>2.2.21</kotlin.version>
-        <kontrakter.version>3.0_20251111092809_222854c</kontrakter.version>
-        <felles.version>3.20251105152539_b03ed80</felles.version>
+        <kontrakter.version>3.0_20251128100735_eaf6aa1</kontrakter.version>
+        <felles.version>4.20251203153147_ca40cc5</felles.version>
         <token-validation-spring.version>5.0.39</token-validation-spring.version>
         <springdoc.version>2.8.14</springdoc.version>
         
@@ -296,7 +296,7 @@
                     <dependency>
                         <groupId>com.pinterest.ktlint</groupId>
                         <artifactId>ktlint-cli</artifactId>
-                        <version>1.7.1</version>
+                        <version>1.8.0</version>
                     </dependency>
                     <!-- additional 3rd party ruleset(s) can be specified here -->
                 </dependencies>
