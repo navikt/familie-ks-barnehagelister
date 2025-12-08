@@ -20,13 +20,13 @@ jobs:
       security-events: write # push sarif to github security
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
         with:
           disable-sudo: true
           egress-policy: audit
           allowed-endpoints: "api.github.com:443\nauth.docker.io:443\ncollector-internet.external.prod-gcp.nav.cloud.nais.io:443\ndeploy.nav.cloud.nais.io:443\nd2glxqk2uabbnd.cloudfront.net:443\neurope-north1-docker.pkg.dev:443\nfulcio.sigstore.dev:443\ngcr.io:443\ngithub-registry-files.githubusercontent.com:443\ngithub.com:443\niamcredentials.googleapis.com:443\nlogin.microsoftonline.com:443\nmaven.pkg.github.com:443\nobjects.githubusercontent.com:443\nproduction.cloudflare.docker.com:443\npublic.ecr.aws:443\nregistry-1.docker.io:443  \nrekor.sigstore.dev:443\nrepo.maven.apache.org:443\nsts.googleapis.com:443\ntest.maskinporten.no:443\ntuf-repo-cdn.sigstore.dev:443\n"
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v4
-      - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # ratchet:actions/setup-java@v4
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v4
+      - uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # ratchet:actions/setup-java@v4
         with:
           java-version: 24
           distribution: 'temurin'
