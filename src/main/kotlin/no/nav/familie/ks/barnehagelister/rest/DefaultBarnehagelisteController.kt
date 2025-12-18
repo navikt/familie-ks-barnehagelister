@@ -54,19 +54,22 @@ class DefaultBarnehagelisteController(
         val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
 
         return when {
-            barnehageliste != null && barnehageliste.leverandorOrgNr != leverandørOrgNr ->
+            barnehageliste != null && barnehageliste.leverandorOrgNr != leverandørOrgNr -> {
                 throw UgyldigKommuneEllerLeverandørFeil("The requested kindergarten list were not sent in by supplier $leverandørOrgNr")
+            }
 
-            barnehageliste != null && barnehageliste.kommuneOrgNr != kommuneOrgNr ->
+            barnehageliste != null && barnehageliste.kommuneOrgNr != kommuneOrgNr -> {
                 throw UgyldigKommuneEllerLeverandørFeil(
                     "The requested kindergarten list were not sent in by municipality with org id $kommuneOrgNr",
                 )
+            }
 
-            else ->
+            else -> {
                 barnehageliste
                     ?.tilKindergartenlistResponse(barnehagelisteMedValideringsfeil.valideringsfeil)
                     ?.toResponseEntity()
                     ?: ResponseEntity.notFound().build()
+            }
         }
     }
 
