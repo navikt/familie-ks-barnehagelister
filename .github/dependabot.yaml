@@ -11,6 +11,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 4
+      exclude:
+        - "no.nav.familie*"
     open-pull-requests-limit: 10
     registries:
       - github
@@ -26,6 +30,8 @@ updates:
       prod-avhengigheter:
         dependency-type: "production"
         exclude-patterns:
+          - "org.springframework*"
+          - "org.springdoc*"
           - "no.nav.security*"
       utvikler-avhengigheter:
         dependency-type: "development"
@@ -35,6 +41,10 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 4
+      exclude:
+        - "no.nav.familie*"
     open-pull-requests-limit: 10
     groups:
       workflows:
@@ -44,3 +54,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 4
+      exclude:
+        - "no.nav.familie*"

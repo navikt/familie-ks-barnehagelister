@@ -14,11 +14,12 @@ jobs:
       id-token: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            api.adoptium.net:443
             api.github.com:443
             auth.docker.io:443
             collector-internet.external.prod-gcp.nav.cloud.nais.io:443
@@ -45,7 +46,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v4
       - uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # ratchet:actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: 24
           distribution: 'temurin'
           cache: 'maven'
       - name: Bygg med maven
@@ -66,7 +67,7 @@ jobs:
           byosbom: target/classes/META-INF/sbom/application.cdx.json
 
       - name: Deploy til dev-gcp
-        uses: nais/deploy/actions/deploy@961addd1e4d4211f1a7333ada5fde85f7c9aa5b7 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@56e14061f2a8437bd9119e7b8f92749a3b288db1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
