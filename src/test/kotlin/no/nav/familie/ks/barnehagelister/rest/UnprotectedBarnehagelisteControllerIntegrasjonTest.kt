@@ -508,15 +508,15 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
                 .andReturn()
 
         val problemDetail = hentProblemDetail(response)
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.type.toString()).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("JSON parse error: Duplicate field 'id'")
+        assertThat(problemDetail.detail).isEqualTo("""JSON parse error: Duplicate Object property "id"""")
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
     private fun assertBadRequest(problemDetail: ProblemDetailMedCallIdOgErrors) {
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.type.toString()).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
         assertThat(problemDetail.detail).isEqualTo("Validation error")
