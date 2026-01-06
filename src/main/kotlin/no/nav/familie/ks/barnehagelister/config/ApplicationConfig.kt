@@ -18,9 +18,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
 import org.springframework.scheduling.annotation.EnableScheduling
-import tools.jackson.core.JsonParser
 import tools.jackson.core.StreamReadFeature
-import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
 
 @SpringBootConfiguration
