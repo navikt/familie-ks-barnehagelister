@@ -1,25 +1,27 @@
 package no.nav.familie.ks.barnehagelister.config
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
+import no.nav.familie.restklient.config.jsonMapperBuilder
+import no.nav.familie.restklient.interceptor.ConsumerIdClientInterceptor
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
+import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory
+import org.springframework.boot.web.server.servlet.ServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.scheduling.annotation.EnableScheduling
+import tools.jackson.core.JsonParser
+import tools.jackson.core.StreamReadFeature
+import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.json.JsonMapper
 
 @SpringBootConfiguration
 @ComponentScan("no.nav.familie.ks.barnehagelister", "no.nav.familie.prosessering")
@@ -36,14 +38,13 @@ class ApplicationConfig {
     }
 
     @Bean
-    fun objectMapper(jackson2ObjectMapperBuilder: Jackson2ObjectMapperBuilder): ObjectMapper =
-        jackson2ObjectMapperBuilder.featuresToEnable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION).build()
+    fun jsonMapper(): JsonMapper = jsonMapperBuilder.enable(StreamReadFeature.STRICT_DUPLICATE_DETECTION).build()
 
     @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {
         log.info("Registering LogFilter filter")
         val filterRegistration: FilterRegistrationBean<LogFilter> = FilterRegistrationBean()
-        filterRegistration.filter = LogFilter(NavSystemtype.NAV_INTEGRASJON)
+        filterRegistration.setFilter(LogFilter(NavSystemtype.NAV_INTEGRASJON))
         filterRegistration.order = 1
         return filterRegistration
     }
@@ -52,7 +53,7 @@ class ApplicationConfig {
     fun securityHeaderFilter(): FilterRegistrationBean<SecurityHeaderFilter> {
         log.info("Registering SecurityHeaderFilter filter")
         val filterRegistration: FilterRegistrationBean<SecurityHeaderFilter> = FilterRegistrationBean()
-        filterRegistration.filter = SecurityHeaderFilter()
+        filterRegistration.setFilter(SecurityHeaderFilter())
         filterRegistration.order = 2
         return filterRegistration
     }

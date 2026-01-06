@@ -1,6 +1,5 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
+import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
 @RestControllerAdvice
@@ -93,11 +93,11 @@ class ApiExceptionHandler {
         request: HttpServletRequest,
     ): ProblemDetail {
         val message =
-            if (e.cause is MissingKotlinParameterException) {
-                val cause = e.cause as MissingKotlinParameterException
-                val missingParameter = cause.parameter
+            if (e.cause is KotlinInvalidNullException) {
+                val cause = e.cause as KotlinInvalidNullException
+                val missingParameter = cause.kotlinPropertyName
 
-                "Couldn't parse request due to missing or null parameter: ${missingParameter.name}"
+                "Couldn't parse request due to missing or null parameter: $missingParameter"
             } else {
                 e.message ?: "Bad request"
             }
