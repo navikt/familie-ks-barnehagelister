@@ -23,7 +23,7 @@
         <jvmTarget>25</jvmTarget>
         <kotlin.version>2.3.0</kotlin.version>
         <kontrakter.version>3.0_20251128100735_eaf6aa1</kontrakter.version>
-        <felles.version>4.100-SNAPSHOT</felles.version>
+        <felles.version>4.20260107095404_1a56161</felles.version>
         <token-validation-spring.version>6.0.1</token-validation-spring.version>
         <springdoc.version>3.0.0</springdoc.version>
     </properties>
