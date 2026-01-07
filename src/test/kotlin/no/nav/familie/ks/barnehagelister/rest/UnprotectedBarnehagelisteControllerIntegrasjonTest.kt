@@ -1,11 +1,11 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import no.nav.familie.ks.barnehagelister.testdata.FormV1DtoTestdata
+import no.nav.familie.restklient.config.jsonMapper
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,8 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -54,7 +54,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             .perform(
                 post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody)),
+                    .content(jsonMapper.writeValueAsString(requestBody)),
             ).andExpect(status().isAccepted)
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("id").value(requestBody.id.toString()))
@@ -71,7 +71,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             .perform(
                 post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody)),
+                    .content(jsonMapper.writeValueAsString(requestBody)),
             )
             // TODO I dette tilfellet kan vi likegodt returnere 200 OK, da vi ikke har noen barnehager å prosessere
             .andExpect(status().isAccepted)
@@ -375,7 +375,7 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
                 post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Correlation-Id", "callIdValue")
-                    .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
+                    .content(jsonMapper.writeValueAsString(invalidBarnehageliste)),
             ).andExpect(status().isAccepted)
     }
 
@@ -508,15 +508,15 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
                 .andReturn()
 
         val problemDetail = hentProblemDetail(response)
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.type.toString()).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
-        assertThat(problemDetail.detail).isEqualTo("JSON parse error: Duplicate field 'id'")
+        assertThat(problemDetail.detail).isEqualTo("""JSON parse error: Duplicate Object property "id"""")
         assertThat(problemDetail.callId).isEqualTo("callIdValue")
     }
 
     private fun assertBadRequest(problemDetail: ProblemDetailMedCallIdOgErrors) {
-        assertThat(problemDetail.type).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
+        assertThat(problemDetail.type.toString()).isEqualTo("https://problems-registry.smartbear.com/validation-error/")
         assertThat(problemDetail.title).isEqualTo("Bad Request")
         assertThat(problemDetail.status).isEqualTo(400)
         assertThat(problemDetail.detail).isEqualTo("Validation error")
@@ -529,13 +529,13 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
                 post("/api/kindergartenlists/v1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Correlation-Id", "callIdValue")
-                    .content(objectMapper.writeValueAsString(invalidBarnehageliste)),
+                    .content(jsonMapper.writeValueAsString(invalidBarnehageliste)),
             ).andExpect(status().isBadRequest)
             .andExpect(content().contentType("application/problem+json"))
             .andReturn()
 
     private fun hentProblemDetail(response: MvcResult): ProblemDetailMedCallIdOgErrors =
-        objectMapper
+        jsonMapper
             .readValue(
                 response.response.getContentAsString(Charset.forName("UTF-8")),
                 ProblemDetailMedCallIdOgErrors::class.java,
