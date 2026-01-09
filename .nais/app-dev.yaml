@@ -8,6 +8,7 @@ metadata:
   annotations:
     nais.io/restricted: "true"
     nginx.ingress.kubernetes.io/limit-rpm: "250"
+    nginx.ingress.kubernetes.io/proxy-body-size: "5m"
 spec:
   image: {{ image }}
   port: 8096
