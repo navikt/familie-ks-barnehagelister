@@ -37,7 +37,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
     ) {
         if (request.requestURI.contains("/ping")) {
             // Unngå logging av ping kall for å redusere støy i loggene
-            return afterCompletion(request, response, handler, ex)
+            return super.afterCompletion(request, response, handler, ex)
         }
 
         val headers = request.hentHeaders()
