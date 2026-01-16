@@ -37,7 +37,7 @@ Kindergarten lists should be submitted before the 1. of every month. A small per
 ### API Overview
 - An endpoint is available for submitting kindergarten lists, supporting multiple kindergartens per request. Each submission must include a unique identifier.
 - A separate endpoint is provided for retrieving the submission status. This endpoint will indicate any validation errors that require attention.
-- Maksimum size for data sent in is 5 MB. The application will not accept larger files.
+- Maximum size for data sent in is 5 MB. The application will not accept larger files.
 
 ### Authentication  
 Access to this API requires authentication via a **Maskinporten** token, utilizing the delegation API for Maskinporten. Municipalities must delegate access to their respective suppliers. New suppliers must contact **Nav** to obtain access to the API.  
