@@ -29,7 +29,7 @@ class SwaggerDocumentationConfig {
 The Familie KS Barnehagelister API is designed to process and receive kindergarten lists relevant to Kontantstøtte. The API provides a structured endpoint for submitting kindergarten lists in compliance with [Forskrift om føring av register til bruk i forbindelse med kontroll av beregning og utbetaling av kontantstøtte](https://lovdata.no/dokument/SF/forskrift/2005-12-16-1510?q=kontantst%C3%B8tte). 
 
 ### Terms of use
-Terms of use for the api can be found [here](https://github.com/navikt/familie-ks-barnehagelister/raw/main/v1.1%20Bruksvilk%C3%A5r%20NAVs%20API%20for%20elektronisk%20innsending%20av%20barnehagelister.pdf)
+__Please read the Terms of use prior to launching the service.__ Terms of use for the api can be found [here](https://github.com/navikt/familie-ks-barnehagelister/raw/main/v1.1%20Bruksvilk%C3%A5r%20NAVs%20API%20for%20elektronisk%20innsending%20av%20barnehagelister.pdf)
 
 ### Submission frequency   
 Kindergarten lists should be submitted before the 1. of every month. A small period of time is allowed so it is possible to correct the data, the last date for submission for the current month is the 10. of said month. A municipality may have several submissions within the same month to allow for corrections. 
@@ -37,6 +37,7 @@ Kindergarten lists should be submitted before the 1. of every month. A small per
 ### API Overview
 - An endpoint is available for submitting kindergarten lists, supporting multiple kindergartens per request. Each submission must include a unique identifier.
 - A separate endpoint is provided for retrieving the submission status. This endpoint will indicate any validation errors that require attention.
+- Maksimum size for data sent in is 5 MB. The application will not accept larger files.
 
 ### Authentication  
 Access to this API requires authentication via a **Maskinporten** token, utilizing the delegation API for Maskinporten. Municipalities must delegate access to their respective suppliers. New suppliers must contact **Nav** to obtain access to the API.  
