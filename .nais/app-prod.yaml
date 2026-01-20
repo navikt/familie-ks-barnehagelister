@@ -35,8 +35,6 @@ spec:
     requests:
       memory: 1024Mi
       cpu: 200m
-  secureLogs:
-    enabled: true
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-ks-barnehagelister.intern.nav.no
     - https://familie-ks-barnehagelister.nav.no/api/kindergartenlists
