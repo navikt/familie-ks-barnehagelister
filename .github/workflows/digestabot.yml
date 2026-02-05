@@ -1,0 +1,21 @@
+name: "Check for newer image versions"
+
+on:
+  workflow_dispatch:
+  schedule:
+    # At the end of every day
+    - cron: "0 0 * * *"
+
+jobs:
+  digest-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+      - uses: navikt/digestabot@6c419f9c92ce6a841d25d44e1f91ae8d371ecdd3 #v1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          team: teamfamilie
