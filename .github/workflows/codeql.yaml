@@ -28,7 +28,7 @@ jobs:
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@1a077f8f6c71a45340c26ca0b877e00459e5f443 # ratchet:github/codeql-action/init@v2.24.1
+        uses: github/codeql-action/init@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2 # ratchet:github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
 
@@ -46,6 +46,6 @@ jobs:
           mvn -B --no-transfer-progress package --settings .m2/maven-settings.xml --file pom.xml
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@cdefb33c0f6224e58673d9004f47f7cb3e328b89 # ratchet:github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2 # ratchet:github/codeql-action/init@v4
         with:
           category: "/language:${{matrix.language}}"
