@@ -1,6 +1,5 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.log.IdUtils
@@ -18,17 +17,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
+import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
 @RestControllerAdvice
 class ApiExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
 
+    private fun ProblemDetail.toProblemDetailMedCallIdOgErrors(): ProblemDetailMedCallIdOgErrors =
+        ProblemDetailMedCallIdOgErrors(hentCallIdFraMDC()).apply {
+            status = this@toProblemDetailMedCallIdOgErrors.status
+            title = this@toProblemDetailMedCallIdOgErrors.title
+            detail = this@toProblemDetailMedCallIdOgErrors.detail
+            instance = this@toProblemDetailMedCallIdOgErrors.instance
+            type = this@toProblemDetailMedCallIdOgErrors.type
+            properties = this@toProblemDetailMedCallIdOgErrors.properties
+        }
+
     @ExceptionHandler(Exception::class)
     fun handleUkjentFeil(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail =
+    ): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Unknown error")
             .apply {
@@ -36,18 +46,17 @@ class ApiExceptionHandler {
                     URI.create(
                         "https://problems-registry.smartbear.com/server-error/",
                     )
-
-                properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
-            }.apply {
-                logger.error("Ukjent server feil for ${this.properties}")
-                secureLogger.error("Ukjent server feil for ${this.properties}", e)
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                logger.error("Ukjent server feil for callId: $callId")
+                secureLogger.error("Ukjent server feil for callId: $callId", e)
             }
 
     @ExceptionHandler(NoHandlerFoundException::class)
     fun skjulNoHandlerFound(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail =
+    ): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.NOT_FOUND, e.message ?: "Not found")
             .apply {
@@ -55,17 +64,16 @@ class ApiExceptionHandler {
                     URI.create(
                         "https://problems-registry.smartbear.com/not-found/",
                     )
-
-                properties = mapOf("callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()))
-            }.apply {
-                logger.info("Not-found ${request.method} ${request.requestURI} ${this.properties}")
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                logger.info("Not-found ${request.method} ${request.requestURI} callId: $callId")
             }
 
     @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
     fun onJwtTokenException(
         e: RuntimeException,
         request: HttpServletRequest,
-    ): ProblemDetail =
+    ): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.message ?: "Unauthorized")
             .apply {
@@ -73,13 +81,10 @@ class ApiExceptionHandler {
                     URI.create(
                         "https://problems-registry.smartbear.com/unauthorized/",
                     )
-                properties =
-                    mapOf(
-                        "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
-                    )
-            }.apply {
-                logger.warn("Unauthorized for ${this.properties}")
-                secureLogger.warn("Unauthorized for ${this.properties}", e)
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                logger.warn("Unauthorized for callId: $callId")
+                secureLogger.warn("Unauthorized for callId: $callId", e)
             }
 
     @ExceptionHandler(
@@ -91,13 +96,13 @@ class ApiExceptionHandler {
     fun onValideringsFeil(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail {
+    ): ProblemDetailMedCallIdOgErrors {
         val message =
-            if (e.cause is MissingKotlinParameterException) {
-                val cause = e.cause as MissingKotlinParameterException
-                val missingParameter = cause.parameter
+            if (e.cause is KotlinInvalidNullException) {
+                val cause = e.cause as KotlinInvalidNullException
+                val missingParameter = cause.kotlinPropertyName
 
-                "Couldn't parse request due to missing or null parameter: ${missingParameter.name}"
+                "Couldn't parse request due to missing or null parameter: $missingParameter"
             } else {
                 e.message ?: "Bad request"
             }
@@ -109,26 +114,16 @@ class ApiExceptionHandler {
                     URI.create(
                         "https://problems-registry.smartbear.com/validation-error/",
                     )
-
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
                 when (e) {
-                    is HttpMessageNotReadableException -> {
-                        properties =
-                            mapOf(
-                                "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
-                            )
-                    }
-
                     is JsonValideringsfeilException -> {
-                        properties =
-                            mapOf(
-                                "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
-                                "errors" to e.errors.map { it },
-                            )
+                        errors = e.errors
                     }
                 }
             }.apply {
-                logger.info("ValidationError for ${this.properties}")
-                secureLogger.info("ValidationError for ${this.properties}", e)
+                logger.info("ValidationError for callId: $callId, errors: $errors")
+                secureLogger.info("ValidationError for callId: $callId, errors: $errors", e)
             }
     }
 
@@ -136,7 +131,7 @@ class ApiExceptionHandler {
     fun onUgyldigKommuneEllerLeverandørFeil(
         e: Exception,
         request: HttpServletRequest,
-    ): ProblemDetail =
+    ): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
             .apply {
@@ -144,14 +139,13 @@ class ApiExceptionHandler {
                     URI.create(
                         "https://problems-registry.smartbear.com/forbidden/",
                     )
-                properties =
-                    mapOf(
-                        "callId" to (MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()),
-                    )
-            }.apply {
-                logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}")
-                secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. ${this.properties}", e)
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId")
+                secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId", e)
             }
+
+    private fun hentCallIdFraMDC(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()
 
     /**
      * AsyncRequestNotUsableException er en exception som blir kastet når en async request blir avbrutt. Velger
