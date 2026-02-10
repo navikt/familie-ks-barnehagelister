@@ -1,9 +1,9 @@
 package no.nav.familie.ks.barnehagelister.config
 
-import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.prosessering.PropertiesWrapperTilStringConverter
 import no.nav.familie.prosessering.StringTilPropertiesWrapperConverter
+import no.nav.familie.restklient.config.jsonMapper
 import org.postgresql.util.PGobject
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,7 +35,7 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
 
     @ReadingConverter
     class FormV1RequestDtoPGObjectLesConverter : Converter<PGobject, FormV1RequestDto> {
-        override fun convert(pgObject: PGobject): FormV1RequestDto = objectMapper.readValue(pgObject.value, FormV1RequestDto::class.java)
+        override fun convert(pgObject: PGobject): FormV1RequestDto = jsonMapper.readValue(pgObject.value, FormV1RequestDto::class.java)
     }
 
     @WritingConverter
@@ -43,7 +43,7 @@ class DatabaseConfig : AbstractJdbcConfiguration() {
         override fun convert(skjemaV1: FormV1RequestDto): PGobject {
             val pgJsonObject = PGobject()
             pgJsonObject.type = "json"
-            pgJsonObject.value = objectMapper.writeValueAsString(skjemaV1)
+            pgJsonObject.value = jsonMapper.writeValueAsString(skjemaV1)
             return pgJsonObject
         }
     }
