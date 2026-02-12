@@ -20,7 +20,7 @@ jobs:
       security-events: write # push sarif to github security
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2
         with:
           disable-sudo: true
           egress-policy: audit
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload results to GitHub Security
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: github/codeql-action/upload-sarif@cdefb33c0f6224e58673d9004f47f7cb3e328b89 # ratchet:github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@45cbd0c69e560cd9e7cd7f8c32362050c9b7ded2 # ratchet:github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy.sarif'
 
