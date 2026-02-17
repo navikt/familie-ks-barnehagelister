@@ -1,9 +1,9 @@
 package no.nav.familie.ks.barnehagelister.config
 
+import no.nav.familie.kontrakter.felles.jsonMapperBuilder
 import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
-import no.nav.familie.restklient.config.jsonMapperBuilder
 import no.nav.familie.restklient.interceptor.ConsumerIdClientInterceptor
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation

@@ -1,11 +1,11 @@
 package no.nav.familie.ks.barnehagelister.rest
 
+import no.nav.familie.kontrakter.felles.jsonMapper
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import no.nav.familie.ks.barnehagelister.testdata.FormV1DtoTestdata
-import no.nav.familie.restklient.config.jsonMapper
 import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
