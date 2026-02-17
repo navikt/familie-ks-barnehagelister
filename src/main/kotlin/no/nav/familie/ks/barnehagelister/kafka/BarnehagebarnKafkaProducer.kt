@@ -1,6 +1,6 @@
 package no.nav.familie.ks.barnehagelister.kafka
 
-import no.nav.familie.kontrakter.felles.objectMapper
+import no.nav.familie.kontrakter.felles.jsonMapper
 import no.nav.familie.ks.barnehagelister.config.KafkaConfig.Companion.BARNEHAGELISTE_TOPIC
 import no.nav.familie.ks.barnehagelister.domene.Barnehagebarn
 import no.nav.familie.ks.barnehagelister.domene.tilBarnehagebarnDto
@@ -23,7 +23,7 @@ class BarnehagebarnKafkaProducer(
 
     override fun sendBarnehageBarn(barnehageBarn: Barnehagebarn) {
         val barnehagebarnDto = barnehageBarn.tilBarnehagebarnDto()
-        val melding = objectMapper.writeValueAsString(barnehagebarnDto)
+        val melding = jsonMapper.writeValueAsString(barnehagebarnDto)
 
         val logMeldingMetadata =
             "Topicnavn: ${BARNEHAGELISTE_TOPIC} \n" +

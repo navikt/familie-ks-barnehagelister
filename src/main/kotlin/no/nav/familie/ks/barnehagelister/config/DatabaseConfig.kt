@@ -1,9 +1,9 @@
 package no.nav.familie.ks.barnehagelister.config
 
+import no.nav.familie.kontrakter.felles.jsonMapper
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.prosessering.PropertiesWrapperTilStringConverter
 import no.nav.familie.prosessering.StringTilPropertiesWrapperConverter
-import no.nav.familie.restklient.config.jsonMapper
 import org.postgresql.util.PGobject
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
