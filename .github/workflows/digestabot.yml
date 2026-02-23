@@ -21,4 +21,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           team: teamfamilie
-          title-for-pr: 'Oppdatert docker-image for Chainguard'
+          title-for-pr: 'Bumper Chainguard Docker-image til nyeste tilgjengelige versjon.'
