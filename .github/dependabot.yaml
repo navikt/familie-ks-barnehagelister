@@ -19,6 +19,12 @@ updates:
     registries:
       - github
     groups:
+      interne-avhengigheter:
+        patterns:
+          - "no.nav.familie:*"
+          - "no.nav.familie.kontrakter:*"
+          - "no.nav.familie.felles:*"
+          - "no.nav.familie.eksterne.kontrakter:*"
       spring-med-avhengigheter:
         patterns:
           - "org.springframework*"
@@ -32,8 +38,6 @@ updates:
           - "no.nav.security*"
       utvikler-avhengigheter:
         dependency-type: "development"
-        exclude-patterns:
-          - "no.nav.security*"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -47,11 +51,3 @@ updates:
       workflows:
         patterns:
           - "*"
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    cooldown:
-      default-days: 4
-      exclude:
-        - "no.nav.familie*"
