@@ -19,9 +19,6 @@ updates:
     registries:
       - github
     groups:
-      interne-avhengigheter:
-        patterns:
-          - "no.nav.familie*"
       spring-med-avhengigheter:
         patterns:
           - "org.springframework*"
