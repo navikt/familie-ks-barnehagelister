@@ -34,6 +34,8 @@ jobs:
             objects.githubusercontent.com:443
             release-assets.githubusercontent.com:443
             production.cloudflare.docker.com:443
+            raw.githubusercontent.com:443
+            timestamp.sigstore.dev:443
             registry-1.docker.io:443
             rekor.sigstore.dev:443
             sts.googleapis.com:443
