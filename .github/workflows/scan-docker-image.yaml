@@ -20,7 +20,7 @@ jobs:
       security-events: write # push sarif to github security
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc # v2.15.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -66,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mvn -B -DskipTests --no-transfer-progress package --settings .m2/maven-settings.xml --file pom.xml
-      - uses: nais/docker-build-push@ae613eff6f44f0323476eda1c3994a7c518761c3 # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@078e460885ed0424b60d45ce9220b4be1748be9d # ratchet:nais/docker-build-push@v0
         id: docker-push
         if: github.event.pull_request.user.login != 'dependabot[bot]'
         with:
@@ -80,7 +80,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # ratchet:aquasecurity/trivy-action@0.34.2
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # ratchet:aquasecurity/trivy-action@0.35.0
         env: # Workaround for rate limiting inntil denne er fikset: https://github.com/aquasecurity/trivy-action/issues/389
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db,aquasec/trivy-db,ghcr.io/aquasecurity/trivy-db
           TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db,aquasec/trivy-java-db,ghcr.io/aquasecurity/trivy-java-db
@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload results to GitHub Security
         if: github.event.pull_request.user.login != 'dependabot[bot]'
-        uses: github/codeql-action/upload-sarif@89a39a4e59826350b863aa6b6252a07ad50cf83e # ratchet:github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # ratchet:github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy.sarif'
 
