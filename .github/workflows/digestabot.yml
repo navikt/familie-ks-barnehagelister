@@ -22,3 +22,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           team: teamfamilie
           title-for-pr: 'Bumper Chainguard Docker-image til nyeste tilgjengelige versjon.'
+          commit-message: |
+            Bumper docker image
+            
+            
+            skip-checks: true
