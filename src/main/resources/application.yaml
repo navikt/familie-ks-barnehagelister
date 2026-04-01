@@ -22,6 +22,11 @@ spring:
       max-lifetime: 900000
       minimum-idle: 1
       data-source-properties.stringtype: unspecified # Nødvendig for å kunde sende en String til et json-felt i PostgresSql
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${MASKINPORTEN_ISSUER}
 management:
   endpoint.health:
     show-details: always
@@ -37,15 +42,15 @@ management:
       export:
         enabled: true
 
-no.nav.security.jwt:
-  issuer:
-    maskinporten:
-      discoveryurl: ${MASKINPORTEN_WELL_KNOWN_URL}
-      validation:
-        optional_claims: sub,aud,nbf
-    azuread:
-      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
-      accepted_audience: ${AZURE_APP_CLIENT_ID}
+#no.nav.security.jwt:
+#  issuer:
+#    maskinporten:
+#      discoveryurl: ${MASKINPORTEN_WELL_KNOWN_URL}
+#      validation:
+#        optional_claims: sub,aud,nbf
+#    azuread:
+#      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+#      accepted_audience: ${AZURE_APP_CLIENT_ID}
 #  client:
 #    registration:
 #      ks-barnehagelister-clientcredentials:
@@ -72,3 +77,5 @@ prosessering:
   delete:
     after:
       weeks: 4
+
+BARNEHAGELISTER_SCOPE: nav:familie/v1/kontantstotte/barnehagelister

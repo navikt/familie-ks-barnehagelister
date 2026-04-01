@@ -6,7 +6,6 @@ import no.nav.familie.ks.barnehagelister.rest.dto.AddressRequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.PersonRequestDto
 import no.nav.familie.ks.barnehagelister.testdata.FormV1DtoTestdata
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,12 +27,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.Charset
 
+// TODO: MockOauthServer
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("dev")
 @ContextConfiguration(initializers = [DbContainerInitializer::class])
-@EnableMockOAuth2Server
 class UnprotectedBarnehagelisteControllerIntegrasjonTest {
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -280,7 +279,9 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
+                        FormV1DtoTestdata
+                            .lagKindergartenRequestDto()
+                            .copy(name = "Barnehagenavn", organizationNumber = "03Z1245689"),
                     ),
             )
 
@@ -292,7 +293,10 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                JsonValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 03Z1245689"),
+                JsonValideringsfeilInfo(
+                    "kindergartens[0].organizationNumber",
+                    "Not a valid organization number 03Z1245689",
+                ),
             )
     }
 
@@ -302,7 +306,9 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
             FormV1DtoTestdata.gyldigBarnehageliste().copy(
                 kindergartens =
                     listOf(
-                        FormV1DtoTestdata.lagKindergartenRequestDto().copy(name = "Barnehagenavn", organizationNumber = "123456789"),
+                        FormV1DtoTestdata
+                            .lagKindergartenRequestDto()
+                            .copy(name = "Barnehagenavn", organizationNumber = "123456789"),
                     ),
             )
 
@@ -314,7 +320,10 @@ class UnprotectedBarnehagelisteControllerIntegrasjonTest {
         assertThat(problemDetail.errors)
             .hasSize(1)
             .contains(
-                JsonValideringsfeilInfo("kindergartens[0].organizationNumber", "Not a valid organization number 123456789"),
+                JsonValideringsfeilInfo(
+                    "kindergartens[0].organizationNumber",
+                    "Not a valid organization number 123456789",
+                ),
             )
     }
 

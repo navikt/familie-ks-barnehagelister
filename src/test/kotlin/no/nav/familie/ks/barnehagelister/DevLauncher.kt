@@ -1,12 +1,11 @@
 package no.nav.familie.ks.barnehagelister
 
 import no.nav.familie.ks.barnehagelister.config.ApplicationConfig
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
 
+// @EnableMockOAuth2Server //TODO
 @Import(ApplicationConfig::class)
-@EnableMockOAuth2Server
 class DevLauncher
 
 fun main(args: Array<String>) {

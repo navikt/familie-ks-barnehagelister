@@ -9,7 +9,9 @@ spring:
 prosessering:
   rolle: "928636f4-fd0d-4149-978e-a6fb68bb19de" # 0000-GA-STDAPPS
 
+#TODO: Denne kan mest sannsynlig fjernes
 MASKINPORTEN_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
+MASKINPORTEN_ISSUER: https://test.maskinporten.no/
 AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 
 
