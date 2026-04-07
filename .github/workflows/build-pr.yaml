@@ -17,6 +17,7 @@ jobs:
 
   ktlint:
     name: Ktlint
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'digestabot') }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,6 +44,7 @@ jobs:
 
   tester:
     name: Tester
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'digestabot') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # ratchet:actions/checkout@v4
