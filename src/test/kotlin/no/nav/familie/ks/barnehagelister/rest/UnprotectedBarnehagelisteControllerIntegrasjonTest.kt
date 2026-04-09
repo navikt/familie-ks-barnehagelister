@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.Charset
 
-// TODO: MockOauthServer
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension::class)

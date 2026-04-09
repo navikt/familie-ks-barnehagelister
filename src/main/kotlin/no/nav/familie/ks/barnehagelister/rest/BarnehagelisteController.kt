@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.UUID
 
-@PreAuthorize("hasAuthority('SCOPE_nav:familie/v1/kontantstotte/barnehagelister')")
 @RequestMapping("/api/kindergartenlists")
 interface BarnehagelisteController {
     @Operation(summary = "Send in kindergarten list", operationId = "receiveKindergartenList")

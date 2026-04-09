@@ -4,7 +4,12 @@ import no.nav.familie.ks.barnehagelister.config.ApplicationConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
 
-// @EnableMockOAuth2Server //TODO
+/**
+ * Brukes for å kjøre lokalt med dev-profilen.
+ *
+ * OBS! Med dev-profilen er det ingen autentisering, og alle endepunkter er åpne. Brukes kun for lokal utvikling.
+ * Se DevSecurityConfig for detaljer.
+ */
 @Import(ApplicationConfig::class)
 class DevLauncher
 

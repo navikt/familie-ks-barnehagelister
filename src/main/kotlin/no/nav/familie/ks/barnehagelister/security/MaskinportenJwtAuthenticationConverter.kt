@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component
 
 @Component
-class AzureJwtAuthenticationConverter(
+class MaskinportenJwtAuthenticationConverter(
     @param:Value("\${BARNEHAGELISTER_SCOPE}") private val scope: String,
 ) : Converter<Jwt, AbstractAuthenticationToken> {
     private val secureLogger: Logger = LoggerFactory.getLogger("secureLogger")
