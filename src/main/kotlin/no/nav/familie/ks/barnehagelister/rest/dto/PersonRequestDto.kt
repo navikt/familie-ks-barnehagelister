@@ -9,7 +9,7 @@ import no.nav.familie.ks.barnehagelister.validering.Fødselsnummer
 
 @Schema(name = "Person")
 data class PersonRequestDto(
-    @Schema(
+    @field:Schema(
         description = "Identifier for the person, i.e., SSN or D-number",
         type = "String",
         example = "30438227985",
@@ -19,7 +19,7 @@ data class PersonRequestDto(
     @field:Size(min = 11, max = 11, message = "Social Security Number must have 11 digits")
     @field:Fødselsnummer
     val socialSecurityNumber: String,
-    @Schema(
+    @field:Schema(
         description = "First name",
         example = "Ola",
         requiredMode = REQUIRED,
@@ -27,7 +27,7 @@ data class PersonRequestDto(
     @field:Size(min = 1, max = 200, message = "First name can be a maximum of 200 characters.")
     @field:NotBlank
     val firstName: String,
-    @Schema(
+    @field:Schema(
         description = "Last name",
         example = "Nordmann",
         requiredMode = REQUIRED,
