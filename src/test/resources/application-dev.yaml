@@ -12,6 +12,11 @@ prosessering:
 MASKINPORTEN_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 
+#For å kjøre mot prosessering-frontend lokalt må denne URL-en peke på Azure, og ikke på mock-oauth2-serveren. Det er
+# fordi prosessering-frontend henter inn metadata fra denne URL-en, og da må den kunne finne de riktige verdiene for å
+# kunne validere tokenet som sendes fra prosessering-backend.
+#AZURE_APP_WELL_KNOWN_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/v2.0/.well-known/openid-configuration
+
 
 godkjente-leverandorer:
   leverandorer:
