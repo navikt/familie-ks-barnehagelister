@@ -17,7 +17,7 @@ MASKINPORTEN_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1
 # kunne validere tokenet som sendes fra prosessering-backend.
 AZURE_APP_WELL_KNOWN_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/v2.0/.well-known/openid-configuration
 #Denne trengs også for lokal kjøring mot prosessering-frontend, for at token skal ha riktig aud.
-AZURE_APP_CLIENT_ID: dummy-hent-fra-hent-miljøvariabel.sh
+#AZURE_APP_CLIENT_ID: dummy
 
 godkjente-leverandorer:
   leverandorer:
