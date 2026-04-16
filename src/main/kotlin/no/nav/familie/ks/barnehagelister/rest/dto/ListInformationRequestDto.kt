@@ -15,6 +15,6 @@ data class ListInformationRequestDto(
     @field:Size(min = 4, max = 4, message = "Municipality number must have 4 digits")
     @field:Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Municipality number must be a numeric field")
     val municipalityNumber: String,
-    @Schema(type = "string", format = "yearmonth", example = "2024-09")
+    @field:Schema(type = "string", format = "yearmonth", example = "2024-09")
     val submissionForYearMonth: YearMonth,
 )

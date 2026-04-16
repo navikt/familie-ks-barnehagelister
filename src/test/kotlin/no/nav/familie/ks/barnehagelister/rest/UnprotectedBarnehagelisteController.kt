@@ -19,7 +19,6 @@ import java.util.UUID
 class UnprotectedBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
 ) : BarnehagelisteController {
-    @Unprotected
     override fun mottaBarnehageliste(
         formV1RequestDto: FormV1RequestDto,
         bindingResult: BindingResult,
@@ -40,7 +39,6 @@ class UnprotectedBarnehagelisteController(
             ).toResponseEntity()
     }
 
-    @Unprotected
     override fun status(
         id: UUID,
         request: HttpServletRequest,
@@ -54,7 +52,6 @@ class UnprotectedBarnehagelisteController(
             ?: ResponseEntity.notFound().build()
     }
 
-    @Unprotected
     override fun ping(): String = "\"OK\""
 }
 

@@ -6,7 +6,7 @@ import org.springframework.boot.flyway.autoconfigure.FlywayConfigurationCustomiz
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 
-@Profile("!dev")
+@Profile("!dev", "!dev-med-auth")
 @ConditionalOnProperty("spring.flyway.enabled")
 data class FlywayConfiguration(
     private val role: String,

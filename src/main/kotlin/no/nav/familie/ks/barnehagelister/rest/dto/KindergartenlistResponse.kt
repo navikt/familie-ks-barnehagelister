@@ -7,7 +7,7 @@ import java.util.UUID
 
 data class KindergartenlistResponse(
     val id: UUID,
-    @Schema(
+    @field:Schema(
         description = "\"Received\" until further validations are done. \"Done\" when the list is processed, even if there are warnings.",
     )
     val status: BarnehagelisteStatusEngelsk,
@@ -21,9 +21,9 @@ data class KindergartenlistResponse(
     name = "ResponseLinks",
 )
 data class ResponseLinksResponseDto(
-    @Schema(example = "/api/kindergartenlists/status/19375e59-0f07-4c9b-a7bb-6f30fb43819b")
+    @field:Schema(example = "/api/kindergartenlists/status/19375e59-0f07-4c9b-a7bb-6f30fb43819b")
     val status: String,
-    @Schema(
+    @field:Schema(
         description =
             "Heavier validations that fail will be listed here. List is still processed if there are warnings," +
                 " but gives an indication of faulty data.",
@@ -33,9 +33,9 @@ data class ResponseLinksResponseDto(
 
 @Schema(name = "ValidationWarnings")
 data class EtterprosesseringfeilInfo(
-    @Schema()
+    @field:Schema()
     val type: EtterprosesseringfeilType,
-    @Schema(
+    @field:Schema(
         description = "Details about the validation error. If no more information is available, the field is set to missing",
         example = "Overlapping period within the same list for children. child=12345678901",
     )
