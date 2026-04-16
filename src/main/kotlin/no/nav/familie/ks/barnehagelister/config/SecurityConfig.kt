@@ -31,7 +31,6 @@ class SecurityConfig(
     @Bean
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
-            cors { configurationSource = corsConfigurationSource() }
             authorizeHttpRequests {
                 authorize("/internal/**", permitAll)
                 authorize("/actuator/**", permitAll)
@@ -52,35 +51,6 @@ class SecurityConfig(
         // Forsikre oss om at prosessering-spring-security tar seg av /task/api/**
         http.securityMatcher(NegatedRequestMatcher(PathPatternRequestMatcher.pathPattern("/api/task/**")))
         return http.build()
-    }
-
-    // TODO: kan dette fjernes?
-    open fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-
-        configuration.allowedOrigins =
-            listOf(
-                "https://familie-ks-infotrygd.intern.dev.nav.no",
-                "https://familie-ks-infotrygd.intern.nav.no",
-                "http://localhost:8080",
-            )
-
-        configuration.allowedMethods = listOf("GET", "POST", "OPTIONS")
-        configuration.allowedHeaders =
-            listOf(
-                "Content-Type",
-                "Accept",
-                "Authorization",
-                "Origin",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers",
-            )
-        configuration.allowCredentials = true
-        configuration.maxAge = 3600L
-
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
     }
 
     @Bean
