@@ -14,7 +14,7 @@ jobs:
       id-token: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -58,7 +58,7 @@ jobs:
         run: |
           mvn -B --no-transfer-progress package --settings .m2/maven-settings.xml --file pom.xml
 
-      - uses: nais/docker-build-push@078e460885ed0424b60d45ce9220b4be1748be9d # ratchet:nais/docker-build-push@v0
+      - uses: nais/docker-build-push@cd5ec5663feb0e05c3fa374d1fb442605b046c6b # ratchet:nais/docker-build-push@v0
         id: docker-push
         with:
           pull: true # optional, default false
