@@ -15,13 +15,13 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260306133947_d473c40</prosessering.version>
+        <prosessering.version>2.20260331095424_89d92d2</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
-        <kotlin.version>2.3.10</kotlin.version>
+        <kotlin.version>2.3.20</kotlin.version>
         <kontrakter.version>4.0_20260326091316_bc0649b</kontrakter.version>
         <felles.version>4.20260315040340_f2acdc7</felles.version>
         <token-validation-spring.version>6.0.5</token-validation-spring.version>
