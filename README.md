@@ -56,9 +56,16 @@ lage en konsument og for å generere nytt token. Hvis man velger en ny konsument
 Lokalt kjører applikasjonen på port 8096. For å teste tjenesten lokalt, så kan man kjøre [DevLauncher](src/test/kotlin/no/nav/familie/ks/barnehagelister/DevLauncher.kt)  
 Link til [swagger](http://localhost:8096/swagger-ui/index.html) lokalt
 
-#### Prosessering-frontend lokalt
-AZURE_APP_CLIENT_ID må være satt. Brukt hent-og-lagre-miljøvariabler.sh scriptet for å sette denne.
-AZURE_APP_WELL_KNOWN_URL må peke mot samme issuer som prosessering-frontend. Se application-dev.yaml.
+
+#### Lokale profiler
+
+* `dev`: ingen auth (fungerer offline)
+* `dev-med-auth`: auth på endepunkter
+  * Maskinporten for `/api/kindergartenlists/**`
+  * AzureAD for `/api/task/**` (brukes av familie-prosessering-frontend)
+  * Kafka er fortsatt skrudd av!!
+
+For `dev-med-auth` kan du bruke [DevMedAuthLauncher](src/test/kotlin/no/nav/familie/ks/barnehagelister/DevMedAuthLauncher.kt).
 
 ### Kode generert av GitHub Copilot
 Dette repoet bruker GitHub Copilot til å generere kode.

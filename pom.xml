@@ -149,7 +149,12 @@
         <dependency>
             <groupId>no.nav.familie</groupId>
             <artifactId>prosessering-core</artifactId>
-            <version>${prosessering.version}</version>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.familie</groupId>
+            <artifactId>prosessering-web-spring-security</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <!-- Annet -->

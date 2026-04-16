@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.security
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.core.Authentication
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Component
 
 @Component
+@Profile("!dev")
 class MaskinportenAuthenticationManager(
     @param:Value("\${BARNEHAGELISTER_SCOPE}") private val scope: String,
     @param:Value("\${MASKINPORTEN_ISSUER}") val issuerUri: String,
@@ -26,7 +28,9 @@ class MaskinportenAuthenticationManager(
         decoder.setJwtValidator(
             DelegatingOAuth2TokenValidator(
                 JwtValidators.createDefaultWithIssuer(issuerUri),
-                JwtClaimValidator<List<String>>(SCOPES_CLAIM) { scopesInToken -> scopesInToken.contains(scope) },
+                JwtClaimValidator<String>(SCOPES_CLAIM) { scopeInToken ->
+                    scopeInToken == scope
+                },
             ),
         )
         val provider = JwtAuthenticationProvider(decoder)

@@ -15,21 +15,7 @@ import java.nio.file.Path
 @Import(ApplicationConfig::class)
 class DevLauncher
 
-private fun loadDotenvIfPresent(dotenvPath: Path = Path.of(".env")) {
-    if (!System.getProperty("AZURE_APP_CLIENT_ID").isNullOrBlank()) return
-    if (!Files.exists(dotenvPath)) return
-
-    val line = Files.readAllLines(dotenvPath).firstOrNull { it.startsWith("AZURE_APP_CLIENT_ID=") } ?: return
-    val rawValue = line.substringAfter("AZURE_APP_CLIENT_ID=").trim()
-    val value = rawValue.removeSurrounding("'").removeSurrounding("\"")
-
-    if (value.isNotBlank()) {
-        System.setProperty("AZURE_APP_CLIENT_ID", value)
-    }
-}
-
 fun main(args: Array<String>) {
-    loadDotenvIfPresent()
     System.setProperty("spring.profiles.active", "dev")
     val springApp = SpringApplication(DevLauncher::class.java)
     springApp.setAdditionalProfiles("dev")

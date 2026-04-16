@@ -10,11 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +29,7 @@ class DevSecurityConfig {
                 authorize("/tables", permitAll)
                 authorize("/testtoken/**", permitAll)
                 authorize("/api/kindergartenlists/**", permitAll)
-                authorize(anyRequest, authenticated)
+                authorize(anyRequest, permitAll)
             }
             csrf { disable() }
         }
@@ -45,23 +41,12 @@ class DevSecurityConfig {
     fun prosesseringInfoProvider(
         @Value("\${prosessering.rolle}") prosesseringRolle: String,
     ) = object : ProsesseringInfoProvider {
-        override fun hentBrukernavn(): String =
-            try {
-                hentJwt()?.getClaimAsString("preferred_username") ?: "VL"
-            } catch (e: Exception) {
-                "VL"
-            }
+        override fun hentBrukernavn(): String = "VL"
 
-        override fun harTilgang(): Boolean = grupper().contains(prosesseringRolle)
+        override fun harTilgang(): Boolean = true
 
-        private fun grupper(): List<String> =
-            try {
-                hentJwt()?.getClaimAsStringList("groups") ?: emptyList()
-            } catch (e: Exception) {
-                emptyList()
-            }
-
-        private fun hentJwt() = (SecurityContextHolder.getContext()?.authentication as? JwtAuthenticationToken)?.token
+        @Suppress("UNUSED_PARAMETER")
+        private fun grupper(): List<String> = emptyList()
     }
 
     companion object {

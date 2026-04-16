@@ -37,7 +37,7 @@ class BarnehagebarnKafkaProducer(
 }
 
 @Service
-@Profile("dev")
+@Profile("dev", "dev-med-auth")
 class DummyBarnehagebarnKafkaProducer : IBarnehagebarnKafkaProducer {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
