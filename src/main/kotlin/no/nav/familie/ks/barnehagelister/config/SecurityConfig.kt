@@ -1,8 +1,7 @@
 package no.nav.familie.ks.barnehagelister.config
 
-import no.nav.familie.ks.barnehagelister.security.MaskinportenJwtAuthenticationConverter
+import no.nav.familie.ks.barnehagelister.security.MaskinportenAuthenticationManager
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
-import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -13,7 +12,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -23,7 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableMethodSecurity(prePostEnabled = true)
 @Profile("!dev")
 class SecurityConfig(
-    private val maskinportenJwtAuthenticationConverter: MaskinportenJwtAuthenticationConverter,
+    private val maskinportenAuthenticationManager: MaskinportenAuthenticationManager,
 ) {
     @Bean
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -41,11 +44,13 @@ class SecurityConfig(
             }
             oauth2ResourceServer {
                 jwt {
-                    jwtAuthenticationConverter = maskinportenJwtAuthenticationConverter
+                    authenticationManager = maskinportenAuthenticationManager
                 }
             }
             csrf { disable() }
         }
+        // Forsikre oss om at prosessering-spring-security tar seg av /task/api/**
+        http.securityMatcher(NegatedRequestMatcher(PathPatternRequestMatcher.pathPattern("/api/task/**")))
         return http.build()
     }
 
@@ -84,26 +89,21 @@ class SecurityConfig(
     ) = object : ProsesseringInfoProvider {
         override fun hentBrukernavn(): String =
             try {
-                SpringTokenValidationContextHolder()
-                    .getTokenValidationContext()
-                    .getClaims("azuread")
-                    .getStringClaim("preferred_username")
+                hentJwt()?.getClaimAsString("preferred_username") ?: "VL"
             } catch (e: Exception) {
                 "VL"
             }
 
         override fun harTilgang(): Boolean = grupper().contains(prosesseringRolle)
 
-        @Suppress("UNCHECKED_CAST")
         private fun grupper(): List<String> =
             try {
-                SpringTokenValidationContextHolder()
-                    .getTokenValidationContext()
-                    .getClaims("azuread")
-                    .get("groups") as List<String>? ?: emptyList()
+                hentJwt()?.getClaimAsStringList("groups") ?: emptyList()
             } catch (e: Exception) {
                 emptyList()
             }
+
+        private fun hentJwt() = (SecurityContextHolder.getContext()?.authentication as? JwtAuthenticationToken)?.token
     }
 
     @Bean
