@@ -25,6 +25,7 @@
         <kontrakter.version>4.0_20260326091316_bc0649b</kontrakter.version>
         <felles.version>4.20260315040340_f2acdc7</felles.version>
         <springdoc.version>3.0.2</springdoc.version>
+        <mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
@@ -123,7 +124,7 @@
         <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>mock-oauth2-server</artifactId>
-            <version>3.0.1</version>
+            <version>${mock-oauth2-server.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -149,12 +150,12 @@
         <dependency>
             <groupId>no.nav.familie</groupId>
             <artifactId>prosessering-core</artifactId>
-            <version>1.0.0</version>
+            <version>${prosessering.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.familie</groupId>
             <artifactId>prosessering-web-spring-security</artifactId>
-            <version>1.0.0</version>
+            <version>${prosessering.version}</version>
         </dependency>
 
         <!-- Annet -->

@@ -21,14 +21,6 @@ class DevSecurityConfig {
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             authorizeHttpRequests {
-                authorize("/internal/**", permitAll)
-                authorize("/actuator/**", permitAll)
-                authorize("/swagger-ui/**", permitAll)
-                authorize("/v3/api-docs/**", permitAll)
-                authorize("/swagger-ui.html", permitAll)
-                authorize("/tables", permitAll)
-                authorize("/testtoken/**", permitAll)
-                authorize("/api/kindergartenlists/**", permitAll)
                 authorize(anyRequest, permitAll)
             }
             csrf { disable() }
@@ -38,18 +30,10 @@ class DevSecurityConfig {
     }
 
     @Bean
-    fun prosesseringInfoProvider(
-        @Value("\${prosessering.rolle}") prosesseringRolle: String,
-    ) = object : ProsesseringInfoProvider {
-        override fun hentBrukernavn(): String = "VL"
+    fun prosesseringInfoProvider() =
+        object : ProsesseringInfoProvider {
+            override fun hentBrukernavn(): String = "VL"
 
-        override fun harTilgang(): Boolean = true
-
-        @Suppress("UNUSED_PARAMETER")
-        private fun grupper(): List<String> = emptyList()
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(DevSecurityConfig::class.java)
-    }
+            override fun harTilgang(): Boolean = true
+        }
 }

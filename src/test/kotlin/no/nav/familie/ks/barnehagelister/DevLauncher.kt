@@ -10,7 +10,6 @@ import java.nio.file.Path
  * Brukes for å kjøre lokalt med dev-profilen.
  *
  * OBS! Med dev-profilen er det ingen autentisering, og alle endepunkter er åpne. Brukes kun for lokal utvikling.
- * Se DevSecurityConfig for detaljer.
  */
 @Import(ApplicationConfig::class)
 class DevLauncher

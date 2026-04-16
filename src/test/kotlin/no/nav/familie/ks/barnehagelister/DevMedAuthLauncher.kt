@@ -9,7 +9,7 @@ import java.nio.file.Path
 /**
  * Brukes for å kjøre lokalt med auth (dev-med-auth).
  * - Maskinporten (test.maskinporten.no) for /api/kindergartenlists/ + **
- * - AzureAD for /api/task/ + ** (brukes av familie-prosessering-frontend)
+ * - AzureAD for /api/task/ (brukes av familie-prosessering-frontend)
  * OBS! Kafka er fortsatt ikke på med denne profilen
  */
 @Import(ApplicationConfig::class)
@@ -37,7 +37,7 @@ private fun lastdotEnvHvisTilstede(dotenvPath: Path = Path.of(".env")) {
                 if (indeksLikhet <= 0) return@mapNotNull null
                 val key = line.substring(0, indeksLikhet).trim()
                 val raw = line.substring(indeksLikhet + 1).trim()
-                val value = raw.removeSurrounding("'").removeSurrounding("\"")
+                val value = raw.removeSurrounding("\"")
                 if (key.isBlank() || value.isBlank()) return@mapNotNull null
                 key to value
             }.toMap()
