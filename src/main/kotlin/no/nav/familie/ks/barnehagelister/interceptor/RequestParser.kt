@@ -1,8 +1,9 @@
 package no.nav.familie.ks.barnehagelister.interceptor
 
 import jakarta.servlet.http.HttpServletRequest
-import no.nav.security.token.support.core.jwt.JwtToken
-import no.nav.security.token.support.core.jwt.JwtTokenClaims
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.jwt.Jwt
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
 fun HttpServletRequest.hentHeaders() =
     headerNames?.toList()?.map { headerName ->
@@ -19,10 +20,10 @@ fun HttpServletRequest.hentHeaders() =
 fun HttpServletRequest.hentInfoFraToken(): String {
     val jwtClaims = hentClaims()
 
-    val clientId = jwtClaims?.get("client_id")
-    val scope = jwtClaims?.get("scope")
+    val clientId = jwtClaims?.claims?.get("client_id")
+    val scope = jwtClaims?.claims?.get("scope")
     val consumerId = jwtClaims?.hentNestedClaim("consumer")?.get("ID")
-    val issuer = jwtClaims?.issuer
+    val issuer = jwtClaims?.issuer?.toString()
 
     val tokenData = "$issuer $clientId $scope $consumerId"
     return tokenData
@@ -31,7 +32,7 @@ fun HttpServletRequest.hentInfoFraToken(): String {
 fun HttpServletRequest.hentConsumerId(): String? {
     val jwtClaims = hentClaims()
 
-    val consumerId = jwtClaims?.hentNestedClaim("consumer")?.get("ID")
+    val consumerId = jwtClaims?.hentNestedClaim("consumer")?.get("ID")?.toString()
     return consumerId
 }
 
@@ -42,27 +43,17 @@ fun HttpServletRequest.hentSupplierId(): String? {
         jwtClaims
             ?.hentNestedClaim("supplier")
             ?.get("ID")
+            ?.toString()
             ?.substringAfter(":") // ID er på format 0192:<orgno>
     return organisasjonsNummer
 }
 
-fun HttpServletRequest.hentClaims(): JwtTokenClaims? {
-    val authorizationHeader = getHeader("Authorization")
-    val token =
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            authorizationHeader.substring(7)
-        } else {
-            null
-        }
-
-    return if (token == null) {
-        null
-    } else {
-        JwtToken(token).jwtTokenClaims
-    }
+fun HttpServletRequest.hentClaims(): Jwt? {
+    val authentication = SecurityContextHolder.getContext()?.authentication
+    return (authentication as? JwtAuthenticationToken)?.token
 }
 
-fun JwtTokenClaims.hentNestedClaim(claim: String): Map<String, String>? {
+fun Jwt.hentNestedClaim(claim: String): Map<String, Any>? {
     @Suppress("UNCHECKED_CAST")
-    return this.get(claim) as? Map<String, String>?
+    return this.claims[claim] as? Map<String, Any>?
 }

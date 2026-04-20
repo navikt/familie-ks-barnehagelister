@@ -26,6 +26,7 @@
         <felles.version>4.20260315040340_f2acdc7</felles.version>
         <token-validation-spring.version>6.0.5</token-validation-spring.version>
         <springdoc.version>3.0.3</springdoc.version>
+        <mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
