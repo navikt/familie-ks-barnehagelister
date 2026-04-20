@@ -17,9 +17,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -48,7 +45,7 @@ class SecurityConfig(
             }
             csrf { disable() }
         }
-        // Forsikre oss om at prosessering-spring-security tar seg av /task/api/**
+        // Forsikre oss om at prosessering-spring-security tar seg av /api/task/**
         http.securityMatcher(NegatedRequestMatcher(PathPatternRequestMatcher.pathPattern("/api/task/**")))
         return http.build()
     }

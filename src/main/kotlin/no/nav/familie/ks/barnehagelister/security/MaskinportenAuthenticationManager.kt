@@ -24,7 +24,8 @@ class MaskinportenAuthenticationManager(
     }
 
     private val delegate: AuthenticationManager by lazy {
-        val decoder = JwtDecoders.fromIssuerLocation(issuerUri) as NimbusJwtDecoder
+        val decoder = NimbusJwtDecoder.withIssuerLocation(issuerUri).build()
+
         decoder.setJwtValidator(
             DelegatingOAuth2TokenValidator(
                 JwtValidators.createDefaultWithIssuer(issuerUri),
