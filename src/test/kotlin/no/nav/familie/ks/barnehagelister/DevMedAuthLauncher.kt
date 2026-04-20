@@ -16,14 +16,14 @@ import java.nio.file.Path
 class DevMedAuthLauncher
 
 fun main(args: Array<String>) {
-    lastdotEnvHvisTilstede()
+    lastDotEnvHvisTilstede()
     System.setProperty("spring.profiles.active", "dev-med-auth")
     val springApp = SpringApplication(DevMedAuthLauncher::class.java)
     springApp.setAdditionalProfiles("dev-med-auth")
     springApp.run(*args)
 }
 
-private fun lastdotEnvHvisTilstede(dotenvPath: Path = Path.of(".env")) {
+private fun lastDotEnvHvisTilstede(dotenvPath: Path = Path.of(".env")) {
     if (!Files.exists(dotenvPath)) return
 
     val lines = Files.readAllLines(dotenvPath)

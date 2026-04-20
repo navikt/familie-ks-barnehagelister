@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @Profile("!dev")
-@PreAuthorize("hasAuthority('SCOPE_nav:familie/v1/kontantstotte/barnehagelister')")
+@PreAuthorize("hasAuthority('SCOPE_' + @environment.getProperty('BARNEHAGELISTER_SCOPE'))")
 @RestController
 class DefaultBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,

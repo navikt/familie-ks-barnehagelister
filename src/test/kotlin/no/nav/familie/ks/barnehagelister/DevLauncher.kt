@@ -3,8 +3,6 @@ package no.nav.familie.ks.barnehagelister
 import no.nav.familie.ks.barnehagelister.config.ApplicationConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * Brukes for å kjøre lokalt med dev-profilen.
