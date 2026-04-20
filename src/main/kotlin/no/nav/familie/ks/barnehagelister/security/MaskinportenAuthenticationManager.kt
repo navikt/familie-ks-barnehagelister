@@ -30,7 +30,11 @@ class MaskinportenAuthenticationManager(
             DelegatingOAuth2TokenValidator(
                 JwtValidators.createDefaultWithIssuer(issuerUri),
                 JwtClaimValidator<String>(SCOPES_CLAIM) { scopeInToken ->
-                    scopeInToken == scope
+                    scopeInToken
+                        .trim()
+                        .split(Regex("\\s+"))
+                        .filter { it.isNotBlank() }
+                        .contains(scope)
                 },
             ),
         )
