@@ -12,7 +12,6 @@ prosessering:
 MASKINPORTEN_ISSUER: https://test.maskinporten.no/
 AZURE_OPENID_CONFIG_ISSUER: https://test.maskinporten.no/
 AZURE_APP_CLIENT_ID: test-client-id
-AZURE_APP_WELL_KNOWN_URL: http://localhost:${mock-oauth2-server.port}/issuer1/.well-known/openid-configuration
 
 
 godkjente-leverandorer:

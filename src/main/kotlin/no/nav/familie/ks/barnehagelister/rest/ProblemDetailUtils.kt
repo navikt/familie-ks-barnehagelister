@@ -1,7 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletResponse
+import no.nav.familie.kontrakter.felles.jsonMapper
 import no.nav.familie.log.IdUtils
 import no.nav.familie.prosessering.util.MDCConstants
 import org.slf4j.MDC
@@ -11,8 +11,6 @@ import org.springframework.http.ProblemDetail
 import java.net.URI
 
 object ProblemDetailUtils {
-    private val objectMapper: ObjectMapper = ObjectMapper().findAndRegisterModules()
-
     fun writeProblemDetailResponse(
         response: HttpServletResponse,
         status: HttpStatus,
@@ -29,7 +27,7 @@ object ProblemDetailUtils {
 
         response.status = status.value()
         response.contentType = MediaType.APPLICATION_PROBLEM_JSON_VALUE
-        objectMapper.writeValue(response.writer, problemDetailMedCallIdOgErrors)
+        jsonMapper.writeValue(response.writer, problemDetailMedCallIdOgErrors)
     }
 
     fun ProblemDetail.toProblemDetailMedCallIdOgErrors(): ProblemDetailMedCallIdOgErrors =
