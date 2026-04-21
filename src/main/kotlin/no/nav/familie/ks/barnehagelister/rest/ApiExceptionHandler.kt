@@ -2,37 +2,26 @@ package no.nav.familie.ks.barnehagelister.rest
 
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.config.secureLogger
-import no.nav.familie.log.IdUtils
-import no.nav.familie.prosessering.util.MDCConstants
-import no.nav.security.token.support.core.exceptions.JwtTokenMissingException
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
+import no.nav.familie.ks.barnehagelister.rest.ProblemDetailUtils.toProblemDetailMedCallIdOgErrors
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
 @RestControllerAdvice
 class ApiExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
-
-    private fun ProblemDetail.toProblemDetailMedCallIdOgErrors(): ProblemDetailMedCallIdOgErrors =
-        ProblemDetailMedCallIdOgErrors(hentCallIdFraMDC()).apply {
-            status = this@toProblemDetailMedCallIdOgErrors.status
-            title = this@toProblemDetailMedCallIdOgErrors.title
-            detail = this@toProblemDetailMedCallIdOgErrors.detail
-            instance = this@toProblemDetailMedCallIdOgErrors.instance
-            type = this@toProblemDetailMedCallIdOgErrors.type
-            properties = this@toProblemDetailMedCallIdOgErrors.properties
-        }
 
     @ExceptionHandler(Exception::class)
     fun handleUkjentFeil(
@@ -66,12 +55,40 @@ class ApiExceptionHandler {
                     )
             }.toProblemDetailMedCallIdOgErrors()
             .apply {
-                logger.info("Not-found ${request.method} ${request.requestURI} callId: $callId")
+                logger.warn("Not-found ${request.method} ${request.requestURI} callId: $callId")
             }
 
-    @ExceptionHandler(value = [JwtTokenMissingException::class, JwtTokenUnauthorizedException::class])
-    fun onJwtTokenException(
-        e: RuntimeException,
+    // TODO se på om denne er unødvendig/ødelegger/har feil flyt
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFound(
+        e: NoResourceFoundException,
+        request: HttpServletRequest,
+    ): ProblemDetailMedCallIdOgErrors {
+        val uri = request.requestURI
+
+        val isStaticResource =
+            uri.startsWith("/swagger-ui/") ||
+                uri.startsWith("/v3/api-docs/") ||
+                uri.startsWith("/webjars/")
+
+        return ProblemDetail
+            .forStatusAndDetail(HttpStatus.NOT_FOUND, e.message ?: "Not found")
+            .apply {
+                type =
+                    URI.create("https://problems-registry.smartbear.com/not-found/")
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                if (isStaticResource) {
+                    logger.debug("Static resource not found: ${request.method} $uri callId: $callId")
+                } else {
+                    logger.warn("Resource not found: ${request.method} $uri callId: $callId")
+                }
+            }
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun onAuthenticationException(
+        e: AuthenticationException,
         request: HttpServletRequest,
     ): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
@@ -85,6 +102,21 @@ class ApiExceptionHandler {
             .apply {
                 logger.warn("Unauthorized for callId: $callId")
                 secureLogger.warn("Unauthorized for callId: $callId", e)
+            }
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun onAccessDeniedException(
+        e: AccessDeniedException,
+        request: HttpServletRequest,
+    ): ProblemDetailMedCallIdOgErrors =
+        ProblemDetail
+            .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
+            .apply {
+                type = URI.create("https://problems-registry.smartbear.com/forbidden/")
+            }.toProblemDetailMedCallIdOgErrors()
+            .apply {
+                logger.warn("Access denied for callId: $callId")
+                secureLogger.warn("Access denied for callId: $callId", e)
             }
 
     @ExceptionHandler(
@@ -144,8 +176,6 @@ class ApiExceptionHandler {
                 logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId")
                 secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId", e)
             }
-
-    private fun hentCallIdFraMDC(): String = MDC.get(MDCConstants.MDC_CALL_ID) ?: IdUtils.generateId()
 
     /**
      * AsyncRequestNotUsableException er en exception som blir kastet når en async request blir avbrutt. Velger

@@ -1,5 +1,8 @@
 package no.nav.familie.ks.barnehagelister.config
 
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import no.nav.familie.ks.barnehagelister.rest.ProblemDetailUtils
 import no.nav.familie.ks.barnehagelister.security.MaskinportenAuthenticationManager
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
 import org.slf4j.LoggerFactory
@@ -8,13 +11,18 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 
@@ -42,6 +50,8 @@ class SecurityConfig(
                 jwt {
                     authenticationManager = maskinportenAuthenticationManager
                 }
+                authenticationEntryPoint = problemDetailAuthenticationEntryPoint()
+                accessDeniedHandler = problemDetailAccessDeniedHandler()
             }
             csrf { disable() }
         }
@@ -81,6 +91,28 @@ class SecurityConfig(
         filterRegistration.order = 2
         return filterRegistration
     }
+
+    @Bean
+    fun problemDetailAuthenticationEntryPoint(): AuthenticationEntryPoint =
+        AuthenticationEntryPoint { _: HttpServletRequest, response: HttpServletResponse, e: AuthenticationException ->
+            ProblemDetailUtils.writeProblemDetailResponse(
+                response,
+                HttpStatus.UNAUTHORIZED,
+                e.message ?: "Unauthorized",
+                "https://problems-registry.smartbear.com/unauthorized/",
+            )
+        }
+
+    @Bean
+    fun problemDetailAccessDeniedHandler(): AccessDeniedHandler =
+        AccessDeniedHandler { _: HttpServletRequest, response: HttpServletResponse, e: AccessDeniedException ->
+            ProblemDetailUtils.writeProblemDetailResponse(
+                response,
+                HttpStatus.FORBIDDEN,
+                e.message ?: "Forbidden",
+                "https://problems-registry.smartbear.com/forbidden/",
+            )
+        }
 
     companion object {
         private val log = LoggerFactory.getLogger(SecurityConfig::class.java)
