@@ -53,7 +53,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should authenticate successfully with valid token and scope`() {
+    fun `skal autentisere med gyldig token`() {
         val token =
             mockOAuth2Server.issueToken(
                 issuerId = "default",
@@ -74,7 +74,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should reject token with missing required scope`() {
+    fun `skal avvise token med feil scope`() {
         val token =
             mockOAuth2Server.issueToken(
                 issuerId = "default",
@@ -94,7 +94,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should reject token with wrong issuer`() {
+    fun `skal avvise token med feil issuer`() {
         val wrongIssuerServer = MockOAuth2Server()
         wrongIssuerServer.start()
 
@@ -120,7 +120,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should reject expired token`() {
+    fun `skal avvise gammelt token`() {
         val token =
             mockOAuth2Server.issueToken(
                 issuerId = "default",
@@ -140,7 +140,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should reject token with invalid signature`() {
+    fun `skal avvise token med ugyldig signatur`() {
         val token =
             mockOAuth2Server.issueToken(
                 issuerId = "default",
@@ -162,7 +162,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
     }
 
     @Test
-    fun `should handle scope claim with extra whitespace`() {
+    fun `skal håndtere scope med ekstra whitespace`() {
         val token =
             mockOAuth2Server.issueToken(
                 issuerId = "default",
