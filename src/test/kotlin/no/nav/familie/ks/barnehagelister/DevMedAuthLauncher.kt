@@ -5,8 +5,6 @@ import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.nio.file.Files
-import java.nio.file.Path
 
 /**
  * Brukes for å kjøre lokalt med auth (dev-med-auth).
