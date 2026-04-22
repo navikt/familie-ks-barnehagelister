@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
-import org.springframework.web.servlet.resource.NoResourceFoundException
 import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
@@ -24,10 +23,7 @@ class ApiExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
 
     @ExceptionHandler(Exception::class)
-    fun handleUkjentFeil(
-        e: Exception,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors =
+    fun handleUkjentFeil(e: Exception): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.message ?: "Unknown error")
             .apply {
@@ -58,39 +54,8 @@ class ApiExceptionHandler {
                 logger.warn("Not-found ${request.method} ${request.requestURI} callId: $callId")
             }
 
-    // TODO se på om denne er unødvendig/ødelegger/har feil flyt
-    @ExceptionHandler(NoResourceFoundException::class)
-    fun handleNoResourceFound(
-        e: NoResourceFoundException,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors {
-        val uri = request.requestURI
-
-        val isStaticResource =
-            uri.startsWith("/swagger-ui/") ||
-                uri.startsWith("/v3/api-docs/") ||
-                uri.startsWith("/webjars/")
-
-        return ProblemDetail
-            .forStatusAndDetail(HttpStatus.NOT_FOUND, e.message ?: "Not found")
-            .apply {
-                type =
-                    URI.create("https://problems-registry.smartbear.com/not-found/")
-            }.toProblemDetailMedCallIdOgErrors()
-            .apply {
-                if (isStaticResource) {
-                    logger.debug("Static resource not found: ${request.method} $uri callId: $callId")
-                } else {
-                    logger.warn("Resource not found: ${request.method} $uri callId: $callId")
-                }
-            }
-    }
-
     @ExceptionHandler(AuthenticationException::class)
-    fun onAuthenticationException(
-        e: AuthenticationException,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors =
+    fun onAuthenticationException(e: AuthenticationException): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.message ?: "Unauthorized")
             .apply {
@@ -105,10 +70,7 @@ class ApiExceptionHandler {
             }
 
     @ExceptionHandler(AccessDeniedException::class)
-    fun onAccessDeniedException(
-        e: AccessDeniedException,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors =
+    fun onAccessDeniedException(e: AccessDeniedException): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
             .apply {
@@ -125,10 +87,7 @@ class ApiExceptionHandler {
             JsonValideringsfeilException::class,
         ],
     )
-    fun onValideringsFeil(
-        e: Exception,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors {
+    fun onValideringsFeil(e: Exception): ProblemDetailMedCallIdOgErrors {
         val message =
             if (e.cause is KotlinInvalidNullException) {
                 val cause = e.cause as KotlinInvalidNullException
@@ -160,10 +119,7 @@ class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = [UgyldigKommuneEllerLeverandørFeil::class])
-    fun onUgyldigKommuneEllerLeverandørFeil(
-        e: Exception,
-        request: HttpServletRequest,
-    ): ProblemDetailMedCallIdOgErrors =
+    fun onUgyldigKommuneEllerLeverandørFeil(e: Exception): ProblemDetailMedCallIdOgErrors =
         ProblemDetail
             .forStatusAndDetail(HttpStatus.FORBIDDEN, e.message ?: "Forbidden")
             .apply {
