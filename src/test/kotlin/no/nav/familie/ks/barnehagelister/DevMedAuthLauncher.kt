@@ -3,6 +3,8 @@ package no.nav.familie.ks.barnehagelister
 import no.nav.familie.ks.barnehagelister.config.ApplicationConfig
 import org.springframework.boot.SpringApplication
 import org.springframework.context.annotation.Import
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -16,38 +18,31 @@ import java.nio.file.Path
 class DevMedAuthLauncher
 
 fun main(args: Array<String>) {
-    lastDotEnvHvisTilstede()
+    settClientIdOgSecret()
     System.setProperty("spring.profiles.active", "dev-med-auth")
     val springApp = SpringApplication(DevMedAuthLauncher::class.java)
     springApp.setAdditionalProfiles("dev-med-auth")
     springApp.run(*args)
 }
 
-private fun lastDotEnvHvisTilstede(dotenvPath: Path = Path.of(".env")) {
-    if (!Files.exists(dotenvPath)) return
+private fun settClientIdOgSecret() {
+    val cmd = "src/test/resources/hentMiljøvariabler.sh"
 
-    val lines = Files.readAllLines(dotenvPath)
-    val env =
-        lines
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .filterNot { it.startsWith("#") }
-            .mapNotNull { line ->
-                val indeksLikhet = line.indexOf('=')
-                if (indeksLikhet <= 0) return@mapNotNull null
-                val key = line.substring(0, indeksLikhet).trim()
-                val raw = line.substring(indeksLikhet + 1).trim()
-                val value = raw.removeSurrounding("\"")
-                if (key.isBlank() || value.isBlank()) return@mapNotNull null
-                key to value
-            }.toMap()
+    val process = ProcessBuilder(cmd).start()
 
-    fun setIfMissing(key: String) {
-        if (!System.getProperty(key).isNullOrBlank()) return
-        val value = env[key] ?: return
-        System.setProperty(key, value)
+    if (process.waitFor() == 1) {
+        val inputStream = BufferedReader(InputStreamReader(process.inputStream))
+        inputStream.lines().forEach { println(it) }
+        inputStream.close()
+        throw IllegalStateException("Klarte ikke hente variabler fra Nais. Er du logget på Naisdevice og gcloud?")
     }
 
-    setIfMissing("AZURE_APP_CLIENT_ID")
-    setIfMissing("AZURE_OPENID_CONFIG_ISSUER")
+    val inputStream = BufferedReader(InputStreamReader(process.inputStream))
+    inputStream.readLine() // "Switched to context dev-gcp"
+    inputStream
+        .readLine()
+        .split(";")
+        .map { it.split("=") }
+        .map { System.setProperty(it[0], it[1]) }
+    inputStream.close()
 }

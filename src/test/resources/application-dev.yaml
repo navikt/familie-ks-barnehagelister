@@ -9,9 +9,8 @@ spring:
 prosessering:
   rolle: "928636f4-fd0d-4149-978e-a6fb68bb19de" # 0000-GA-STDAPPS
 
-MASKINPORTEN_ISSUER: https://test.maskinporten.no/
-AZURE_OPENID_CONFIG_ISSUER: https://test.maskinporten.no/
-AZURE_APP_CLIENT_ID: test-client-id
+AZURE_APP_CLIENT_ID: dummy
+AZURE_OPENID_CONFIG_ISSUER: dummy
 
 
 godkjente-leverandorer:

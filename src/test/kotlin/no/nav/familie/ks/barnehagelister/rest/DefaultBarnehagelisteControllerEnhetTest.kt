@@ -16,6 +16,7 @@ import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfei
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -31,14 +32,14 @@ class DefaultBarnehagelisteControllerEnhetTest {
     private val barnehagelisteController =
         DefaultBarnehagelisteController(mockBarnehagelisteService, mockGodkjenteLeverandør)
 
+    @BeforeEach
+    fun setUp() {
+        unmockkAll()
+        mockkStatic("no.nav.familie.ks.barnehagelister.interceptor.RequestParserKt")
+    }
+
     @Nested
     inner class StatusTest {
-        @BeforeEach
-        fun beforeEach() {
-            unmockkAll()
-            mockkStatic("no.nav.familie.ks.barnehagelister.interceptor.RequestParserKt")
-        }
-
         @Test
         fun `Skal returnere response entity not found dersom forespurt liste ikke finnes`() {
             // Arrange
