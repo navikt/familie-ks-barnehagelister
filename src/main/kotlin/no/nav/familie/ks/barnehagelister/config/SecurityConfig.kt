@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.AccessDeniedException
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -28,13 +27,15 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
 @Profile("!dev")
 class SecurityConfig(
     private val maskinportenAuthenticationManager: MaskinportenAuthenticationManager,
 ) {
     @Bean
-    open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun securityFilterChain(
+        http: HttpSecurity,
+        @Value("\${BARNEHAGELISTER_SCOPE}") scope: String,
+    ): SecurityFilterChain {
         http {
             authorizeHttpRequests {
                 authorize("/internal/**", permitAll)
@@ -42,7 +43,7 @@ class SecurityConfig(
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
-                authorize(anyRequest, authenticated)
+                authorize(anyRequest, hasAuthority("SCOPE_$scope"))
             }
             oauth2ResourceServer {
                 jwt {
