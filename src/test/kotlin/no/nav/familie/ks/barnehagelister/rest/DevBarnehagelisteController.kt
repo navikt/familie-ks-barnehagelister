@@ -13,9 +13,12 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
+/**
+ * Controller som ikke krever autentisering. Ment for lokal utvikling der man ikke vil bruke token.
+ */
 @Profile("dev")
 @RestController
-class UnprotectedBarnehagelisteController(
+class DevBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
 ) : BarnehagelisteController {
     override fun mottaBarnehageliste(
