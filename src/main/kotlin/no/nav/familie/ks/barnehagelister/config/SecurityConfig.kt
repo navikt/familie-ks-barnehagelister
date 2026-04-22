@@ -42,8 +42,6 @@ class SecurityConfig(
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
-                authorize("/tables", permitAll)
-                authorize("/testtoken/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer {

@@ -17,7 +17,7 @@ fun HttpServletRequest.hentHeaders() =
         }
     }
 
-fun HttpServletRequest.hentInfoFraToken(): String {
+fun hentInfoFraToken(): String {
     val jwtClaims = hentClaims()
 
     val clientId = jwtClaims?.claims?.get("client_id")
@@ -29,14 +29,14 @@ fun HttpServletRequest.hentInfoFraToken(): String {
     return tokenData
 }
 
-fun HttpServletRequest.hentConsumerId(): String? {
+fun hentConsumerId(): String? {
     val jwtClaims = hentClaims()
 
     val consumerId = jwtClaims?.hentNestedClaim("consumer")?.get("ID")?.toString()
     return consumerId
 }
 
-fun HttpServletRequest.hentSupplierId(): String? {
+fun hentSupplierId(): String? {
     val jwtClaims = hentClaims()
 
     val organisasjonsNummer =
@@ -48,7 +48,7 @@ fun HttpServletRequest.hentSupplierId(): String? {
     return organisasjonsNummer
 }
 
-fun HttpServletRequest.hentClaims(): Jwt? {
+fun hentClaims(): Jwt? {
     val authentication = SecurityContextHolder.getContext()?.authentication
     return (authentication as? JwtAuthenticationToken)?.token
 }
