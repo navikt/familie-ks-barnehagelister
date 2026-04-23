@@ -15,5 +15,5 @@ AZURE_OPENID_CONFIG_ISSUER: dummy
 
 godkjente-leverandorer:
   leverandorer:
-    - orgno: "310028142"
+    - orgno: "123456789"
       navn: "HUMAN DEDIKERT ISBJØRN SA"

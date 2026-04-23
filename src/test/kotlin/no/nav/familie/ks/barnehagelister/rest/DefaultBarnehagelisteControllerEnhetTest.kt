@@ -16,6 +16,7 @@ import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfei
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -35,6 +36,11 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun setUp() {
         unmockkAll()
         mockkStatic("no.nav.familie.ks.barnehagelister.interceptor.RequestParserKt")
+    }
+
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Nested

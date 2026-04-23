@@ -8,14 +8,12 @@ import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
-@Profile("!dev")
 @RestController
 class DefaultBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
