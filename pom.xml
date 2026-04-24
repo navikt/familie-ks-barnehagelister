@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260331095424_89d92d2</prosessering.version>
+        <prosessering.version>2.20260420122910_8bfca04</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
@@ -24,9 +24,9 @@
         <kotlin.version>2.3.20</kotlin.version>
         <kontrakter.version>4.0_20260326091316_bc0649b</kontrakter.version>
         <felles.version>4.20260315040340_f2acdc7</felles.version>
-        <token-validation-spring.version>6.0.5</token-validation-spring.version>
         <springdoc.version>3.0.3</springdoc.version>
         <tomcat.version>11.0.21</tomcat.version>
+        <mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
@@ -114,28 +114,21 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>token-validation-spring</artifactId>
-            <version>${token-validation-spring.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>
-            <artifactId>token-client-core</artifactId>
-            <version>${token-validation-spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>token-client-spring</artifactId>
-            <version>${token-validation-spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>token-validation-spring-test</artifactId>
-            <version>${token-validation-spring.version}</version>
+            <artifactId>mock-oauth2-server</artifactId>
+            <version>${mock-oauth2-server.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
@@ -158,6 +151,11 @@
         <dependency>
             <groupId>no.nav.familie</groupId>
             <artifactId>prosessering-core</artifactId>
+            <version>${prosessering.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.familie</groupId>
+            <artifactId>prosessering-web-spring-security</artifactId>
             <version>${prosessering.version}</version>
         </dependency>
 
@@ -190,11 +188,6 @@
         </dependency>
 
         <!-- swagger -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-common</artifactId>
-            <version>${springdoc.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

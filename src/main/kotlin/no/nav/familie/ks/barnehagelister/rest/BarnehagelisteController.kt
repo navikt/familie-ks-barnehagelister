@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
-import no.nav.security.token.support.core.api.ProtectedWithClaims
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.UUID
 
-@ProtectedWithClaims(
-    issuer = "maskinporten",
-    claimMap = ["scope=nav:familie/v1/kontantstotte/barnehagelister"],
-)
 @RequestMapping("/api/kindergartenlists")
 interface BarnehagelisteController {
     @Operation(summary = "Send in kindergarten list", operationId = "receiveKindergartenList")

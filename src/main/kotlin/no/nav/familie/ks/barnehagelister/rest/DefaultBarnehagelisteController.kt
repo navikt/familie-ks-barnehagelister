@@ -8,14 +8,12 @@ import no.nav.familie.ks.barnehagelister.rest.dto.FormV1RequestDto
 import no.nav.familie.ks.barnehagelister.rest.dto.KindergartenlistResponse
 import no.nav.familie.ks.barnehagelister.rest.dto.toResponseEntity
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
-import org.springframework.context.annotation.Profile
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
-@Profile("!dev")
 @RestController
 class DefaultBarnehagelisteController(
     private val barnehagelisteService: BarnehagelisteService,
@@ -29,8 +27,8 @@ class DefaultBarnehagelisteController(
         validerGodkjentLeverandør(request)
         bindingResult.kastValideringsfeilHvisValideringFeiler()
 
-        val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
-        val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
+        val leverandørOrgNr = hentSupplierId() ?: error("No supplier in request.")
+        val kommuneOrgNr = hentConsumerId() ?: error("No municipality in request.")
 
         val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(formV1RequestDto, leverandørOrgNr, kommuneOrgNr)
@@ -50,8 +48,8 @@ class DefaultBarnehagelisteController(
         val barnehagelisteMedValideringsfeil = barnehagelisteService.hentBarnehagelisteMedValideringsfeil(id)
         val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste
 
-        val leverandørOrgNr = request.hentSupplierId() ?: error("No supplier in request.")
-        val kommuneOrgNr = request.hentConsumerId() ?: error("No municipality in request.")
+        val leverandørOrgNr = hentSupplierId() ?: error("No supplier in request.")
+        val kommuneOrgNr = hentConsumerId() ?: error("No municipality in request.")
 
         return when {
             barnehageliste != null && barnehageliste.leverandorOrgNr != leverandørOrgNr -> {
@@ -76,7 +74,7 @@ class DefaultBarnehagelisteController(
     override fun ping(): String = "\"OK\""
 
     private fun validerGodkjentLeverandør(request: HttpServletRequest) {
-        val supplierId = request.hentSupplierId() ?: throw UgyldigKommuneEllerLeverandørFeil("No supplier in request.")
+        val supplierId = hentSupplierId() ?: throw UgyldigKommuneEllerLeverandørFeil("No supplier in request.")
 
         if (supplierId !in godkjenteLeverandører.leverandorer.map { it.orgno }) {
             throw UgyldigKommuneEllerLeverandørFeil("Supplier with orgno ${supplierId.substringAfter(":")} is not a known supplier.")
