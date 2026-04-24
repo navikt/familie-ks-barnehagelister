@@ -7,13 +7,6 @@ Swagger:
 
 ### Database
 
-#### Embedded database
-
-Bruker du `DevLauncherPostgres`, kan du kjøre opp en embedded database. Da må du sette `--dbcontainer`
-under `Edit Configurations -> VM Options`
-
-#### Database i egen container
-
 Postgres-databasen kan settes opp slik:
 
 1. Lag en dockercontainer:
