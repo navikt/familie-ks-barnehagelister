@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260420102701_2be9f5d</prosessering.version>
+        <prosessering.version>2.20260420122910_8bfca04</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
@@ -25,6 +25,7 @@
         <kontrakter.version>4.0_20260326091316_bc0649b</kontrakter.version>
         <felles.version>4.20260315040340_f2acdc7</felles.version>
         <springdoc.version>3.0.3</springdoc.version>
+        <tomcat.version>11.0.21</tomcat.version>
         <mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
     </properties>
 
