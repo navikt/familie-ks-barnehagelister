@@ -25,4 +25,5 @@ replay_pid*
 
 .env
 .idea
+.sisyphus
 target

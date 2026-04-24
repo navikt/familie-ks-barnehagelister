@@ -32,7 +32,7 @@ import java.nio.charset.Charset
 @ExtendWith(SpringExtension::class)
 @ActiveProfiles("dev")
 @ContextConfiguration(initializers = [DbContainerInitializer::class])
-class DevBarnehagelisteControllerIntegrasjonTest {
+class BarnehagelisteControllerIntegrasjonTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
