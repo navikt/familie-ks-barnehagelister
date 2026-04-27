@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260331095424_89d92d2</prosessering.version>
+        <prosessering.version>2.20260420122910_8bfca04</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
@@ -158,6 +158,11 @@
         <dependency>
             <groupId>no.nav.familie</groupId>
             <artifactId>prosessering-core</artifactId>
+            <version>${prosessering.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.familie</groupId>
+            <artifactId>prosessering-web-nav-token-support</artifactId>
             <version>${prosessering.version}</version>
         </dependency>
 
