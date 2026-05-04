@@ -19,7 +19,7 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
         response: HttpServletResponse,
         handler: Any,
     ): Boolean {
-        val infoFraToken = request.hentInfoFraToken()
+        val infoFraToken = hentInfoFraToken()
 
         if (request.requestURI.contains("/ping")) {
             LOG.debug("[pre-handle] $infoFraToken - ping")
@@ -43,10 +43,10 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
         val headers = request.hentHeaders()
         secureLogger.info("Request med ${request.requestURI} ${response.status} $headers")
 
-        val infoFraToken = request.hentInfoFraToken()
+        val infoFraToken = hentInfoFraToken()
 
         val melding = "[post-handle] $infoFraToken - ${request.method}: ${request.requestURI} (${response.status})"
-        val orgNo = request.hentSupplierId() ?: request.hentConsumerId() ?: "MANGLER"
+        val orgNo = hentSupplierId() ?: hentConsumerId() ?: "MANGLER"
 
         if (HttpStatus.valueOf(response.status).isError) {
             LOG.warn(melding)

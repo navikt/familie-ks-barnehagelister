@@ -3,6 +3,7 @@ package no.nav.familie.ks.barnehagelister.rest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
@@ -15,6 +16,8 @@ import no.nav.familie.ks.barnehagelister.service.BarnehagelisteMedValideringsfei
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
 import no.nav.familie.ks.barnehagelister.testdata.FormV1RequestDtoTestData
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,19 +32,28 @@ class DefaultBarnehagelisteControllerEnhetTest {
     private val barnehagelisteController =
         DefaultBarnehagelisteController(mockBarnehagelisteService, mockGodkjenteLeverandør)
 
+    @BeforeEach
+    fun setUp() {
+        unmockkAll()
+        mockkStatic("no.nav.familie.ks.barnehagelister.interceptor.RequestParserKt")
+    }
+
+    @AfterEach
+    fun tearDown() {
+        unmockkAll()
+    }
+
     @Nested
     inner class StatusTest {
         @Test
         fun `Skal returnere response entity not found dersom forespurt liste ikke finnes`() {
             // Arrange
             val mocketRequest = mockk<HttpServletRequest>()
-            mockkStatic(HttpServletRequest::hentConsumerId)
-            mockkStatic(HttpServletRequest::hentSupplierId)
 
             every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
                 BarnehagelisteMedValideringsfeil(null, emptyList())
-            every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
-            every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
+            every { hentConsumerId() } returns "testKommune"
+            every { hentSupplierId() } returns "testLeverandørOrgNr"
             every { mockGodkjenteLeverandør.leverandorer } returns
                 listOf(
                     Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
@@ -58,13 +70,11 @@ class DefaultBarnehagelisteControllerEnhetTest {
         fun `Skal kaste feil dersom det ikke er en godkjent leverandør som forsøker å hente status`() {
             // Arrange
             val mocketRequest = mockk<HttpServletRequest>()
-            mockkStatic(HttpServletRequest::hentConsumerId)
-            mockkStatic(HttpServletRequest::hentSupplierId)
 
             every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
                 BarnehagelisteMedValideringsfeil(null, emptyList())
-            every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
-            every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
+            every { hentConsumerId() } returns "testKommune"
+            every { hentSupplierId() } returns "testLeverandørOrgNr2"
             every { mockGodkjenteLeverandør.leverandorer } returns
                 listOf(
                     Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
@@ -84,8 +94,6 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun `Skal returnere 200 OK med liste med warnings hvis det er BarnehagelisteValideringsfeil`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
-        mockkStatic(HttpServletRequest::hentConsumerId)
-        mockkStatic(HttpServletRequest::hentSupplierId)
 
         val skjema = FormV1RequestDtoTestData.lagRequest()
         val lagretBarnehageliste =
@@ -115,8 +123,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
                     lagretBarnehagelisteValideringsfeil,
                 ),
             )
-        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
-        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
+        every { hentConsumerId() } returns "testKommuneOrgNr"
+        every { hentSupplierId() } returns "testLeverandørOrgNr"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
                 Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
@@ -146,8 +154,6 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun `Skal kaste feil dersom det ikke er samme leverandør som forsøker å hente status på innsendt barnehageliste`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
-        mockkStatic(HttpServletRequest::hentConsumerId)
-        mockkStatic(HttpServletRequest::hentSupplierId)
 
         val lagretBarnehageliste =
             Barnehageliste(
@@ -160,8 +166,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
 
         every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
             BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
-        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
-        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr2"
+        every { hentConsumerId() } returns "testKommuneOrgNr"
+        every { hentSupplierId() } returns "testLeverandørOrgNr2"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
                 Leverandør("testLeverandørOrgNr2", "testLeverandørNavn"),
@@ -180,8 +186,6 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun `Skal kaste feil dersom det ikke er samme kommune som forsøker å hente status på innsendt barnehageliste`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
-        mockkStatic(HttpServletRequest::hentConsumerId)
-        mockkStatic(HttpServletRequest::hentSupplierId)
 
         val lagretBarnehageliste =
             Barnehageliste(
@@ -194,8 +198,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
 
         every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
             BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
-        every { any<HttpServletRequest>().hentConsumerId() } returns "12345"
-        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
+        every { hentConsumerId() } returns "12345"
+        every { hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
                 Leverandør("testLeverandørOrgNr3", "testLeverandørNavn"),
@@ -214,8 +218,6 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun `Skal returnere status dersom barnehageliste forsøkes hent av samme kommune og leverandør`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
-        mockkStatic(HttpServletRequest::hentConsumerId)
-        mockkStatic(HttpServletRequest::hentSupplierId)
 
         val uuid = UUID.randomUUID()
         val lagretBarnehageliste =
@@ -229,8 +231,8 @@ class DefaultBarnehagelisteControllerEnhetTest {
 
         every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
             BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
-        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommuneOrgNr"
-        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr3"
+        every { hentConsumerId() } returns "testKommuneOrgNr"
+        every { hentSupplierId() } returns "testLeverandørOrgNr3"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
                 Leverandør("testLeverandørOrgNr3", "testLeverandørNavn"),
@@ -247,13 +249,11 @@ class DefaultBarnehagelisteControllerEnhetTest {
     fun `Skal returnere valideringfeil hvis det finnes valideringsfeil i databasen`() {
         // Arrange
         val mocketRequest = mockk<HttpServletRequest>()
-        mockkStatic(HttpServletRequest::hentConsumerId)
-        mockkStatic(HttpServletRequest::hentSupplierId)
 
         every { mockBarnehagelisteService.hentBarnehagelisteMedValideringsfeil(any()) } returns
             BarnehagelisteMedValideringsfeil(null, emptyList())
-        every { any<HttpServletRequest>().hentConsumerId() } returns "testKommune"
-        every { any<HttpServletRequest>().hentSupplierId() } returns "testLeverandørOrgNr"
+        every { hentConsumerId() } returns "testKommune"
+        every { hentSupplierId() } returns "testLeverandørOrgNr"
         every { mockGodkjenteLeverandør.leverandorer } returns
             listOf(
                 Leverandør("testLeverandørOrgNr", "testLeverandørNavn"),
