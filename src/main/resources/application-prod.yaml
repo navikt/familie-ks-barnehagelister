@@ -1,3 +1,10 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${MASKINPORTEN_ISSUER}
+
 godkjente-leverandorer:
   leverandorer:
     - orgno: "982410339"

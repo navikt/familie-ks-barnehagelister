@@ -13,25 +13,25 @@ import java.time.LocalDate
             " three different entries.",
 )
 data class ChildInformationRequestDto(
-    @Schema(
+    @field:Schema(
         description = "Number of hours per week it is agreed upon that the child will stay in the kindergarten during this period of time.",
         example = "37.5",
     )
     val agreedHoursInKindergarten: Double,
-    @Schema(
+    @field:Schema(
         description = "Start date for this period in the kindergarten.",
     )
     val startDate: LocalDate,
-    @Schema(
+    @field:Schema(
         description = "End date for this period in the kindergarten, null if it is the current period/the end date is not known.",
     )
     val endDate: LocalDate?,
-    @Schema(
+    @field:Schema(
         description = "Information about the child",
     )
     @field:Valid
     val child: PersonRequestDto,
-    @Schema(
+    @field:Schema(
         description = "The person(s) the child lives with; if the child lives in an institution, the field is empty",
     )
     @field:Valid

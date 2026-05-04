@@ -2,7 +2,6 @@ application.name: familie-ks-barnehagelister
 
 server.port: 8096
 
-
 spring:
   web:
     resources:
@@ -22,6 +21,7 @@ spring:
       max-lifetime: 900000
       minimum-idle: 1
       data-source-properties.stringtype: unspecified # Nødvendig for å kunde sende en String til et json-felt i PostgresSql
+
 management:
   endpoint.health:
     show-details: always
@@ -37,27 +37,6 @@ management:
       export:
         enabled: true
 
-no.nav.security.jwt:
-  issuer:
-    maskinporten:
-      discoveryurl: ${MASKINPORTEN_WELL_KNOWN_URL}
-      validation:
-        optional_claims: sub,aud,nbf
-    azuread:
-      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
-      accepted_audience: ${AZURE_APP_CLIENT_ID}
-#  client:
-#    registration:
-#      ks-barnehagelister-clientcredentials:
-#        resource-url: ${BA_SAK_API_URL}
-#        token-endpoint-url: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-#        grant-type: client_credentials
-#        scope: ${BA_SAK_SCOPE}
-#        authentication:
-#          client-id: ${AZURE_APP_CLIENT_ID}
-#          client-secret: ${AZURE_APP_CLIENT_SECRET}
-#          client-auth-method: client_secret_basic
-
 springdoc:
   swagger-ui:
     disable-swagger-default-url: true
@@ -72,3 +51,5 @@ prosessering:
   delete:
     after:
       weeks: 4
+
+BARNEHAGELISTER_SCOPE: nav:familie/v1/kontantstotte/barnehagelister
