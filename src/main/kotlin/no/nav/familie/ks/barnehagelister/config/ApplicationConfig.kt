@@ -3,7 +3,7 @@ package no.nav.familie.ks.barnehagelister.config
 import no.nav.familie.kontrakter.felles.jsonMapperBuilder
 import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
-import no.nav.familie.restklient.interceptor.ConsumerIdClientInterceptor
+import no.nav.familie.log.interceptor.ConsumerIdClientInterceptor
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
