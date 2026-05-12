@@ -26,7 +26,7 @@
         <felles.version>4.20260508110757_96596c8</felles.version>
         <springdoc.version>3.0.3</springdoc.version>
         <tomcat.version>11.0.21</tomcat.version>
-        <mock-oauth2-server.version>3.0.1</mock-oauth2-server.version>
+        <mock-oauth2-server.version>3.0.3</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
