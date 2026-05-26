@@ -33,6 +33,7 @@ jobs:
             login.microsoftonline.com:443
             maven.pkg.github.com:443
             objects.githubusercontent.com:443
+            production.cloudfront.docker.com:443
             production.cloudflare.docker.com:443
             raw.githubusercontent.com:443
             timestamp.sigstore.dev:443
