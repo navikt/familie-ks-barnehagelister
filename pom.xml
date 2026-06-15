@@ -15,14 +15,14 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260526102747_ed05f71</prosessering.version>
+        <prosessering.version>2.20260615101707_c105ab0</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
-        <kotlin.version>2.3.21</kotlin.version>
-        <kontrakter.version>4.0_20260601160326_f2fb0e9</kontrakter.version>
+        <kotlin.version>2.4.0</kotlin.version>
+        <kontrakter.version>4.0_20260611084408_a47ed94</kontrakter.version>
         <felles.version>4.20260529121328_2754f7c</felles.version>
         <springdoc.version>3.0.3</springdoc.version>
         <tomcat.version>11.0.21</tomcat.version>
