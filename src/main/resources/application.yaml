@@ -39,7 +39,9 @@ management:
 
 springdoc:
   swagger-ui:
-    disable-swagger-default-url: true
+    enabled: true
+  api-docs:
+    enabled: true
 
 prosessering:
   rolle: "87190cf3-b278-457d-8ab7-1a5c55a9edd7" # Gruppen teamfamilie
