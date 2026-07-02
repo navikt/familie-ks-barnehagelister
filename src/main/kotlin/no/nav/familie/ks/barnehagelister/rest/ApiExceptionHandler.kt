@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.rest
 
 import jakarta.servlet.http.HttpServletRequest
+import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.familie.ks.barnehagelister.config.secureLogger
 import no.nav.familie.ks.barnehagelister.rest.ProblemDetailUtils.toProblemDetailMedCallIdOgErrors
 import org.slf4j.Logger
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException
 import org.springframework.web.servlet.NoHandlerFoundException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
@@ -141,5 +143,11 @@ class ApiExceptionHandler {
     fun handlAsyncRequestNotUsableException(e: AsyncRequestNotUsableException): ResponseEntity<Any> {
         logger.info("En AsyncRequestNotUsableException har oppstått, som skjer når en async request blir avbrutt", e)
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+    }
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNoResourceFoundException(request: HttpServletRequest): ResponseEntity<Ressurs<Nothing>> {
+        logger.info("Fant ikke ressurs for request=${request.requestURI}")
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
     }
 }
