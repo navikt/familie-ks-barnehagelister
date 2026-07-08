@@ -82,8 +82,8 @@ spec:
       value: "-Xmx1g"
   gcp: # Database
     sqlInstances:
-      - type: POSTGRES_17 # IF This is changed, all data will be lost. Read on nais.io how to upgrade
-        tier: db-custom-1-3840
+      - type: POSTGRES_17 # Read on nais.io how to upgrade
+        tier: db-f1-micro
         name: familie-ks-barnehagelister-17
         autoBackupHour: 2
         diskAutoresize: true
