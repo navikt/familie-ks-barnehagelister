@@ -15,15 +15,15 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260622101837_623782e</prosessering.version>
+        <prosessering.version>2.20260713101404_6072da6</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
-        <kotlin.version>2.3.21</kotlin.version>
-        <kontrakter.version>4.0_20260622103258_a3e0997</kontrakter.version>
-        <felles.version>4.20260622095330_affbfcf</felles.version>
+        <kotlin.version>2.4.10</kotlin.version>
+        <kontrakter.version>4.0_20260702124405_ce34af2</kontrakter.version>
+        <felles.version>4.20260714100416_2aeb670</felles.version>
         <springdoc.version>3.0.3</springdoc.version>
         <mock-oauth2-server.version>5.0.2</mock-oauth2-server.version>
     </properties>
@@ -193,7 +193,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.11</version>
+            <version>42.7.13</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
