@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.task
 
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.EtterprosesseringfeilType
@@ -28,13 +29,15 @@ class PeriodeOverlappValideringTask(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
     private val taskService: TaskService,
+    private val barnehagebarnMetrikker: BarnehagebarnMetrikker,
 ) : AsyncTaskStep {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     override fun doTask(task: Task) {
         val barnehagelisteId = UUID.fromString(task.payload)
         val barnehageliste =
-            barnehagelisteRepository.findByIdOrNull(barnehagelisteId) ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
+            barnehagelisteRepository.findByIdOrNull(barnehagelisteId)
+                ?: error("Fant ikke barnehageliste med id $barnehagelisteId")
 
         val json = barnehageliste.rawJson
 
@@ -61,15 +64,24 @@ class PeriodeOverlappValideringTask(
             }
         if (alleValideringsfeil.isNotEmpty()) {
             barnehagelisteValideringsfeilRepository.insertAll(alleValideringsfeil)
+            barnehagebarnMetrikker.tellValideringsfeil(
+                type = EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST.name,
+                antall = alleValideringsfeil.size,
+            )
         }
     }
 
     override fun onCompletion(task: Task) {
         val barnehagelisteId = UUID.fromString(task.payload)
         val barnehageliste = barnehagelisteRepository.finnById(barnehagelisteId)
-        LesBarnehagelisteTask.opprettTask(UUID.fromString(task.payload), barnehageliste.leverandorOrgNr, barnehageliste.kommuneOrgNr).also {
-            taskService.save(it)
-        }
+        LesBarnehagelisteTask
+            .opprettTask(
+                UUID.fromString(task.payload),
+                barnehageliste.leverandorOrgNr,
+                barnehageliste.kommuneOrgNr,
+            ).also {
+                taskService.save(it)
+            }
     }
 
     companion object {
