@@ -1,6 +1,7 @@
 package no.nav.familie.ks.barnehagelister.task
 
 import no.nav.familie.ks.barnehagelister.kafka.IBarnehagebarnKafkaProducer
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
@@ -25,6 +26,7 @@ class SendBarnehagebarnTilKsTask(
     private val barnehagebarnRepository: BarnehagebarnRepository,
     private val barnehagebarnKafkaProducer: IBarnehagebarnKafkaProducer,
     private val barnehagelisteService: BarnehagelisteService,
+    private val barnehagebarnMetrikker: BarnehagebarnMetrikker,
 ) : AsyncTaskStep {
     override fun doTask(task: Task) {
         val barnehagebarnId = UUID.fromString(task.payload)
@@ -42,6 +44,8 @@ class SendBarnehagebarnTilKsTask(
         ) { "Barnehageliste med id ${barnehageliste.id} er ikke ferdig prossesert" }
 
         barnehagebarnKafkaProducer.sendBarnehageBarn(barnehagebarn)
+
+        barnehagebarnMetrikker.tellSendtTilKs(barnehagebarn.kommuneNr)
     }
 
     companion object {

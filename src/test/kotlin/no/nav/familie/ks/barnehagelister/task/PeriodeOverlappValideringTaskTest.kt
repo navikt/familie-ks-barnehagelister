@@ -1,11 +1,13 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -24,11 +26,15 @@ class PeriodeOverlappValideringTaskTest {
     val mockBarnehagelisteValideringsfeilRepository = mockk<BarnehagelisteValideringsfeilRepository>()
     val taskService = mockk<TaskService>()
 
+    val meterRegistry = SimpleMeterRegistry()
+    val barnehagebarnMetrikker = BarnehagebarnMetrikker(meterRegistry)
+
     val periodeOverlappValideringTask =
         PeriodeOverlappValideringTask(
             barnehagelisteRepository = mockBarnehagelisteRepository,
             barnehagelisteValideringsfeilRepository = mockBarnehagelisteValideringsfeilRepository,
             taskService = taskService,
+            barnehagebarnMetrikker = barnehagebarnMetrikker,
         )
 
     val barnehagelisteId = UUID.randomUUID()
@@ -109,6 +115,13 @@ class PeriodeOverlappValideringTaskTest {
         assertThat(slot.captured.first().ident).isEqualTo(lagBarn().socialSecurityNumber)
         assertThat(slot.captured.first().etterprosesseringfeiltype).isEqualTo(EtterprosesseringfeilType.OVERLAPPING_PERIOD_WITHIN_SAME_LIST)
         assertThat(slot.captured.first().feilinfo).isEqualTo("Overlapping period within the same list for children.")
+
+        assertThat(
+            meterRegistry
+                .get("barnehageliste.valideringsfeil")
+                .counter()
+                .count(),
+        ).isEqualTo(1.0)
     }
 
     @Test
