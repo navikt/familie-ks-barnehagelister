@@ -11,21 +11,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1</version>
     </parent>
 
     <properties>
-        <prosessering.version>2.20260727132135_b810544</prosessering.version>
+        <prosessering.version>2.20260817115650_f13f507</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
         <kotlin.version>2.4.10</kotlin.version>
-        <kontrakter.version>4.0_20260730124851_08988e0</kontrakter.version>
-        <felles.version>4.20260807140555_998c828</felles.version>
+        <kontrakter.version>4.0_20260821102510_33ea755</kontrakter.version>
+        <felles.version>4.20260818093920_16ad74a</felles.version>
         <springdoc.version>3.1.0</springdoc.version>
-        <mock-oauth2-server.version>6.0.0</mock-oauth2-server.version>
+        <mock-oauth2-server.version>6.0.2</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>4.1.0</version>
+                <version>4.1.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -167,7 +167,7 @@
         <dependency> <!-- Overstyrer versjon default i spring pga sikkerhetshull https://security.snyk.io/package/maven/org.yaml:snakeyaml -->
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>io.mockk</groupId>
