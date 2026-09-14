@@ -51,14 +51,18 @@ class BarnehagebarnMetrikker(
         ).increment(antall.toDouble())
     }
 
-    fun tellSendtTilKs(kommuneNr: String) = teller(BARN_SENDT_TIL_KS, "kommune_nr" to kommuneNr).increment()
+    fun tellSendtTilKs(kommuneNr: String) =
+        teller(
+            BARN_SENDT_TIL_KS,
+            "kommune_nr" to kommuneNr,
+        ).increment()
 
     private fun teller(
         navn: String,
         vararg tags: Pair<String, String>,
     ): Counter {
-        val noekkel = listOf(navn) + tags.flatMap { listOf(it.first, it.second) }
-        return tellere.computeIfAbsent(noekkel) {
+        val nøkkel = listOf(navn) + tags.flatMap { listOf(it.first, it.second) }
+        return tellere.computeIfAbsent(nøkkel) {
             Counter
                 .builder(navn)
                 .tags(tags.map { Tag.of(it.first, it.second) })

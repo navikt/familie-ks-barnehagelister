@@ -46,7 +46,7 @@ class PeriodeOverlappValideringTask(
         val alleValideringsfeil =
             listaGruppertPåBarn.mapNotNull { (barn, listeMedBarnehagebarn) ->
                 try {
-                    listeMedBarnehagebarn.groupBy { it.organisasjonsnummer }.forEach { _, barnISammeBarnehage ->
+                    listeMedBarnehagebarn.groupBy { it.organisasjonsnummer }.forEach { (_, barnISammeBarnehage) ->
                         barnISammeBarnehage.validerIngenOverlapp()
                     }
                     null
