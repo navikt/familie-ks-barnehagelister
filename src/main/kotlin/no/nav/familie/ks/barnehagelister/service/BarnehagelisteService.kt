@@ -2,6 +2,8 @@ package no.nav.familie.ks.barnehagelister.service
 
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.domene.BarnehagelisteValideringsfeil
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
+import no.nav.familie.ks.barnehagelister.metrics.MottattListeResultat
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -19,6 +21,7 @@ class BarnehagelisteService(
     private val barnehagelisteRepository: BarnehagelisteRepository,
     private val taskService: TaskService,
     private val barnehagelisteValideringsfeilRepository: BarnehagelisteValideringsfeilRepository,
+    private val barnehagebarnMetrikker: BarnehagebarnMetrikker,
 ) {
     private val logger = LoggerFactory.getLogger(BarnehagelisteService::class.java)
 
@@ -31,6 +34,7 @@ class BarnehagelisteService(
         val eksisterendeBarnehageliste = eksisterendeBarnehagelisteMedValideringsfeil.barnehageliste
         if (eksisterendeBarnehageliste != null) {
             logger.info("Barnehagelister med id ${skjemaV1.id} har allerede blitt mottatt tidligere.")
+            barnehagebarnMetrikker.tellMottattListe(leverandørOrgNr, MottattListeResultat.DUPLIKAT)
             return BarnehagelisteMedValideringsfeil(
                 barnehageliste = eksisterendeBarnehageliste,
                 valideringsfeil =
@@ -53,6 +57,8 @@ class BarnehagelisteService(
                         kommuneOrgNr = kommuneOrgNr,
                     ),
                 )
+
+        barnehagebarnMetrikker.tellMottattListe(leverandørOrgNr, MottattListeResultat.NY)
 
         val opprettetTask =
             PeriodeOverlappValideringTask.opprettTask(

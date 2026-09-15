@@ -1,5 +1,6 @@
 package no.nav.familie.ks.barnehagelister.task
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
@@ -8,6 +9,7 @@ import io.mockk.runs
 import io.mockk.verify
 import no.nav.familie.ks.barnehagelister.domene.Barnehageliste
 import no.nav.familie.ks.barnehagelister.kafka.DummyBarnehagebarnKafkaProducer
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.repository.BarnehagebarnRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
 import no.nav.familie.ks.barnehagelister.service.BarnehagelisteService
@@ -24,11 +26,15 @@ class SendBarnehagebarnTilKsTaskTest {
     val barnehagebarnKafkaProducer = mockk<DummyBarnehagebarnKafkaProducer>()
     val barnehagebarnRepository = mockk<BarnehagebarnRepository>()
 
+    val meterRegistry = SimpleMeterRegistry()
+    val barnehagebarnMetrikker = BarnehagebarnMetrikker(meterRegistry)
+
     val sendBarnehagebarnTilKsTask =
         SendBarnehagebarnTilKsTask(
             barnehagebarnRepository = barnehagebarnRepository,
             barnehagelisteService = barnehagelisteService,
             barnehagebarnKafkaProducer = barnehagebarnKafkaProducer,
+            barnehagebarnMetrikker = barnehagebarnMetrikker,
         )
 
     val barnehagelisteId = UUID.randomUUID()
@@ -68,6 +74,11 @@ class SendBarnehagebarnTilKsTaskTest {
 
         // Assert
         verify(exactly = 1) { barnehagebarnKafkaProducer.sendBarnehageBarn(barnehagebarn) }
+        assertThat(
+            meterRegistry
+                .counter(BarnehagebarnMetrikker.BARN_SENDT_TIL_KS, "kommune_nr", barnehagebarn.kommuneNr)
+                .count(),
+        ).isEqualTo(1.0)
     }
 
     @Test

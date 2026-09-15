@@ -3,6 +3,9 @@ package no.nav.familie.ks.barnehagelister.rest
 import jakarta.servlet.http.HttpServletRequest
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.familie.ks.barnehagelister.config.secureLogger
+import no.nav.familie.ks.barnehagelister.interceptor.hentSupplierId
+import no.nav.familie.ks.barnehagelister.metrics.AvvisningsAarsak
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.rest.ProblemDetailUtils.toProblemDetailMedCallIdOgErrors
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,7 +24,9 @@ import tools.jackson.module.kotlin.KotlinInvalidNullException
 import java.net.URI
 
 @RestControllerAdvice
-class ApiExceptionHandler {
+class ApiExceptionHandler(
+    private val barnehagebarnMetrikker: BarnehagebarnMetrikker,
+) {
     private val logger: Logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
 
     @ExceptionHandler(Exception::class)
@@ -90,6 +95,16 @@ class ApiExceptionHandler {
         ],
     )
     fun onValideringsFeil(e: Exception): ProblemDetailMedCallIdOgErrors {
+        barnehagebarnMetrikker.tellAvvistListe(
+            leverandorOrgNr = hentSupplierId(),
+            aarsak =
+                if (e is HttpMessageNotReadableException) {
+                    AvvisningsAarsak.JSON_PARSING
+                } else {
+                    AvvisningsAarsak.FELT_VALIDERING
+                },
+        )
+
         val message =
             if (e.cause is KotlinInvalidNullException) {
                 val cause = e.cause as KotlinInvalidNullException
@@ -131,6 +146,10 @@ class ApiExceptionHandler {
                     )
             }.toProblemDetailMedCallIdOgErrors()
             .apply {
+                barnehagebarnMetrikker.tellAvvistListe(
+                    leverandorOrgNr = hentSupplierId(),
+                    aarsak = AvvisningsAarsak.UGYLDIG_LEVERANDOR_ELLER_KOMMUNE,
+                )
                 logger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId")
                 secureLogger.warn("Kalte applikasjonen med en ugyldig kommune eller leverandør. callId: $callId", e)
             }

@@ -1,8 +1,10 @@
 package no.nav.familie.ks.barnehagelister.domene
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.familie.ks.barnehagelister.metrics.BarnehagebarnMetrikker
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteRepository
 import no.nav.familie.ks.barnehagelister.repository.BarnehagelisteValideringsfeilRepository
 import no.nav.familie.ks.barnehagelister.rest.dto.BarnehagelisteStatus
@@ -20,11 +22,15 @@ class BarnehagelisteServiceTest {
     private val mockBarnehagelisteValideringsfeilRepository = mockk<BarnehagelisteValideringsfeilRepository>()
     private val mockTaskService = mockk<TaskService>()
 
+    private val meterRegistry = SimpleMeterRegistry()
+    private val barnehagebarnMetrikker = BarnehagebarnMetrikker(meterRegistry)
+
     private val barnehagelisteService =
         BarnehagelisteService(
             barnehagelisteRepository = mockBarnehagelisteRepository,
             taskService = mockTaskService,
             barnehagelisteValideringsfeilRepository = mockBarnehagelisteValideringsfeilRepository,
+            barnehagebarnMetrikker = barnehagebarnMetrikker,
         )
 
     @Nested
