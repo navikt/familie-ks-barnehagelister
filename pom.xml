@@ -21,8 +21,8 @@
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
-        <kotlin.version>2.4.10</kotlin.version>
-        <kontrakter.version>4.0_20260821102510_33ea755</kontrakter.version>
+        <kotlin.version>2.4.20</kotlin.version>
+        <kontrakter.version>4.0_20260918153552_a46909e</kontrakter.version>
         <felles.version>4.20260818093920_16ad74a</felles.version>
         <springdoc.version>3.1.1</springdoc.version>
         <mock-oauth2-server.version>6.0.2</mock-oauth2-server.version>
