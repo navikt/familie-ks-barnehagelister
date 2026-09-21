@@ -1,5 +1,5 @@
 # Final image
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25@sha256:4f0da573eff60b068101b5894040c0793346c4ad41c783960984664bdc22b4ba
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25@sha256:7dcec2bc8f99be5bed1d016c093fd9d19578be540cd633094531f4a169719a44
 COPY --chown=nonroot:nonroot ./target/familie-ks-barnehagelister.jar /app/app.jar
 WORKDIR /app
 
