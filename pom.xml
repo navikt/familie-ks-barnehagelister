@@ -21,9 +21,9 @@
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
-        <kotlin.version>2.4.20</kotlin.version>
-        <kontrakter.version>4.0_20261012093940_a9af98d</kontrakter.version>
-        <felles.version>4.20261007140752_857f456</felles.version>
+        <kotlin.version>2.4.21</kotlin.version>
+        <kontrakter.version>4.0_20261014103049_c61507f</kontrakter.version>
+        <felles.version>4.20261014144209_63578dc</felles.version>
         <springdoc.version>3.1.1</springdoc.version>
         <mock-oauth2-server.version>6.0.4</mock-oauth2-server.version>
     </properties>
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.13</version>
+            <version>42.7.14</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
