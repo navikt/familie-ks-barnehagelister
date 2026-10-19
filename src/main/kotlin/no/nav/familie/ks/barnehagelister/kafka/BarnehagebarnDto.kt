@@ -12,4 +12,5 @@ class BarnehagebarnDto(
     val kommuneNavn: String,
     val kommuneNr: String,
     val barnehagelisteId: UUID,
+    val organisasjonsnummer: String,
 )

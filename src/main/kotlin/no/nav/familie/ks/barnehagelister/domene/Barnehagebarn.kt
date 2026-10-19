@@ -41,4 +41,5 @@ fun Barnehagebarn.tilBarnehagebarnDto(): BarnehagebarnDto =
         kommuneNavn = this.kommuneNavn,
         kommuneNr = this.kommuneNr,
         barnehagelisteId = this.barnehagelisteId,
+        organisasjonsnummer = this.organisasjonsnummer,
     )
