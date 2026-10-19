@@ -25,7 +25,7 @@
         <kontrakter.version>4.0_20261012093940_a9af98d</kontrakter.version>
         <felles.version>4.20261007140752_857f456</felles.version>
         <springdoc.version>3.1.1</springdoc.version>
-        <mock-oauth2-server.version>6.0.4</mock-oauth2-server.version>
+        <mock-oauth2-server.version>6.0.6</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
