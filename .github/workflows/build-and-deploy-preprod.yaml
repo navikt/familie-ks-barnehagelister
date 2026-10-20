@@ -25,6 +25,8 @@ jobs:
             build.shibboleth.net:443
             central.sonatype.com:443
             collector-internet.external.prod-gcp.nav.cloud.nais.io:443
+            collector-internet.nav.cloud.nais.io:443
+            console.nav.cloud.nais.io:443
             deploy.nav.cloud.nais.io:443
             europe-north1-docker.pkg.dev:443
             fulcio.sigstore.dev:443

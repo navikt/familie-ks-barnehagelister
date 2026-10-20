@@ -26,6 +26,8 @@ jobs:
             build.shibboleth.net:443
             central.sonatype.com:443
             collector-internet.external.prod-gcp.nav.cloud.nais.io:443
+            collector-internet.nav.cloud.nais.io:443
+            console.nav.cloud.nais.io:443
             deploy.nav.cloud.nais.io:443
             europe-north1-docker.pkg.dev:443
             fulcio.sigstore.dev:443
@@ -55,6 +57,7 @@ jobs:
             sts.googleapis.com:443
             timestamp.sigstore.dev:443
             tuf-repo-cdn.sigstore.dev:443
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
