@@ -4,7 +4,6 @@ import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.Metrics
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import no.nav.familie.ks.barnehagelister.config.secureLogger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -39,9 +38,6 @@ class MaskinportenTokenLoggingInterceptor : AsyncHandlerInterceptor {
             // Unngå logging av ping kall for å redusere støy i loggene
             return super.afterCompletion(request, response, handler, ex)
         }
-
-        val headers = request.hentHeaders()
-        secureLogger.info("Request med ${request.requestURI} ${response.status} $headers")
 
         val infoFraToken = hentInfoFraToken()
 
