@@ -1,21 +1,8 @@
 package no.nav.familie.ks.barnehagelister.interceptor
 
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
-
-fun HttpServletRequest.hentHeaders() =
-    headerNames?.toList()?.map { headerName ->
-        if (headerName == "Authorization") {
-            Pair(
-                "Authorization",
-                getHeader(headerName)?.substring(0, 15),
-            )
-        } else {
-            Pair(headerName, getHeader(headerName))
-        }
-    }
 
 fun hentInfoFraToken(): String {
     val jwtClaims = hentClaims()
