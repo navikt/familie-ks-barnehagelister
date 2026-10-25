@@ -3,7 +3,6 @@ package no.nav.familie.ks.barnehagelister.config
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import no.nav.familie.ks.barnehagelister.rest.ProblemDetailUtils
-import no.nav.familie.ks.barnehagelister.security.MaskinportenAuthenticationManager
 import no.nav.familie.prosessering.config.ProsesseringInfoProvider
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -28,9 +27,7 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher
 @Configuration
 @EnableWebSecurity
 @Profile("!dev")
-class SecurityConfig(
-    private val maskinportenAuthenticationManager: MaskinportenAuthenticationManager,
-) {
+class SecurityConfig {
     @Bean
     open fun securityFilterChain(
         http: HttpSecurity,
@@ -46,9 +43,7 @@ class SecurityConfig(
                 authorize(anyRequest, hasAuthority("SCOPE_$scope"))
             }
             oauth2ResourceServer {
-                jwt {
-                    authenticationManager = maskinportenAuthenticationManager
-                }
+                jwt { }
                 authenticationEntryPoint = problemDetailAuthenticationEntryPoint()
                 accessDeniedHandler = problemDetailAccessDeniedHandler()
             }

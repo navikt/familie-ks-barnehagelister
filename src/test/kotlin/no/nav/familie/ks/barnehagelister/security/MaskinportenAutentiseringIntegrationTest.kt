@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @AutoConfigureMockMvc
 @ActiveProfiles("dev-med-auth")
 @ContextConfiguration(initializers = [DbContainerInitializer::class])
-class MaskinportenAuthenticationManagerIntegrationTest {
+class MaskinportenAutentiseringIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -90,7 +90,7 @@ class MaskinportenAuthenticationManagerIntegrationTest {
             .perform(
                 get("/api/kindergartenlists/ping")
                     .header(HttpHeaders.AUTHORIZATION, "Bearer ${token.serialize()}"),
-            ).andExpect(status().isUnauthorized)
+            ).andExpect(status().isForbidden)
     }
 
     @Test
