@@ -66,6 +66,16 @@ interface BarnehagelisteController {
                 ],
             ),
             ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
                 responseCode = "500",
                 description = "Internal error",
                 content = [
@@ -114,6 +124,16 @@ interface BarnehagelisteController {
             ApiResponse(
                 responseCode = "401",
                 description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = "application/problem+json",
+                        schema = Schema(implementation = ProblemDetailMedCallIdOgErrors::class),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
                 content = [
                     Content(
                         mediaType = "application/problem+json",
