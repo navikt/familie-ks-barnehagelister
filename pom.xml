@@ -15,15 +15,15 @@
     </parent>
 
     <properties>
-        <prosessering.version>2.20260817115650_f13f507</prosessering.version>
+        <prosessering.version>2.20261026155201_99f3bfc</prosessering.version>
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>25</java.version>
         <jvmTarget>25</jvmTarget>
         <kotlin.version>2.4.21</kotlin.version>
-        <kontrakter.version>4.0_20261014103049_c61507f</kontrakter.version>
-        <felles.version>4.20261014144209_63578dc</felles.version>
+        <kontrakter.version>4.0_20261026123216_8087cb5</kontrakter.version>
+        <felles.version>4.20261026180911_c3ff6d9</felles.version>
         <springdoc.version>3.1.1</springdoc.version>
         <mock-oauth2-server.version>6.1.3</mock-oauth2-server.version>
     </properties>
