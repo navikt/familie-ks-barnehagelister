@@ -44,8 +44,8 @@ contains information such as
  
 
 ### Submission frequency   
-Kindergarten lists should be submitted before or on the 1. of every month. A small period of time is allowed so it is possible
- to correct the data, the last date for submission for the current month is the 10. of said month. A municipality may 
+Kindergarten lists should be submitted before or on the 1st of every month. There is a short period for correcting the data. 
+The deadline for submitting the list for the current month is the 10th. A municipality may 
  have several submissions within the same month to allow for corrections. 
 
 ### API Overview
@@ -123,12 +123,12 @@ whith the `id` of the submitted kindergarten list and verify that you get a `200
 | What if there are changes in allocated hours in the current month, should we then send changes? | Yes, submit a new updated list for the month. |
 | Should we send information about both parents or only one parent, and should we send addresses and parents from the National Registry (Folkeregisteret)? | We assume that kindergartens have information about who the child lives with, which is what the regulation says NAV should receive information about. You can submit information about multiple parents (persons the child lives with), if the kindergarten has information about this. This is especially useful if the parents have different addresses. You do not need to verify that this is correct according to the National Registry, NAV takes responsibility for doing this. |
 | We have some edge cases regarding apartment numbers, e.g. HXXX - here we do not always capture the apartment number. Is that okay? | That is perfectly fine, send the address you (the kindergarten) have as you have it. |
-| Should we send information about institutions where the child lives in an institution? | Children in institutions do not receive cash benefits(kontantstøtte) according to the law. Therefore, we should not have information about this. |
+| Should we send information about institutions where the child lives in an institution? | Children in institutions do not receive cash-for-care benefit(kontantstøtte) according to the law. Therefore, we should not have information about this. |
 | We have children with synthetic / approximate ID numbers, should we send these? | Yes. |
 | How many children are in a kindergarten list? | There is no minimum or maximum number. |
 | What should we do if a kindergarten has no children? | If a kindergarten has no children with a kindergarten place in a month, you do not need to submit. You can also submit an empty list. | 
 | What does NAV need regarding representation for the kindergartens - business certificate? Do we need authorization per kindergarten or per municipality? | The municipalities delegate representation to you in Maskinporten. When we receive the lists from you, it is thus already verified via Maskinporten that you represent and submit "on behalf of" the municipalities. |
-| What statuses do we get back from you when we submit? | See openapi documentation below and "Validation Errors" above. |
+| What statuses do we get back from you when we submit? | See OpenAPI documentation below and "Validation Errors" above. |
                         """.trimIndent(),
                     ),
             ).components(Components().addSecuritySchemes(bearer, bearerTokenSecurityScheme()))
