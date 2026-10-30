@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
+import org.springframework.validation.BindingResult
 import java.time.LocalDateTime.now
 import java.util.UUID
 
@@ -148,6 +149,29 @@ class DefaultBarnehagelisteControllerEnhetTest {
                     detail = lagretBarnehagelisteValideringsfeil.feilinfo + " child=" + lagretBarnehagelisteValideringsfeil.ident,
                 ),
             )
+    }
+
+    @Test
+    fun `POST skal returnere 404 uten innhold når listen tilhører en annen leverandør eller kommune`() {
+        val request = mockk<HttpServletRequest>()
+        val bindingResult = mockk<BindingResult>()
+        val skjema = FormV1RequestDtoTestData.lagRequest()
+        every { bindingResult.hasErrors() } returns false
+        every { hentSupplierId() } returns "leverandørA"
+        every { hentConsumerId() } returns "kommuneA"
+        every { mockGodkjenteLeverandør.leverandorer } returns listOf(Leverandør("leverandørA", "Leverandør A"))
+
+        listOf("leverandørB" to "kommuneA", "leverandørA" to "kommuneB").forEach { (leverandør, kommune) ->
+            val lagretBarnehageliste =
+                Barnehageliste(skjema.id, skjema, BarnehagelisteStatus.FERDIG, leverandør, kommune)
+            every { mockBarnehagelisteService.mottaBarnehageliste(skjema, "leverandørA", "kommuneA") } returns
+                BarnehagelisteMedValideringsfeil(lagretBarnehageliste, emptyList())
+
+            val response = barnehagelisteController.mottaBarnehageliste(skjema, bindingResult, request)
+
+            assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+            assertThat(response.body).isNull()
+        }
     }
 
     @Test
