@@ -33,7 +33,12 @@ class DefaultBarnehagelisteController(
         val barnehagelisteMedValideringsfeil =
             barnehagelisteService.mottaBarnehageliste(formV1RequestDto, leverandørOrgNr, kommuneOrgNr)
 
-        return barnehagelisteMedValideringsfeil.barnehageliste!!
+        val barnehageliste = barnehagelisteMedValideringsfeil.barnehageliste!!
+        if (barnehageliste.leverandorOrgNr != leverandørOrgNr || barnehageliste.kommuneOrgNr != kommuneOrgNr) {
+            return ResponseEntity.notFound().build()
+        }
+
+        return barnehageliste
             .tilKindergartenlistResponse(
                 barnehagelisteMedValideringsfeil.valideringsfeil,
             ).toResponseEntity()
