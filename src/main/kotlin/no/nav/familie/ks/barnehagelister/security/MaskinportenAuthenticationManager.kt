@@ -7,6 +7,8 @@ import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.JwtClaimValidator
+import org.springframework.security.oauth2.jwt.JwtIssuerValidator
+import org.springframework.security.oauth2.jwt.JwtTimestampValidator
 import org.springframework.security.oauth2.jwt.JwtValidators
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
@@ -27,7 +29,10 @@ class MaskinportenAuthenticationManager(
 
         decoder.setJwtValidator(
             DelegatingOAuth2TokenValidator(
-                JwtValidators.createDefaultWithIssuer(issuerUri),
+                JwtValidators.createDefaultWithValidators(
+                    JwtIssuerValidator(issuerUri),
+                    JwtTimestampValidator().apply { setAllowEmptyExpiryClaim(false) },
+                ),
                 JwtClaimValidator<String>(SCOPES_CLAIM) { scopeInToken ->
                     scopeInToken
                         .trim()
