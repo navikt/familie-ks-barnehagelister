@@ -42,7 +42,6 @@ class SecurityConfig(
                 authorize("/internal/health/**", permitAll)
                 authorize("/internal/metrics/**", permitAll)
                 authorize("/internal/prometheus", permitAll)
-                authorize("/actuator/**", permitAll)
                 authorize("/swagger-ui/**", permitAll)
                 authorize("/v3/api-docs/**", permitAll)
                 authorize("/swagger-ui.html", permitAll)
