@@ -5,7 +5,7 @@ env:
   IMAGE: ghcr.io/navikt/familie-ks-barnehagelister:${{ github.sha }}
 jobs:
   deploy:
-    name: Bygg app/image, push til github, deploy til dev-fss/prod-fss
+    name: Bygg app/image, push til github, deploy til dev-gcp/prod-gcp
     runs-on: ubuntu-latest
     permissions:
       packages: write
