@@ -5,6 +5,8 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
@@ -50,6 +52,39 @@ class MaskinportenAuthenticationManagerIntegrationTest {
             registry.add("AZURE_APP_CLIENT_ID") { "test-client-id" }
             registry.add("AZURE_APP_JWK") { "{}" }
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "/internal",
+            "/internal/health/liveness",
+            "/internal/health/readiness",
+            "/internal/metrics",
+            "/internal/metrics/jvm.memory.used",
+            "/internal/prometheus",
+        ],
+    )
+    fun `skal tillate offentlige internal-endepunkter uten token`(path: String) {
+        mockMvc
+            .perform(get(path))
+            .andExpect(status().isOk)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "/internal/info",
+            "/internal/mappings",
+            "/internal/status/isAlive",
+            "/internal/healthcheck",
+            "/internal/prometheus/other",
+        ],
+    )
+    fun `skal avvise øvrige internal-endepunkter uten token`(path: String) {
+        mockMvc
+            .perform(get(path))
+            .andExpect(status().isUnauthorized)
     }
 
     @Test
