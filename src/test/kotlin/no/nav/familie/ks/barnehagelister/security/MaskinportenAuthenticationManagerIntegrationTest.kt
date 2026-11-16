@@ -2,6 +2,7 @@ package no.nav.familie.ks.barnehagelister.security
 
 import no.nav.familie.ks.barnehagelister.DbContainerInitializer
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -17,6 +18,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -85,6 +87,17 @@ class MaskinportenAuthenticationManagerIntegrationTest {
         mockMvc
             .perform(get(path))
             .andExpect(status().isUnauthorized)
+    }
+
+    @Test
+    fun `skal ikke opprette sesjon for kall uten token`() {
+        val resultat =
+            mockMvc
+                .perform(post("/api/kindergartenlists"))
+                .andExpect(status().isUnauthorized)
+                .andReturn()
+
+        assertThat(resultat.request.getSession(false)).isNull()
     }
 
     @Test
