@@ -25,7 +25,7 @@
         <kontrakter.version>4.0_20261120100915_9bfc3c0</kontrakter.version>
         <felles.version>4.20261026180911_c3ff6d9</felles.version>
         <springdoc.version>3.2.0</springdoc.version>
-        <mock-oauth2-server.version>6.1.4</mock-oauth2-server.version>
+        <mock-oauth2-server.version>7.0.0</mock-oauth2-server.version>
     </properties>
 
     <dependencyManagement>
@@ -173,7 +173,7 @@
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk-jvm</artifactId>
-            <version>1.14.11</version>
+            <version>1.14.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
