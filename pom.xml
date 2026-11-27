@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.2</version>
+        <version>4.2.0</version>
     </parent>
 
     <properties>
@@ -24,7 +24,7 @@
         <kotlin.version>2.4.21</kotlin.version>
         <kontrakter.version>4.0_20261120100915_9bfc3c0</kontrakter.version>
         <felles.version>4.20261026180911_c3ff6d9</felles.version>
-        <springdoc.version>3.2.0</springdoc.version>
+        <springdoc.version>3.2.1</springdoc.version>
         <mock-oauth2-server.version>6.1.4</mock-oauth2-server.version>
     </properties>
 
@@ -38,7 +38,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>4.1.2</version>
+                <version>4.2.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
